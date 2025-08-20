@@ -1,7 +1,7 @@
 import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
 
-const baseUrl = "http://localhost:8000/";
+const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
 
 export const createNewPasswordApi = async (email, password) => {
