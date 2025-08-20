@@ -1,7 +1,7 @@
 import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
 
-const baseUrl = "http://localhost:8000/";
+const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
 
 export const registerUser = async (name, email, phone_number, password) => {
@@ -34,7 +34,7 @@ export const registerUser = async (name, email, phone_number, password) => {
 
 
 export const loginUser = async (formData) => {
-  const response = await fetch("https://localhost:8000/api/v1/login/", {
+  const response = await fetch("https://site2demo.in/doach/api/v1/login/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
