@@ -1,5 +1,6 @@
 import React from "react";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Sidebar({ menuOpen }) {
   return (
@@ -18,30 +19,30 @@ export default function Sidebar({ menuOpen }) {
       </div>
 
       <nav className="flex flex-col space-y-4">
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaHome /> <span>Home</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaUser /> <span>Profile</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaCog /> <span>Community</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaCog /> <span>Play List</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaCog /> <span>Contact</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaCog /> <span>Support</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaCog /> <span>Reviews</span>
-        </a>
-        <a href="#" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        </Link>
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
           <FaSignOutAlt /> <span>Logout</span>
-        </a>
+        </Link>
       </nav>
     </aside>
   );

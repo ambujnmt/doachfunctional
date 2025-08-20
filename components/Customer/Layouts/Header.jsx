@@ -71,12 +71,12 @@ export default function Header({ menuOpen, setMenuOpen }) {
 
       {/* Center Menu */}
       <nav className="hidden md:flex flex-1 justify-center space-x-6">
-        <a href="#" className="hover:text-gray-200">Home</a>
-        <a href="#" className="hover:text-gray-200">Community</a>
-        <a href="#" className="hover:text-gray-200">Play List</a>
-        <a href="#" className="hover:text-gray-200">Contact Us</a>
-        <a href="#" className="hover:text-gray-200">Profile</a>
-        <a href="#" className="hover:text-gray-200">Member Ship</a>
+        <Link href="/" className="hover:text-gray-200">Home</Link>
+        <Link href="/" className="hover:text-gray-200">Community</Link>
+        <Link href="/" className="hover:text-gray-200">Play List</Link>
+        <Link href="/" className="hover:text-gray-200">Contact Us</Link>
+        <Link href="/" className="hover:text-gray-200">Profile</Link>
+        <Link href="/" className="hover:text-gray-200">Member Ship</Link>
       </nav>
 
       {/* Right Profile + Notification */}
@@ -130,8 +130,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
 
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50">
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">Profile</a>
+              <Link href="/" className="block px-4 py-2 hover:bg-gray-100">Dashboard</Link>
+              <Link href="/" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"
