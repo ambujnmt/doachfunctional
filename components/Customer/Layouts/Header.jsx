@@ -62,7 +62,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
       <Link href="/">
       <div className="flex items-center space-x-2">
         <img
-          src="http://localhost:3000/assets/images/logo_and_favicon/logo.png"
+          src="http://site2demo.in/doach/assets/images/logo_and_favicon/logo.png"
           alt="Logo"
           className="w-20 h-10 object-contain rounded-full"
         />
@@ -71,12 +71,12 @@ export default function Header({ menuOpen, setMenuOpen }) {
 
       {/* Center Menu */}
       <nav className="hidden md:flex flex-1 justify-center space-x-6">
-        <Link href="/" className="hover:text-gray-200">Home</Link>
-        <Link href="/" className="hover:text-gray-200">Community</Link>
-        <Link href="/" className="hover:text-gray-200">Play List</Link>
-        <Link href="/" className="hover:text-gray-200">Contact Us</Link>
-        <Link href="/" className="hover:text-gray-200">Profile</Link>
-        <Link href="/" className="hover:text-gray-200">Member Ship</Link>
+        <Link href="/" className="hover:text-gray-200 underline-none text-white">Home</Link>
+        <Link href="/" className="hover:text-gray-200 underline-none text-white">Community</Link>
+        <Link href="/" className="hover:text-gray-200 underline-none text-white">Play List</Link>
+        <Link href="/" className="hover:text-gray-200 underline-none text-white">Contact Us</Link>
+        <Link href="/" className="hover:text-gray-200 underline-none text-white">Profile</Link>
+        <Link href="/" className="hover:text-gray-200 underline-none text-white">Member Ship</Link>
       </nav>
 
       {/* Right Profile + Notification */}
@@ -130,8 +130,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
 
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50">
-              <Link href="/" className="block px-4 py-2 hover:bg-gray-100">Dashboard</Link>
-              <Link href="/" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
+              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 underline-none text-white">Dashboard</Link>
+              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 underline-none text-white">Profile</Link>
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"

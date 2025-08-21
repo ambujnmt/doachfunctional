@@ -19,28 +19,28 @@ export default function Sidebar({ menuOpen }) {
       </div>
 
       <nav className="flex flex-col space-y-4">
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaHome /> <span>Home</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaUser /> <span>Profile</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaCog /> <span>Community</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaCog /> <span>Play List</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaCog /> <span>Contact</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaCog /> <span>Support</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaCog /> <span>Reviews</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded">
+        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded underline-none text-white">
           <FaSignOutAlt /> <span>Logout</span>
         </Link>
       </nav>
