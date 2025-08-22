@@ -11,11 +11,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Auto redirect if token exists
+  // Auto redirect if token + onboarding check exists
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    if (token) {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    if (token && user?.onboarding_complete === 1) {
       router.push("/customer/dashboard");
+    } else if (token && user?.onboarding_complete !== 1) {
+      router.push("/onboarding");
     }
   }, [router]);
 
@@ -25,24 +29,26 @@ export default function Login() {
       [e.target.name]: e.target.value,
     });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const res = await loginUser(formData);
-
       // Save token and user info
       localStorage.setItem("authToken", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem("userId", res.data.id);
 
       toast.success("Login successful!");
       setTimeout(() => {
-        router.push("/customer/dashboard");
+        if (res.data.onboarding_complete === 1) {
+          router.push("/customer/dashboard");
+        } else {
+          router.push("/onboarding");
+        }
       }, 1000);
     } catch (err) {
-      // Show error toast
       toast.error(err.message || "Login failed");
     } finally {
       setLoading(false);

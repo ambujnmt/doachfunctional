@@ -31,10 +31,8 @@ export const registerUser = async (name, email, phone_number, password) => {
   }
 };
 
-
-
 export const loginUser = async (formData) => {
-  const response = await fetch("https://site2demo.in/doach/api/v1/login", {
+  const response = await fetch(`${baseUrl}api/v1/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,5 +50,33 @@ export const loginUser = async (formData) => {
   }
 
   return data; 
+};
+
+export const onboardingUser = async (payload) => {
+  const u = JSON.parse(localStorage.getItem("user") || "{}"); // get user token
+
+  try {
+    const response = await fetch(`${baseUrl}api/v1/onboarding`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${u?.token}`, // include auth if available
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data?.status) {
+      const error = new Error(data.message || "Onboarding failed");
+      error.details = data.errors || {};
+      throw error;
+    }
+
+    return data; // return backend-confirmed onboarding data
+  } catch (error) {
+    console.error("Onboarding Error:", error.message, error.details);
+    throw error;
+  }
 };
 

@@ -62,7 +62,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
       <Link href="/">
       <div className="flex items-center space-x-2">
         <img
-          src="http://site2demo.in/doach/assets/images/logo_and_favicon/logo.png"
+          src="http://localhost:3000/assets/images/logo_and_favicon/logo.png"
           alt="Logo"
           className="w-20 h-10 object-contain rounded-full"
         />
@@ -130,8 +130,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
 
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50">
-              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 underline-none text-white">Dashboard</Link>
-              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 underline-none text-white">Profile</Link>
+              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 underline-none">Dashboard</Link>
+              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 underline-none">Profile</Link>
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"
