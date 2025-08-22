@@ -62,7 +62,7 @@ export default function Onboarding() {
       };
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      router.push("/customer/dashboard");
+      router.push("/customer/community");
     } catch (err) {
       const response = err.response?.data;
       if (response?.errors) {

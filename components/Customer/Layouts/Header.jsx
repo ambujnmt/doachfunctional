@@ -72,11 +72,10 @@ export default function Header({ menuOpen, setMenuOpen }) {
       {/* Center Menu */}
       <nav className="hidden md:flex flex-1 justify-center space-x-6">
         <Link href="/" className="hover:text-gray-200 no-underline text-white">Home</Link>
-        <Link href="/" className="hover:text-gray-200 no-underline text-white">Community</Link>
-        <Link href="/" className="hover:text-gray-200 no-underline text-white">Play List</Link>
-        <Link href="/" className="hover:text-gray-200 no-underline text-white">Contact Us</Link>
-        <Link href="/" className="hover:text-gray-200 no-underline text-white">Profile</Link>
-        <Link href="/" className="hover:text-gray-200 no-underline text-white">Member Ship</Link>
+        <Link href="/customer/community" className="hover:text-gray-200 no-underline text-white">Community</Link>
+        <Link href="/customer/page/support" className="hover:text-gray-200 no-underline text-white">Contact Us</Link>
+        <Link href="/customer/profile/info" className="hover:text-gray-200 no-underline text-white">Profile</Link>
+        <Link href="/customer/dashboard" className="hover:text-gray-200 no-underline text-white">Member Ship</Link>
       </nav>
 
       {/* Right Profile + Notification */}
@@ -130,8 +129,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
 
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50">
-              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 no-underline text-dark">Dashboard</Link>
-              <Link href="/" className="block px-4 py-2 hover:bg-gray-100 no-underline text-dark">Profile</Link>
+              <Link href="/customer/dashboard" className="block px-4 py-2 hover:bg-gray-100 no-underline text-dark">Dashboard</Link>
+              <Link href="/customer/profile/info" className="block px-4 py-2 hover:bg-gray-100 no-underline text-dark">Profile</Link>
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"

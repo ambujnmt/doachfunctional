@@ -1,5 +1,13 @@
 import React from "react";
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaUser,
+  FaUsers,
+  FaPhoneAlt,
+  FaHeadset,
+  FaStar,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import Link from "next/link";
 
 export default function Sidebar({ menuOpen }) {
@@ -14,33 +22,57 @@ export default function Sidebar({ menuOpen }) {
       `}
     >
       {/* Sticky Dashboard Title */}
-      <div className="text-2xl font-bold mb-2 sticky top-0 bg-gray-800 z-10 py-3">
+      <div className="text-2xl font-bold mb-4 sticky top-0 bg-gray-800 z-10 py-3">
         Dashboard
       </div>
 
-      <nav className="flex flex-col space-y-4">
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
-          <FaHome /> <span>Home</span>
+      <nav className="flex flex-col space-y-3">
+        <Link
+          href="/customer/dashboard"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaHome /> <span>Dashboard</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
+
+        <Link
+          href="/customer/community"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaUsers /> <span>Community</span>
+        </Link>
+
+        <Link
+          href="/customer/profile/info"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
           <FaUser /> <span>Profile</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
-          <FaCog /> <span>Community</span>
+
+        <Link
+          href="/customer/page/support"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaPhoneAlt /> <span>Contact</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
-          <FaCog /> <span>Play List</span>
+
+        <Link
+          href="/customer/page/support"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaHeadset /> <span>Support</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
-          <FaCog /> <span>Contact</span>
+
+        <Link
+          href="/customer/dashboard"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaStar /> <span>Reviews</span>
         </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
-          <FaCog /> <span>Support</span>
-        </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
-          <FaCog /> <span>Reviews</span>
-        </Link>
-        <Link href="/" className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white">
+
+        <Link
+          href="/customer/dashboard"
+          className="flex items-center space-x-2 hover:bg-red-600 p-2 rounded no-underline text-white"
+        >
           <FaSignOutAlt /> <span>Logout</span>
         </Link>
       </nav>
