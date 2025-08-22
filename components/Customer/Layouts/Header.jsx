@@ -62,7 +62,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
       <Link href="/">
       <div className="flex items-center space-x-2">
         <img
-          src="/assets/images/logo_and_favicon/logo.png"
+          src="https://site2demo.in/doach/public/static_assets/images/logo/logo.png"
           alt="Logo"
           className="w-20 h-10 object-contain rounded-full"
         />
