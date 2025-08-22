@@ -20,7 +20,7 @@ export const registerUser = async (name, email, phone_number, password) => {
 
     if (!response.ok || !result?.status) {
       const error = new Error(result.message || "Registration failed");
-      error.details = result.errors || {}; // ✅ Attach server validation errors
+      error.details = result.errors || {}; 
       throw error;
     }
 
