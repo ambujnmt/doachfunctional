@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+
 import {
   FaBars,
   FaBell,
@@ -140,19 +141,19 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
             <div className="absolute right-0 mt-3 w-56 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50 animate-fadeIn">
               <Link
                 href="/"
-                className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2"
+                className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 no-underline text-dark"
               >
                 <FaTachometerAlt /> <span>Dashboard</span>
               </Link>
               <Link
                 href="/profile"
-                className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2"
+                className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 no-underline text-dark"
               >
                 <FaUser /> <span>Profile</span>
               </Link>
               <Link
                 href="/settings"
-                className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2"
+                className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 no-underline text-dark"
               >
                 <FaCog /> <span>Settings</span>
               </Link>
