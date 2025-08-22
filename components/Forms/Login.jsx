@@ -73,7 +73,7 @@ export default function Login() {
             <div className="flex flex-col items-start justify-center">
               <Link
                 href="/home"
-                className="text-gray-400 mb-3 no-underline flex items-center hover:text-yellow-600 text-sm"
+                className="text-white mb-3 no-underline flex items-center hover:text-yellow-600 text-sm"
               >
                 <FaArrowLeftLong /> &nbsp; Back
               </Link>

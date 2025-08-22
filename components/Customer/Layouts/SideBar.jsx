@@ -7,6 +7,11 @@ import {
   FaHeadset,
   FaStar,
   FaSignOutAlt,
+  FaVideo,   
+  FaHistory,
+  FaFire,
+  FaUserTie ,
+  FaCog,
 } from "react-icons/fa";
 import Link from "next/link";
 
@@ -45,6 +50,27 @@ export default function Sidebar({ menuOpen }) {
           href="/customer/profile/info"
           className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
         >
+          <FaVideo /> <span>Demo Video List</span>
+        </Link>
+
+        <Link
+          href="/customer/profile/info"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaHistory /> <span>Session History</span>
+        </Link>
+
+        <Link
+          href="/customer/profile/info"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaFire /> <span>My Steak</span>
+        </Link>
+
+        <Link
+          href="/customer/profile/info"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
           <FaUser /> <span>Profile</span>
         </Link>
 
@@ -66,7 +92,14 @@ export default function Sidebar({ menuOpen }) {
           href="/customer/dashboard"
           className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
         >
-          <FaStar /> <span>Reviews</span>
+          <FaCog  /> <span>Setting</span>
+        </Link>
+
+        <Link
+          href="/customer/dashboard"
+          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        >
+          <FaUserTie  /> <span>My Doach</span>
         </Link>
 
         <Link

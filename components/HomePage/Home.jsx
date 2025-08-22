@@ -6,6 +6,7 @@ import HomeFooter from "./HomeFooter";
 import { AiOutlinePlus } from "react-icons/ai"; 
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import PartnersSlider from "./PartnersSlider";
+import RotatingText from "./RotatingText";
 
 
 
@@ -146,11 +147,29 @@ export default function Home() {
                   <Link href="/">
                     <img src="https://nmtdevserver.com/doach/logo.png" alt="image" className="w-[500px] h-auto block m-auto" />
                   </Link>
-                  <p className="mt-[50px] text-[13px] xl:text-lg md:text-xl text-black max-w-md mx-auto !border-[#FFC32B] p-2 bg-[#FFC32B] rounded-full">The AI Coach That Adapts to You</p>
+                  
+                  {/* RotatingText here */}
+                  <RotatingText />
+                  {/* // RotatingText here */}
                 </div>
 
+
+                {/* Android / ios image section */}
+                <Container maxWidth="lg" className="mt-5">
+                  <div className="grid grid-cols-12 gap-4">
+                    <div className="col-span-6">
+                      <img src="https://nmtdevserver.com/doach/app-store-img.png" alt="image" className="xl:w-[35%] md:w-[60%] h-auto float-right" />
+                    </div>
+                    <div className="col-span-6">
+                      <img src="https://nmtdevserver.com/doach/google-play-img.png" alt="image" className="xl:w-[35%] md:w-[60%] h-auto" />
+                    </div>
+                  </div>
+                </Container>
+                {/* // Android / ios image section */}
+
+
                 {/* Scroll arrow */}
-                <div className="">
+                {/* <div className="">
                     <button
                         onClick={scrollToNext}
                         aria-label="Scroll to event"
@@ -158,7 +177,7 @@ export default function Home() {
                         >
                         ↓
                     </button>
-                </div>
+                </div> */}
             </section>
             {/* // Hero section */}
 
@@ -188,6 +207,22 @@ export default function Home() {
                               Sign Up for Challenge
                           </button>
                         </div>
+
+
+
+                        {/* Android / ios image section */}
+                        <Container maxWidth="lg" className="mt-5">
+                          <div className="grid grid-cols-12 gap-4">
+                            <div className="col-span-6">
+                              <img src="https://nmtdevserver.com/doach/app-store-img.png" alt="image" className="w-[35%] h-auto float-right" />
+                            </div>
+                            <div className="col-span-6">
+                              <img src="https://nmtdevserver.com/doach/google-play-img.png" alt="image" className="w-[35%] h-auto" />
+                            </div>
+                          </div>
+                        </Container>
+                        {/* // Android / ios image section */}
+
 
 
                         {/* Partners section */} 
