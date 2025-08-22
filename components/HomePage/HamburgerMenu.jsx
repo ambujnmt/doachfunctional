@@ -1,10 +1,43 @@
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import { Link } from "@heroui/react";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 export default function YellowCircleMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    setIsLoggedIn(!!token);
+  }, [])
+
+  const handleLogout = () => {
+      Swal.fire({
+        title: "Logout?",
+        text: "You will be logged out of your admin account.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Logout",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("authToken");
+          Swal.fire({
+            title: "Logged Out",
+            text: "Your session has ended.",
+            icon: "success",
+            timer: 1200,
+            showConfirmButton: false,
+          });
+          setTimeout(() => router.push("/login"), 1500);
+        }
+      });
+    };
 
   return (
     <>
@@ -37,24 +70,29 @@ export default function YellowCircleMenu() {
         </button>
 
         <div className="space-y-6 mt-16">
-          <Link
-            href="/login"
-            className="block px-3 py-3 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Login
-          </Link>
-          <Link
-            href="/signUp"
-            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Create Account
-          </Link>
-          <Link
-            href="/community"
-            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Community
-          </Link>
+          {!isLoggedIn ? (
+            <>
+              <Link
+                href="/login"
+                className="block px-3 py-3 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+              >
+                Login
+              </Link>
+              <Link
+                href="/signUp"
+                className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+              >
+                Create Account
+              </Link>
+            </>
+          ) : (
+            <Link
+              href="/customer/dashboard"
+              className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+            >
+              Dashboard
+            </Link>
+          )}
           <Link
             href="/event"
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
@@ -91,12 +129,15 @@ export default function YellowCircleMenu() {
           >
             MyDoach
           </Link>
-          <Link
-            href="/onboarding"
-            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Onboarding
-          </Link>
+          {isLoggedIn && (
+            <a
+              onClick={handleLogout}
+              className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+            >
+              Logout
+            </a>
+          )}
+          
         </div>
       </div>
 
