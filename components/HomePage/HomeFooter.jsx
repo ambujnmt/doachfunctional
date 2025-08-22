@@ -71,6 +71,16 @@ export default function HomeFooter() {
                                         <IoLogoWhatsapp className='text-black text-[28px]' />
                                     </a>
                                 </div>
+
+                                {/* Android / ios image section */} 
+                                <div className="grid grid-col-1 gap-4 mt-3">
+                                    <div className="flex xl:justify-end lg:block xl:flex">
+                                        <img src="https://nmtdevserver.com/doach/app-store-img.png" alt="image" className="xl:w-[40%] md:w-[60%] h-auto" />&nbsp;&nbsp;
+
+                                        <img src="https://nmtdevserver.com/doach/google-play-img.png" alt="image" className="xl:w-[40%] md:w-[60%] h-auto" />
+                                    </div>
+                                </div> 
+                                {/* // Android / ios image section */}
                             </div>
                         </div>
                     </div>
