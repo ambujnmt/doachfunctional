@@ -67,14 +67,14 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
           <FaBars />
         </button>
         <Link href="/" className="flex items-center space-x-2">
-          {/* <img
-            src="http://localhost:3000/assets/images/logo_and_favicon/logo.png"
+          <img
+            src="https://site2demo.in/doach/public/static_assets/images/logo/logo.png"
             alt="Logo"
-            className="w-10 h-10 object-contain rounded-full"
-          /> */}
-          <span className="text-lg font-bold hidden sm:block">
+            className="w-20 h-10 object-contain rounded-full"
+          />
+          {/* <span className="text-lg font-bold hidden sm:block">
             Admin Dashboard
-          </span>
+          </span> */}
         </Link>
       </div>
 
@@ -158,7 +158,7 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
                 <FaCog /> <span>Settings</span>
               </Link>
               <button
-                onClick={handleLogout}
+                // onClick={handleLogout}
                 className="w-full flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 text-left text-red-600"
               >
                 <FaSignOutAlt /> <span>Logout</span>
