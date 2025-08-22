@@ -16,9 +16,9 @@ export default function Login() {
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    if (token && user?.onboarding_complete === 1) {
+    if (token && user?.onboarding_complete == 1) {
       router.push("/customer/dashboard");
-    } else if (token && user?.onboarding_complete !== 1) {
+    } else if (token && user?.onboarding_complete != 1) {
       router.push("/onboarding");
     }
   }, [router]);
