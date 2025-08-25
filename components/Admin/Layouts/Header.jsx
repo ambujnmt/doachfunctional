@@ -32,7 +32,7 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const adminHandleLogout = () => {
     Swal.fire({
       title: "Logout?",
       text: "You will be logged out of your admin account.",
@@ -43,7 +43,7 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
       confirmButtonText: "Yes, Logout",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("adminAuthToken");
         Swal.fire({
           title: "Logged Out",
           text: "Your session has ended.",
@@ -51,7 +51,7 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
           timer: 1200,
           showConfirmButton: false,
         });
-        setTimeout(() => router.push("/login"), 1500);
+        setTimeout(() => router.push("/administor/login"), 1500);
       }
     });
   };
@@ -158,7 +158,7 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
                 <FaCog /> <span>Settings</span>
               </Link>
               <button
-                // onClick={handleLogout}
+                onClick={adminHandleLogout}
                 className="w-full flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 text-left text-red-600"
               >
                 <FaSignOutAlt /> <span>Logout</span>

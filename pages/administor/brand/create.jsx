@@ -1,15 +1,15 @@
 import React, { useState } from "react";   
-import Dashboard from '../../components/Admin/Dashboard/Dashboard'
-import Header from '../../components/Admin/Layouts/Header';
-import SideBar from '../../components/Admin/Layouts/SideBar';
-import Footer from '../../components/Admin/Layouts/Footer';
-import PrivateAdminRoute from "../../components/PrivateRoute/PrivateAdminRoute";
+import Header from '../../../components/Admin/Layouts/Header';
+import SideBar from '../../../components/Admin/Layouts/SideBar';
+import Footer from '../../../components/Admin/Layouts/Footer';
+import PrivateAdminRoute from "../../../components/PrivateRoute/PrivateAdminRoute";
+import Create from "../../../components/Admin/Brand/Create";
 
-export default function dashboard() {
+export default function listing() {
    const [menuOpen, setMenuOpen] = useState(false); 
   
     return (
-      <PrivateAdminRoute>
+        <PrivateAdminRoute>
       <div className="flex flex-col min-h-screen">
         {/* Fixed Header */}
         <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
@@ -23,7 +23,7 @@ export default function dashboard() {
             
             {/* Dashboard content */}
             <div className="flex-1">
-              <Dashboard />
+              <Create />
             </div>
   
             {/* Footer INSIDE dashboard */}
