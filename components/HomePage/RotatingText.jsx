@@ -23,7 +23,7 @@ export default function RotatingText() {
 
   return (
     <div className="text-center">
-      <Link href={texts[index].href}>
+      <Link href={texts[index].href} className="no-underline">
         <p className="cursor-pointer mt-[50px] text-[13px] xl:text-lg md:text-xl text-black max-w-md mx-auto p-2 bg-[#FFC32B] rounded-full transition-all duration-500 hover:scale-105">
           {texts[index].label}
         </p>
