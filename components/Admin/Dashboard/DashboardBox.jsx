@@ -26,7 +26,7 @@ export default function DashboardBox() {
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
       {/* Users Box */}
       <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col">
-        <h3 className="text-lg font-semibold text-gray-700">Users</h3>
+        <h3 className="text-lg font-semibold text-gray-700">Customers</h3>
         <p className="text-2xl font-bold mt-1">1,245</p>
         <div className="h-24 mt-2">
           <ResponsiveContainer width="100%" height="100%">
@@ -40,7 +40,7 @@ export default function DashboardBox() {
 
       {/* Orders Box */}
       <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col">
-        <h3 className="text-lg font-semibold text-gray-700">Orders</h3>
+        <h3 className="text-lg font-semibold text-gray-700">Events</h3>
         <p className="text-2xl font-bold mt-1">320</p>
         <div className="h-24 mt-2">
           <ResponsiveContainer width="100%" height="100%">
@@ -60,8 +60,8 @@ export default function DashboardBox() {
 
       {/* Revenue Box */}
       <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col">
-        <h3 className="text-lg font-semibold text-gray-700">Revenue</h3>
-        <p className="text-2xl font-bold mt-1">$12,400</p>
+        <h3 className="text-lg font-semibold text-gray-700">Brands</h3>
+        <p className="text-2xl font-bold mt-1">37</p>
         <div className="h-24 mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
@@ -74,8 +74,8 @@ export default function DashboardBox() {
 
       {/* Growth Box */}
       <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col">
-        <h3 className="text-lg font-semibold text-gray-700">Growth</h3>
-        <p className="text-2xl font-bold mt-1">+15%</p>
+        <h3 className="text-lg font-semibold text-gray-700">Community</h3>
+        <p className="text-2xl font-bold mt-1">678</p>
         <div className="h-24 mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>

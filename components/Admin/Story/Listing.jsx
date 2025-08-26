@@ -1,49 +1,55 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
-import { customerList } from "../../../utils/fetchAdminApi";
+import { storyList } from "../../../utils/fetchAdminApi";
 import Pagination from "@mui/material/Pagination";
-import { useRouter } from "next/router";
-import { confirmDelete } from "../../../utils/confirmDelete"; 
+import Link from "next/link";
+import { confirmDelete } from "../../../utils/confirmDelete";
 
 export default function Listing() {
-  const [customers, setCustomers] = useState([]);
+  const [storys, setstorys] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const customersPerPage = 10;
+  const storysPerPage = 10;
 
-  const router = useRouter();
-
-  // Fetch customers (made reusable)
-  const fetchCustomers = async () => {
-    // setLoading(true);
-    const data = await customerList();
-    setCustomers(data || []);
-    setLoading(false);
+  // Fetch storys
+  const fetchStories = async () => {
+    try {
+      const data = await storyList();
+      setstorys(data || []);
+    } catch (error) {
+      console.error("Failed to fetch storys:", error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchCustomers();
+    fetchStories();
   }, []);
 
+  // Delete story
   const handleDelete = async (id) => {
-    await confirmDelete(`/delete/user/${id}`, fetchCustomers);
+    await confirmDelete(`/delete/story/${id}`, fetchStories);
   };
 
   // Search filter
-  const filteredCustomers = customers.filter(
-    (customer) =>
-      customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.phone_number?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredstorys = storys.filter(
+    (story) =>
+      story.story_title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      story.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (story.story_date &&
+        new Date(story.story_date)
+          .toLocaleDateString()
+          .includes(searchTerm))
   );
 
   // Pagination
-  const indexOfLast = currentPage * customersPerPage;
-  const indexOfFirst = indexOfLast - customersPerPage;
-  const currentCustomers = filteredCustomers.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(filteredCustomers.length / customersPerPage);
+  const indexOfLast = currentPage * storysPerPage;
+  const indexOfFirst = indexOfLast - storysPerPage;
+  const currentstorys = filteredstorys.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredstorys.length / storysPerPage);
 
   return (
     <div className="py-4">
@@ -51,16 +57,16 @@ export default function Listing() {
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Stories List</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Story List</h1>
             <p className="text-gray-600 mt-1">
-              Manage and view customer details here.
+              Manage and view story details here.
             </p>
           </div>
           <div className="flex space-x-2">
             {/* Search Box */}
             <input
               type="text"
-              placeholder="Search by name, email or phone..."
+              placeholder="Search by name, description, or date..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -69,13 +75,13 @@ export default function Listing() {
               className="border border-gray-300 rounded-lg px-4 py-2 w-72"
             />
 
-            {/* Back Button */}
-            <button
-              onClick={() => router.back()}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+            {/* Create story Button */}
+            <Link
+              href="/administor/stories/create"
+              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition inline-block"
             >
-              ← Back
-            </button>
+              + Create
+            </Link>
           </div>
         </div>
 
@@ -88,7 +94,7 @@ export default function Listing() {
                 alt="Loading..."
                 className="mx-auto w-12 h-12"
               />
-              <p className="mt-2 text-gray-500">Loading customers...</p>
+              <p className="mt-2 text-gray-500">Loading storys...</p>
             </div>
           ) : (
             <div>
@@ -96,59 +102,66 @@ export default function Listing() {
                 <thead className="bg-gray-100 text-gray-700">
                   <tr>
                     <th className="p-3 text-left">#</th>
-                    <th className="p-3 text-left">Name</th>
-                    <th className="p-3 text-left">Email</th>
-                    <th className="p-3 text-left">Phone</th>
+                    <th className="p-3 text-left">Story Title</th>
+                    <th className="p-3 text-left">Description</th>
+                    <th className="p-3 text-left">Date</th>
+                    <th className="p-3 text-left">Image</th>
                     <th className="p-3 text-left">Status</th>
                     <th className="p-3 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {currentCustomers.length > 0 ? (
-                    currentCustomers.map((customer, index) => (
+                  {currentstorys.length > 0 ? (
+                    currentstorys.map((story, index) => (
                       <tr
-                        key={customer.id}
+                        key={story.id}
                         className="border-b hover:bg-gray-50 transition"
                       >
                         <td className="p-3">{indexOfFirst + index + 1}</td>
                         <td className="p-3 font-medium text-gray-800">
-                          {customer.name}
+                          {story.story_title}
                         </td>
-                        <td className="p-3">{customer.email}</td>
-                        <td className="p-3">{customer.phone_number}</td>
+                        <td className="p-3">{story.description}</td>
+                        <td className="p-3">
+                          {story.story_date
+                            ? new Date(story.story_date).toLocaleDateString()
+                            : "N/A"}
+                        </td>
+                        <td className="p-3">
+                          {story.story_image ? (
+                            <img
+                              src={story.story_image}
+                              alt={story.story_title}
+                              className="w-20 h-12 object-cover rounded"
+                            />
+                          ) : (
+                            "No Image"
+                          )}
+                        </td>
                         <td className="p-3">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              customer.status === "active"
+                              story.status === 1
                                 ? "bg-green-100 text-green-700"
-                                : customer.status === "inactive"
-                                ? "bg-gray-200 text-gray-700"
-                                : customer.status === "banned"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-yellow-100 text-yellow-700"
+                                : "bg-gray-200 text-gray-700"
                             }`}
                           >
-                            {customer.status
-                              ? customer.status.charAt(0).toUpperCase() +
-                                customer.status.slice(1)
-                              : "Unknown"}
+                            {story.status === 1 ? "Active" : "Inactive"}
                           </span>
                         </td>
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
-                            {/* View Button */}
                             <button className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 transition">
                               <FaEye className="text-blue-600 text-lg" />
                             </button>
-
-                            {/* Edit Button */}
-                            <button className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition">
+                            <Link
+                              href={`/administor/stories/edit?id=${story.id}`} // Pass story ID in the URL
+                              className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition"
+                            >
                               <FaEdit className="text-green-600 text-lg" />
-                            </button>
-
-                            {/* Delete Button */}
+                            </Link>
                             <button
-                              onClick={() => handleDelete(customer.id)}
+                              onClick={() => handleDelete(story.id)}
                               className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition"
                             >
                               <FaTrash className="text-red-600 text-lg" />
@@ -160,10 +173,10 @@ export default function Listing() {
                   ) : (
                     <tr>
                       <td
-                        colSpan="6"
+                        colSpan="7"
                         className="p-4 text-center text-gray-500 italic"
                       >
-                        No customers found.
+                        No storys found.
                       </td>
                     </tr>
                   )}
@@ -174,8 +187,8 @@ export default function Listing() {
               <div className="p-4 flex justify-between items-center border-t">
                 <span className="text-gray-600 text-sm">
                   Showing {indexOfFirst + 1} to{" "}
-                  {Math.min(indexOfLast, filteredCustomers.length)} of{" "}
-                  {filteredCustomers.length} entries
+                  {Math.min(indexOfLast, filteredstorys.length)} of{" "}
+                  {filteredstorys.length} entries
                 </span>
                 {totalPages > 1 && (
                   <Pagination

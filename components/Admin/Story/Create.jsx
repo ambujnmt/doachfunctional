@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBrand } from "../../../utils/fetchAdminApi";
+import { createStory } from "../../../utils/fetchAdminApi"; // ✅ change to createStory if you have separate API
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Create() {
-  const [brandName, setBrandName] = useState("");
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -14,7 +15,7 @@ export default function Create() {
 
   const router = useRouter();
 
-  // image preview
+  // Image preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -27,30 +28,31 @@ export default function Create() {
     }
   };
 
-  // submit form
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!brandName || !description || !image) {
-      alert("Please fill all fields and upload an image.");
+    if (!title || !description || !date || !image) {
+      toast.error("Please fill all fields and upload an image.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("brand_name", brandName);
+    formData.append("story_title", title);
+    formData.append("story_date", date);
     formData.append("description", description);
     formData.append("image", image);
 
     try {
       setLoading(true);
-      await createBrand(formData); // ✅ helper use kiya
-      toast.success("Brand Created successful!");
+      await createStory(formData); // ✅ replace with createStory if available
+      toast.success("Story created successfully!");
       setTimeout(() => {
-        router.push("/administor/brand/listing");
+        router.push("/administor/stories/listing"); // ✅ fixed path
       }, 2000);
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Failed to create event.");
+      toast.error(error.message || "Failed to create story.");
     } finally {
       setLoading(false);
     }
@@ -58,58 +60,64 @@ export default function Create() {
 
   return (
     <div className="mx-auto bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Create Brand</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">Create Story</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
-        
-        {/* Event Name */}
+        {/* Title */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Brand Name</label>
+          <label className="block text-gray-700 font-medium mb-1">Story Title</label>
           <input
             type="text"
-            value={brandName}
-            onChange={(e) => setBrandName(e.target.value)}
-            placeholder="Enter event name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter story title"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
             required
           />
         </div>
-        
+
+        {/* Date */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Story Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
+            required
+          />
+        </div>
+
         {/* Description */}
         <div>
           <label className="block text-gray-700 font-medium mb-1">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter brand description"
+            placeholder="Enter story description"
             rows="4"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
             required
           />
         </div>
 
-        {/* Image Upload */}
+        {/* Image */}
         <div>
-            <label className="block text-gray-700 font-medium mb-2">Brand Image</label>
-            
-            <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 cursor-pointer text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          <label className="block text-gray-700 font-medium mb-1">Story Image</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+          {preview && (
+            <img
+              src={preview}
+              alt="Preview"
+              className="mt-3 w-48 h-32 object-cover rounded-lg shadow"
             />
-            {preview && (
-                <img
-                src={preview}
-                alt="Preview"
-                className="mt-3 w-48 h-32 object-cover rounded-lg shadow"
-                />
-            )}
+          )}
         </div>
+
         {/* Actions */}
         <div className="flex justify-between items-center">
           <button
             type="button"
-            onClick={() => router.push("/administor/brand")}
+            onClick={() => router.push("/administor/story/listing")}
             className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
           >
             Cancel
@@ -119,12 +127,12 @@ export default function Create() {
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
           >
-            {loading ? "Creating..." : "Create Event"}
+            {loading ? "Creating..." : "Create Story"}
           </button>
         </div>
       </form>
-      {/* Toast Container */}
-            <ToastContainer position="top-right" autoClose={3000} />
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

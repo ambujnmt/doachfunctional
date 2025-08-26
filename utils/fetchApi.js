@@ -80,3 +80,93 @@ export const onboardingUser = async (payload) => {
   }
 };
 
+
+
+export const brandHomePage = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/brands`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const eventHomePage = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/events`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const storiesHomePage = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/stories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const coachesHomePage = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/coaches`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+
+
+
+

@@ -1,132 +1,75 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { Navigation, Autoplay } from "swiper/modules";
 import Container from "@mui/material/Container";
+import { brandHomePage } from "../../utils/fetchApi"; // adjust path
 
 export default function PartnersSlider() {
-    return (
-        <Container maxWidth="lg">
+  const [brands, setBrands] = useState([]);
 
-            <div className="pt-20">
-                <h3 class="xl:text-4xl lg:text-4xl text-2xl text-center font-medium text-white mb-8">Founding Brand Partners</h3>
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const data = await brandHomePage();
+      setBrands(data);
+    };
+    fetchBrands();
+  }, []);
+
+  return (
+    <Container maxWidth="lg">
+      <div className="pt-20">
+        <h3 className="xl:text-4xl lg:text-4xl text-2xl text-center font-medium text-white mb-8">
+          Founding Brand Partners
+        </h3>
+      </div>
+
+      <Swiper
+        modules={[Navigation, Autoplay]}
+        navigation
+        loop={brands.length > 3} // loop only if enough slides
+        spaceBetween={20}
+        slidesPerView={3}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        breakpoints={{
+          0: { slidesPerView: 3 },
+          640: { slidesPerView: 4 },
+          1024: { slidesPerView: 6 },
+        }}
+      >
+        {brands.map((brand) => (
+          <SwiperSlide key={brand.id}>
+            <div className="text-center">
+              <img
+                src={brand.brand_image}
+                alt={brand.brand_name}
+                className="w-[40%] h-auto object-cover mx-auto"
+              />
             </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-            <Swiper
-                modules={[Navigation, Autoplay]}
-                navigation
-                loop={true}
-                spaceBetween={20}
-                slidesPerView={3}
-                autoplay={{
-                delay: 3000, // 3 seconds
-                disableOnInteraction: false,  
-                }}
-                breakpoints={{
-                0: {
-                    slidesPerView: 3,
-                },
-                640: {
-                    slidesPerView: 4,
-                },
-                1024: {
-                    slidesPerView: 6,
-                },
-                }}
-            >
-                
-                <div className="flex items-center"> 
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://www.pngplay.com/wp-content/uploads/12/Windows-Logo-PNG-HD-Photos.png"
-                            alt="image"
-                            className="w-[40%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/1724px-Apple_logo_white.svg.png"
-                            alt="image"
-                            className="w-[40%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://nmtdevserver.com/doach/youtube-logo.png"
-                            alt="image"
-                            className="w-[40%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://nmtdevserver.com/doach/cavs-logo.png"
-                            alt="image"
-                            className="w-[50%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://www.pngplay.com/wp-content/uploads/12/Windows-Logo-PNG-HD-Photos.png"
-                            alt="image"
-                            className="w-[40%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/1724px-Apple_logo_white.svg.png"
-                            alt="image"
-                            className="w-[40%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://nmtdevserver.com/doach/youtube-logo.png"
-                            alt="image"
-                            className="w-[40%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="text-center">
-                            <img
-                            src="https://nmtdevserver.com/doach/cavs-logo.png"
-                            alt="image"
-                            className="w-[50%] h-auto object-cover"
-                            /> 
-                        </div>
-                    </SwiperSlide>
-                </div>
-            </Swiper>
-
-            <style>
-                {`
-                    .swiper-button-prev{
-                        display: none;
-                    }
-                    .swiper-button-next{
-                        display: none;
-                    }
-                    .swiper-wrapper{
-                        align-items: center;
-                    }
-                `}
-            </style>
-        
-        </Container> 
-    );
+      <style>
+        {`
+          .swiper-button-prev{
+              display: none;
+          }
+          .swiper-button-next{
+              display: none;
+          }
+          .swiper-wrapper{
+              align-items: center;
+          }
+        `}
+      </style>
+    </Container>
+  );
 }
