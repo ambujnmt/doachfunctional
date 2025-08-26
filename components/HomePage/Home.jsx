@@ -7,7 +7,71 @@ import { AiOutlinePlus } from "react-icons/ai";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import PartnersSlider from "./PartnersSlider";
 import RotatingText from "./RotatingText";
+import { eventHomePage, storiesHomePage, coachesHomePage  } from "../../utils/fetchApi";
 
+
+// Event Card Component
+const EventCard = ({ event }) => (
+  <div className="bg-[#FFC32B] rounded-3xl">
+    <img
+      src={event.image || event.event_image} // adjust depending on API
+      alt={event.event_name}
+      className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl"
+    />
+    <div className="p-3">
+      <h5 className="text-black text-[18px] font-semibold mb-1">{event.event_name}</h5>
+      <p className="text-[14px] font-medium text-black mb-1">{event.date || event.created_at?.split("T")[0]}</p>
+      <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
+        {event.description || "No description available"}
+      </p>
+      <Link href="#" className="flex justify-end text-[14px] font-medium text-black">
+        2 min. read
+      </Link>
+    </div>
+  </div>
+);
+
+// Story Card Component
+const StoryCard = ({ story }) => (
+  <div className="bg-[#FFC32B] rounded-3xl">
+    <img
+      src={story.story_image || story.image} // adjust depending on API
+      alt={story.title || story.story_name}
+      className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl"
+    />
+    <div className="p-3">
+      <h5 className="text-black text-[18px] font-semibold mb-1">{story.title || story.story_title}</h5>
+      <p className="text-[14px] font-medium text-black mb-1">{story.date || story.created_at?.split("T")[0]}</p>
+      <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
+        {story.description || story.story_description || "No description available"}
+      </p>
+      <Link href="#" className="flex justify-end text-[14px] font-medium text-black">
+        2 min. read
+      </Link>
+    </div>
+  </div>
+);
+
+// Coach Card Component
+const CoachCard = ({ coach }) => (
+  <div className="bg-[#FFC32B] rounded-3xl">
+    <img
+      src={coach.coach_image || coach.image} // adjust based on API
+      alt={coach.specialization}
+      className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl"
+    />
+    <div className="p-3">
+      <h5 className="text-black text-[18px] font-semibold mb-1">{coach.specialization}</h5>
+      <p className="text-[14px] font-medium text-black mb-1">{coach.date || coach.created_at?.split("T")[0]}</p>
+      <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
+        {coach.bio_data || "No description available"}
+      </p>
+      <Link href="#" className="flex justify-end text-[14px] font-medium text-black">
+        2 min. read
+      </Link>
+    </div>
+  </div>
+);
 
 
 export default function Home() {
@@ -16,6 +80,23 @@ export default function Home() {
   const [age, setAge] = useState("");
   const [showParent, setShowParent] = useState(false);
   const signupFormRef = useRef(null);
+
+  const [events, setEvents] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [coaches, setCoaches] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventData = await eventHomePage();
+      const storyData = await storiesHomePage();
+      const coachData = await coachesHomePage();
+      setEvents(eventData);
+      setStories(storyData);
+      setCoaches(coachData);
+    };
+    fetchData();
+  }, []);
 
   // Close voice menu on click outside
   useEffect(() => {
@@ -120,6 +201,7 @@ export default function Home() {
     { key: "illinois", name: "Illinois", count: 4 },
     { key: "georgia", name: "Georgia", count: 5 },
   ];
+  
 
     return (
         <>
@@ -237,46 +319,22 @@ export default function Home() {
 
                 {/* Events section */}
                 <section className="event-sec">
-                  <Container>
-                    <div className="grid grid-cols-12 gap-4">
-                      <div className="col-span-12">
-                        <h4 className="text-white text-[22px] font-bold">Events</h4>
-                      </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://columbusregion.com/wp-content/uploads/2022/08/Homepage_HERO-2.jpg" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Cleveland YMCA</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
+                    <Container>
+                      <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-12">
+                          <h4 className="text-white text-[22px] font-bold">Events</h4>
                         </div>
+                        {events.length > 0 ? (
+                          events.map((event) => (
+                            <div key={event.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
+                              <EventCard event={event} />
+                            </div>
+                          ))
+                        ) : (
+                          <p className="col-span-12 text-white">No events available.</p>
+                        )}
                       </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://kommwirmachendaseinfach.de/wp-content/uploads/2019/07/highlights-singapur-marina-bay-sands-hotel.jpg" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Pittsburgh YMCA</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iZDshdZpXIHI/v0/-1x-1.webp" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Rochester YMCA</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Container>
+                    </Container>
                 </section>
                 {/* // Event section */}
 
@@ -288,88 +346,40 @@ export default function Home() {
                       <div className="col-span-12">
                         <h4 className="text-white text-[22px] font-bold">Stories</h4>
                       </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://d3rqy6w6tyyf68.cloudfront.net/AcuCustom/Sitename/DAM/128/scw106-whatispassing-p6_Thumb.png" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Passing</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
+                      {stories.length > 0 ? (
+                        stories.map((story) => (
+                          <div key={story.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
+                            <StoryCard story={story} />
                           </div>
-                        </div>
-                      </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://blog.playo.co/wp-content/uploads/2017/03/football-shots-you-need-to-know.jpg" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Shooting</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://stackathlete.com/wp-content/uploads/2021/02/soccer-cone-drill-captainu.jpg" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Ball handling</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
-                        </div>
-                      </div>
+                        ))
+                      ) : (
+                        <p className="col-span-12 text-white">No stories available.</p>
+                      )}
                     </div>
                   </Container>
                 </section>
                 {/* // Stories section */}
 
 
-                {/* Coaches section */}
-                <section className="event-sec mt-5">
-                  <Container>
-                    <div className="grid grid-cols-12 gap-4">
-                      <div className="col-span-12">
-                        <h4 className="text-white text-[22px] font-bold">Coaches</h4>
-                      </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://i.insider.com/61d8942bd21c1e0019ee49a2?width=700" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Womens College Basketball </h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
+                {/* Coaches Section */}
+                  <section className="event-sec mt-5">
+                    <Container>
+                      <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-12">
+                          <h4 className="text-white text-[22px] font-bold">Coaches</h4>
                         </div>
+                        {coaches.length > 0 ? (
+                          coaches.map((coach) => (
+                            <div key={coach.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
+                              <CoachCard coach={coach} />
+                            </div>
+                          ))
+                        ) : (
+                          <p className="col-span-12 text-white">No coaches available.</p>
+                        )}
                       </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://blog.playo.co/wp-content/uploads/2017/03/football-shots-you-need-to-know.jpg" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Mens College Basketball</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                        <div className="bg-[#FFC32B] rounded-3xl">
-                          <img src="https://www.ncaa.com/_flysystem/public-s3/styles/large_16x9/public-s3/thumbnails/2024-04/FinalSeconds_Thumb.jpg?h=d1cb525d&itok=qGAvcCg8" alt="image" className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" />
-                          <div className="p-3">
-                            <h5 className="text-black text-[18px] font-semibold mb-1">Boys High School</h5>
-                            <p className="text-[14px] font-medium text-black mb-1">08.13.25</p>
-                            <p className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum eum, voluptatem quae id laboriosam iure repellat perferendis aspernatur corrupti. Nesciunt at reiciendis natus labore assumenda nulla impedit accusantium quidem quam.</p>
-                            <Link href="#" className="flex justify-end text-[14px] font-medium text-black">2 min. read</Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Container>
-                </section>
+                    </Container>
+                  </section>
                 {/* // Coaches section */}
 
 

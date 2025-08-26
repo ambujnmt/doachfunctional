@@ -4,7 +4,7 @@ import axios from "axios";
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: "https://site2demo.in/doach/api/admin/v2", // <-- apna base url yaha set karo
+  baseURL: "https://site2demo.in/doach/", // <-- apna base url yaha set karo
 });
 
 export const confirmDelete = async (endpoint, callback) => {

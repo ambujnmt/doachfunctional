@@ -4,6 +4,7 @@ import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import { customerList } from "../../../utils/fetchAdminApi";
 import Pagination from "@mui/material/Pagination";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { confirmDelete } from "../../../utils/confirmDelete"; 
 
 export default function Listing() {
@@ -137,14 +138,17 @@ export default function Listing() {
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
                             {/* View Button */}
-                            <button className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 transition">
+                            <Link
+                              href={`/administor/customer/view?id=${customer.id}`} // Pass coach ID in the URL
+                              className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition"
+                            >
                               <FaEye className="text-blue-600 text-lg" />
-                            </button>
+                            </Link>
 
                             {/* Edit Button */}
-                            <button className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition">
+                            {/* <button className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition">
                               <FaEdit className="text-green-600 text-lg" />
-                            </button>
+                            </button> */}
 
                             {/* Delete Button */}
                             <button

@@ -37,7 +37,7 @@ export default function DashboardCharts() {
     <div className="grid grid-cols-12 gap-6 mt-4">
       {/* 📈 Line Chart - 8 cols */}
       <div className="col-span-12 md:col-span-8 bg-white shadow rounded-2xl p-6">
-        <h2 className="text-xl font-bold mb-4">Monthly Sales Trend</h2>
+        <h2 className="text-xl font-bold mb-4">Monthly Customers</h2>
         <ResponsiveContainer width="100%" height={350}>
           <LineChart data={data}>
             <XAxis dataKey="name" />
@@ -56,7 +56,7 @@ export default function DashboardCharts() {
 
       {/* 🥧 Pie Chart - 4 cols */}
       <div className="col-span-12 md:col-span-4 bg-white shadow rounded-2xl p-6">
-        <h2 className="text-xl font-bold mb-4">Sales Distribution</h2>
+        <h2 className="text-xl font-bold mb-4">Chart Distribution</h2>
         <ResponsiveContainer width="100%" height={350}>
           <PieChart>
             <Pie
