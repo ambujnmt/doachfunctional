@@ -18,26 +18,52 @@ export default function HomeFooter() {
                         <div className="col-span-12 xl:col-span-3 md:col-span-6 lg:col-span-3">
                             <div className="text-left">
                                 <div className="text-2xl font-extrabold text-yellow-400">
+                                    <Link href="/">
                                     <img src="https://nmtdevserver.com/doach/black-logo.png" alt="image" className='w-[50%] h-auto mb-4' />
+                                    </Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">Shop</div>
-                                <div className="text-black text-[15px] font-bold">Company</div>
-                                <div className="text-black text-[15px] font-bold">Media</div>
-                                <div className="text-black text-[15px] font-bold">Careers</div>
-                                <div className="text-black text-[15px] font-bold">Contact Us</div>
+                                <div className="text-black text-[15px] font-bold">
+                                    <Link href="/shop">Shop</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                    <Link href="/company">Company</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                    <Link href="/media">Media</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                    <Link href="/careers">Careers</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                    <Link href="/contactUs">Contact Us</Link>
+                                </div>
                             </div>
                         </div>
 
                         <div className="col-span-12 xl:col-span-5 md:col-span-6 lg:col-span-5">
                             <div className="text-left">
                                 <div className="xl:mt-12 mt-0"></div>
-                                <div className="text-black text-[15px] font-bold">Private Policy</div>
-                                <div className="text-black text-[15px] font-bold">Terms</div>
-                                <div className="text-black text-[15px] font-bold">Cookie Settings</div>
-                                <div className="text-black text-[15px] font-bold">Accessibility</div>
-                                <div className="text-black text-[15px] font-bold">Fraud Warning</div>
-                                <div className="text-black text-[15px] font-bold">Do Not Sell/Share My Personal Infomation</div>
-                                <div className="text-black text-[15px] font-bold">DOACH Circle Rules</div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=private-policy`}>Private Policy</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=terms-and-conditions`}>Terms</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=private-policy`}>Cookie Settings</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=accessibility`}>Accessibility</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=fraud-warning`}>Fraud Warning</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=do-not-sell-or-share`}>Do Not Sell/Share My Personal Infomation</Link>
+                                </div>
+                                <div className="text-black text-[15px] font-bold">
+                                     <Link href={`/dynamicPage?id=doach-circle-rules`}>DOACH Circle Rules</Link>
+                                </div>
                             </div>
                         </div>
 

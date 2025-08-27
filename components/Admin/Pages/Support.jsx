@@ -2,35 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaTrash } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
-
-// Fake API fetch function (replace with your API)
-const fetchSupportRequests = async () => {
-  return [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      subject: "Login issue",
-      message: "Cannot login to my account",
-      date: "2025-08-26",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      subject: "Payment problem",
-      message: "Payment not processed",
-      date: "2025-08-25",
-      status: "Resolved",
-    },
-  ];
-};
+import { customerSupport } from "../../../utils/fetchAdminApi"; // adjust path
 
 // Confirm Delete function placeholder
 const confirmDelete = async (id, callback) => {
   if (window.confirm("Are you sure you want to delete this request?")) {
-    // call your API here to delete
+    // call delete API here
     console.log("Deleted ID:", id);
     callback();
   }
@@ -43,10 +20,10 @@ export default function SupportListing() {
   const [loading, setLoading] = useState(true);
   const requestsPerPage = 10;
 
-  // Fetch requests
+  // Fetch requests from real API
   const getRequests = async () => {
     setLoading(true);
-    const data = await fetchSupportRequests();
+    const data = await customerSupport();
     setRequests(data || []);
     setLoading(false);
   };
@@ -59,12 +36,13 @@ export default function SupportListing() {
     await confirmDelete(id, getRequests);
   };
 
-  // Filtered results
+  // Filter results
   const filteredRequests = requests.filter(
     (r) =>
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       r.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.subject.toLowerCase().includes(searchTerm.toLowerCase())
+      r.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.address.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination
@@ -83,13 +61,13 @@ export default function SupportListing() {
               Support Requests
             </h1>
             <p className="text-gray-600 mt-1">
-              Manage and view support requests here.
+              Manage and view customer support requests.
             </p>
           </div>
           <div>
             <input
               type="text"
-              placeholder="Search by name, email, or subject..."
+              placeholder="Search by name, email, phone, or address..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -119,10 +97,10 @@ export default function SupportListing() {
                     <th className="p-3 text-left">#</th>
                     <th className="p-3 text-left">Name</th>
                     <th className="p-3 text-left">Email</th>
-                    <th className="p-3 text-left">Subject</th>
+                    <th className="p-3 text-left">Phone</th>
+                    <th className="p-3 text-left">Address</th>
                     <th className="p-3 text-left">Message</th>
                     <th className="p-3 text-left">Date</th>
-                    <th className="p-3 text-left">Status</th>
                     <th className="p-3 text-center">Actions</th>
                   </tr>
                 </thead>
@@ -136,21 +114,11 @@ export default function SupportListing() {
                         <td className="p-3">{indexOfFirst + index + 1}</td>
                         <td className="p-3 font-medium text-gray-800">{r.name}</td>
                         <td className="p-3">{r.email}</td>
-                        <td className="p-3">{r.subject}</td>
+                        <td className="p-3">{r.phone}</td>
+                        <td className="p-3">{r.address}</td>
                         <td className="p-3">{r.message}</td>
-                        <td className="p-3">{r.date}</td>
                         <td className="p-3">
-                          <span
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              r.status === "Resolved"
-                                ? "bg-green-100 text-green-700"
-                                : r.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            {r.status}
-                          </span>
+                          {new Date(r.created_at).toLocaleDateString()}
                         </td>
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
