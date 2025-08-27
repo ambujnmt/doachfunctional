@@ -140,19 +140,19 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
           {dropdownOpen && (
             <div className="absolute right-0 mt-3 w-56 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50 animate-fadeIn">
               <Link
-                href="/"
+                href="/administor/dashboard"
                 className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 no-underline text-dark"
               >
                 <FaTachometerAlt /> <span>Dashboard</span>
               </Link>
               <Link
-                href="/profile"
+                href="/administor/profile/update"
                 className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 no-underline text-dark"
               >
                 <FaUser /> <span>Profile</span>
               </Link>
               <Link
-                href="/settings"
+                href="/administor/settings/configration"
                 className="flex items-center px-4 py-2 hover:bg-gray-100 space-x-2 no-underline text-dark"
               >
                 <FaCog /> <span>Settings</span>

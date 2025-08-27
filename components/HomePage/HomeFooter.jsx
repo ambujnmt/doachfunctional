@@ -22,19 +22,19 @@ export default function HomeFooter() {
                                     <img src="https://nmtdevserver.com/doach/black-logo.png" alt="image" className='w-[50%] h-auto mb-4' />
                                     </Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                     <Link href="/shop">Shop</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                     <Link href="/company">Company</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                     <Link href="/media">Media</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                     <Link href="/careers">Careers</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                     <Link href="/contactUs">Contact Us</Link>
                                 </div>
                             </div>
@@ -43,25 +43,25 @@ export default function HomeFooter() {
                         <div className="col-span-12 xl:col-span-5 md:col-span-6 lg:col-span-5">
                             <div className="text-left">
                                 <div className="xl:mt-12 mt-0"></div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=private-policy`}>Private Policy</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=terms-and-conditions`}>Terms</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=private-policy`}>Cookie Settings</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=accessibility`}>Accessibility</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=fraud-warning`}>Fraud Warning</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=do-not-sell-or-share`}>Do Not Sell/Share My Personal Infomation</Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold">
+                                <div className="text-black text-[15px] font-bold no-underline text-dark">
                                      <Link href={`/dynamicPage?id=doach-circle-rules`}>DOACH Circle Rules</Link>
                                 </div>
                             </div>
