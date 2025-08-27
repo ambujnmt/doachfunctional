@@ -329,3 +329,62 @@ export const updateCoach = async (formData, id) => {
   }
 };
 // end coach section
+
+
+// dunamic page list 
+export const dynamicPageList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/page-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch Pages ");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching Pages:", error);
+    return [];
+  }
+};
+
+export const dynamicPageUpdate = async (id, formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/page-update/${id}`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("updateStory error:", error);
+    throw new Error(error.response?.data?.message || "Failed to update story");
+  }
+};
+
+
+// support section
+
+export const customerSupport = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/customer-support`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customer support");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customer support:", error);
+    return [];
+  }
+};
+
+

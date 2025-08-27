@@ -11,8 +11,8 @@ import { eventHomePage, storiesHomePage, coachesHomePage  } from "../../utils/fe
 
 
 // Event Card Component
-const EventCard = ({ event }) => (
-  <div className="bg-[#FFC32B] rounded-3xl">
+const EventCard = ({ event, onClick }) => (
+  <div className="bg-[#FFC32B] rounded-3xl" onClick={() => onClick(event)} >
     <img
       src={event.image || event.event_image} // adjust depending on API
       alt={event.event_name}
@@ -32,8 +32,8 @@ const EventCard = ({ event }) => (
 );
 
 // Story Card Component
-const StoryCard = ({ story }) => (
-  <div className="bg-[#FFC32B] rounded-3xl">
+const StoryCard = ({ story, onClick }) => (
+  <div className="bg-[#FFC32B] rounded-3xl" onClick={() => onClick(story)}>
     <img
       src={story.story_image || story.image} // adjust depending on API
       alt={story.title || story.story_name}
@@ -53,8 +53,8 @@ const StoryCard = ({ story }) => (
 );
 
 // Coach Card Component
-const CoachCard = ({ coach }) => (
-  <div className="bg-[#FFC32B] rounded-3xl">
+const CoachCard = ({ coach, onClick }) => (
+  <div className="bg-[#FFC32B] rounded-3xl" onClick={() => onClick(coach)}>
     <img
       src={coach.coach_image || coach.image} // adjust based on API
       alt={coach.specialization}
@@ -202,6 +202,20 @@ export default function Home() {
     { key: "georgia", name: "Georgia", count: 5 },
   ];
   
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedStory, setSelectedStory] = useState(null);
+  const [selectedCoach, setSelectedCoach] = useState(null);
+
+  const openEventModal = (event) => setSelectedEvent(event);
+  const closeEventModal = () => setSelectedEvent(null);
+
+  // Story
+  const openStoryModal = (story) => setSelectedStory(story);
+  const closeStoryModal = () => setSelectedStory(null);
+
+  // Coach
+  const openCoachModal = (coach) => setSelectedCoach(coach);
+  const closeCoachModal = () => setSelectedCoach(null);
 
     return (
         <>
@@ -320,14 +334,20 @@ export default function Home() {
                 {/* Events section */}
                 <section className="event-sec">
                     <Container>
+                      <div className="flex justify-between items-center mb-4">
+                        <h4 className="text-white text-[22px] font-bold">Events</h4>
+                        <Link
+                          href="/event/listing" // replace with your actual events page route
+                          className="px-4 py-2 bg-[#FFC32B] text-black font-semibold rounded-md hover:bg-yellow-300 transition"
+                        >
+                          View All
+                        </Link>
+                      </div>
                       <div className="grid grid-cols-12 gap-4">
-                        <div className="col-span-12">
-                          <h4 className="text-white text-[22px] font-bold">Events</h4>
-                        </div>
                         {events.length > 0 ? (
-                          events.map((event) => (
+                          events.slice(0, 3).map((event) => (
                             <div key={event.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                              <EventCard event={event} />
+                             <EventCard event={event} onClick={openEventModal} />
                             </div>
                           ))
                         ) : (
@@ -342,14 +362,20 @@ export default function Home() {
                 {/* Stories section */}
                 <section className="event-sec mt-5">
                   <Container>
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="text-white text-[22px] font-bold">Stories</h4>
+                        <Link
+                          href="/story/listing" // replace with your actual events page route
+                          className="px-4 py-2 bg-[#FFC32B] text-black font-semibold rounded-md hover:bg-yellow-300 transition"
+                        >
+                          View All
+                        </Link>
+                    </div>
                     <div className="grid grid-cols-12 gap-4">
-                      <div className="col-span-12">
-                        <h4 className="text-white text-[22px] font-bold">Stories</h4>
-                      </div>
                       {stories.length > 0 ? (
-                        stories.map((story) => (
+                        stories.slice(0, 3).map((story) => (
                           <div key={story.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                            <StoryCard story={story} />
+                            <StoryCard story={story} onClick={openStoryModal} />
                           </div>
                         ))
                       ) : (
@@ -364,14 +390,20 @@ export default function Home() {
                 {/* Coaches Section */}
                   <section className="event-sec mt-5">
                     <Container>
+                      <div className="flex justify-between items-center mb-4">
+                        <h4 className="text-white text-[22px] font-bold">Coaches</h4>
+                        <Link
+                          href="/coach/listing" // replace with your actual events page route
+                          className="px-4 py-2 bg-[#FFC32B] text-black font-semibold rounded-md hover:bg-yellow-300 transition"
+                        >
+                          View All
+                        </Link>
+                      </div>
                       <div className="grid grid-cols-12 gap-4">
-                        <div className="col-span-12">
-                          <h4 className="text-white text-[22px] font-bold">Coaches</h4>
-                        </div>
                         {coaches.length > 0 ? (
-                          coaches.map((coach) => (
+                          coaches.slice(0, 3).map((coach) => (
                             <div key={coach.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
-                              <CoachCard coach={coach} />
+                              <CoachCard coach={coach} onClick={openCoachModal} />
                             </div>
                           ))
                         ) : (
@@ -388,12 +420,9 @@ export default function Home() {
                     onClick={openSignupModal}
                     className="px-8 py-[12px] bg-[#FFC32B] text-black rounded-full font-semibold shadow-md hover:bg-yellow-300 transition"
                   >
-                    View More
+                    View Challenge
                   </button>
                 </div>
-
- 
-
 
                 {/* Footer */}
                 <HomeFooter />
@@ -485,10 +514,105 @@ export default function Home() {
                     </form>
                 </div>
             </div>
+
+
+            {/* Event Modal */}
+
+            {selectedEvent && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                <div className="bg-white rounded-2xl p-6 relative">
+                  {/* Close Button */}
+                  <button
+                    onClick={closeEventModal}
+                    className="absolute top-4 right-4 text-5xl font-bold text-white bg-black/50 rounded-full w-14 h-14 flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all"
+                  >
+                    &times;
+                  </button>
+
+                  {/* Event Content */}
+                  <img
+                    src={selectedEvent.image || selectedEvent.event_image}
+                    alt={selectedEvent.event_name}
+                    className="w-full h-[250px] object-cover rounded-lg mb-4"
+                  />
+                  <h3 className="text-xl font-bold mb-2 text-black">
+                    {selectedEvent.event_name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {selectedEvent.date || selectedEvent.created_at?.split("T")[0]}
+                  </p>
+                  <p className="text-gray-800">
+                    {selectedEvent.description || "No description available"}
+                  </p>
+                </div>
+              </div>
+              )}
+
+            {/*  story Modal */}
+            {selectedStory && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                <div className="bg-white rounded-2xl p-6 relative">
+                  {/* Close Button */}
+                  <button
+                    onClick={closeStoryModal}
+                    className="absolute top-4 right-4 text-5xl font-bold text-white bg-black/50 rounded-full w-14 h-14 flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all"
+                  >
+                    &times;
+                  </button>
+
+                  {/* Story Content */}
+                  <img
+                    src={selectedStory.story_image || selectedStory.image}
+                    alt={selectedStory.title || selectedStory.story_name}
+                    className="w-full h-[250px] object-cover rounded-lg mb-4"
+                  />
+                  <h3 className="text-xl font-bold mb-2 text-black">
+                    {selectedStory.title || selectedStory.story_title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {selectedStory.date || selectedStory.created_at?.split("T")[0]}
+                  </p>
+                  <p className="text-gray-800">
+                    {selectedStory.description || selectedStory.story_description || "No description available"}
+                  </p>
+                </div>
+              </div>
+            )}
+
+           {/*  coach Modal */}
+            {selectedCoach && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                <div className="bg-white rounded-2xl p-6 relative">
+                  {/* Close Button */}
+                  <button
+                    onClick={closeCoachModal}
+                    className="absolute top-4 right-4 text-5xl font-bold text-white bg-black/50 rounded-full w-14 h-14 flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all"
+                  >
+                    &times;
+                  </button>
+
+                  {/* Coach Content */}
+                  <img
+                    src={selectedCoach.coach_image || selectedCoach.image}
+                    alt={selectedCoach.specialization}
+                    className="w-full h-[250px] object-cover rounded-lg mb-4"
+                  />
+                  <h3 className="text-xl font-bold mb-2 text-black">
+                    {selectedCoach.specialization}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {selectedCoach.date || selectedCoach.created_at?.split("T")[0]}
+                  </p>
+                  <p className="text-gray-800">
+                    {selectedCoach.bio_data || "No description available"}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* end modal */}
+
             {/* Sign Up for Challenge Modal */}
-
-
-
 
             {/* Simple additional CSS for marquee animation (Tailwind doesn't include keyframes here) */}
             <style>{`

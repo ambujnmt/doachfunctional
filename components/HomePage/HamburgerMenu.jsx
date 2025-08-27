@@ -106,7 +106,7 @@ export default function YellowCircleMenu() {
             Contact / Help
           </Link>
           <Link
-            href="privacyPolicy"
+            href={`/dynamicPage?id=terms-and-conditions`}
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
           >
             Privacy & Terms

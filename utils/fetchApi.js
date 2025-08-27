@@ -1,5 +1,6 @@
 import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
+import axios from "axios";
 
 const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
@@ -124,6 +125,7 @@ export const eventHomePage = async () => {
   }
 };
 
+
 export const storiesHomePage = async () => {
   try {
     const response = await fetch(`${baseUrl}api/v1/stories`, {
@@ -163,6 +165,35 @@ export const coachesHomePage = async () => {
   } catch (error) {
     console.error("Error fetching customers:", error);
     return [];
+  }
+};
+
+export const getDynamicPageBySlug = async (slug) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/page/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error("getCoach error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+export const saveSupportMessage = async (formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/v1/customer-support`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
   }
 };
 
