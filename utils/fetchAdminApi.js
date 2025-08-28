@@ -2,7 +2,7 @@ import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; 
 import axios from "axios";
 
-const baseUrl = "http://localhost:8000/";
+const baseUrl = "https://site2demo.in/doach/";
 
 export const loginAdmin = async (formData) => {
   const response = await fetch(`${baseUrl}api/admin/v2/auth/login`, {

@@ -2,7 +2,7 @@ import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
 import axios from "axios";
 
-const baseUrl = "http://localhost:8000/";
+const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
 
 export const registerUser = async (name, email, phone_number, password) => {
