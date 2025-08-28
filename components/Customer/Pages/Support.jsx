@@ -23,7 +23,7 @@ export default function Support() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
+    <div className="bg-gray-100 py-10">
       <div className="w-full bg-white rounded-xl shadow-md p-8">
         {/* Title + Subtitle */}
         <div className="mb-6">

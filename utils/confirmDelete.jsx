@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/admin/v2/", // change if needed
+  baseURL: "https://site2demo.in/doach/api/admin/v2/", // change if needed
 });
 
 export const confirmDelete = async (endpoint, callback) => {
