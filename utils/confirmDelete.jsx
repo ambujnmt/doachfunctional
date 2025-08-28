@@ -1,10 +1,9 @@
-// src/utils/confirmDelete.js
 import Swal from "sweetalert2";
 import axios from "axios";
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: "https://site2demo.in/doach/", // <-- apna base url yaha set karo
+  baseURL: "http://localhost:8000/api/admin/v2/", // change if needed
 });
 
 export const confirmDelete = async (endpoint, callback) => {
@@ -20,9 +19,9 @@ export const confirmDelete = async (endpoint, callback) => {
 
   if (result.isConfirmed) {
     try {
-      await api.delete(endpoint); // sirf endpoint pass karna hoga
+      await api.delete(endpoint); // ✅ works now
       await Swal.fire("Deleted!", "Record has been deleted.", "success");
-      if (callback) callback(); // Optional function to refetch data
+      if (callback) callback(); // refetch after delete
     } catch (error) {
       console.error(error);
       Swal.fire("Failed!", "There was a problem deleting.", "error");

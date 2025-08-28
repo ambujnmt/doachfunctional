@@ -3,6 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { updateProfile } from "../../../utils/fetchAdminApi"; // API call helper
+
+// 🔹 Your backend base URL
+const baseUrl = "http://localhost:8000/"; // change as per your backend
 
 export default function UpdateProfile() {
   const [name, setName] = useState("");
@@ -15,27 +19,22 @@ export default function UpdateProfile() {
 
   const router = useRouter();
 
+  // 🔹 Load admin data from localStorage on mount
   useEffect(() => {
-    async function fetchProfile() {
-      try {
-        // Replace with API call
-        const data = {
-          name: "Admin Name",
-          email: "admin@example.com",
-          phone: "1234567890",
-          profilePic: null,
-        };
-        setName(data.name);
-        setEmail(data.email);
-        setPhone(data.phone);
-        setPreviewPic(data.profilePic);
-      } catch (err) {
-        console.error(err);
-      }
+    const storedAdmin = localStorage.getItem("admin");
+    if (storedAdmin) {
+      const adminData = JSON.parse(storedAdmin);
+      setName(adminData.name || "");
+      setEmail(adminData.email || "");
+      setPhone(adminData.phone || "");
+      setPreviewPic(adminData.profile_pic || null);
+    } else {
+      toast.error("No admin data found. Please login again.");
+      router.push("/login");
     }
-    fetchProfile();
-  }, []);
+  }, [router]);
 
+  // 🔹 Image preview handler
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setProfilePic(file);
@@ -46,6 +45,7 @@ export default function UpdateProfile() {
     }
   };
 
+  // 🔹 Update profile submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !phone) {
@@ -62,11 +62,21 @@ export default function UpdateProfile() {
 
     try {
       setLoading(true);
-      // await updateAdminProfile(formData);
-      toast.success("Profile updated successfully!");
+      const res = await updateProfile(formData);
+
+      if (res.status) {
+        // ✅ Update localStorage with new admin data
+        localStorage.setItem("admin", JSON.stringify(res.data));
+        if (res.data.access_token) {
+          localStorage.setItem("adminAuthToken", res.data.access_token);
+        }
+        toast.success("Profile updated successfully!");
+      } else {
+        toast.error(res.message || "Failed to update profile.");
+      }
     } catch (err) {
       console.error(err);
-      toast.error(err.message || "Failed to update profile.");
+      toast.error("Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -75,15 +85,15 @@ export default function UpdateProfile() {
   return (
     <div className="bg-white shadow-lg rounded-xl p-6 mt-6">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Admin Profile</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
 
-        {/* Profile Image Box */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Profile Image */}
         <div className="flex items-center space-x-4">
           <div className="w-28 h-28 rounded-full border-2 border-gray-300 overflow-hidden flex items-center justify-center bg-gray-100">
             {previewPic ? (
               <img
-                src={previewPic}
-                alt="Profile Preview"
+                src={previewPic} // 👈 अब यहां कोई extra check की जरूरत नहीं
+                alt="Profile"
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -100,7 +110,9 @@ export default function UpdateProfile() {
 
         {/* Name */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Full Name</label>
+          <label className="block text-gray-700 font-medium mb-1">
+            Full Name
+          </label>
           <input
             type="text"
             value={name}
@@ -117,6 +129,7 @@ export default function UpdateProfile() {
           <input
             type="email"
             value={email}
+            readOnly
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter email"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
@@ -139,7 +152,9 @@ export default function UpdateProfile() {
 
         {/* Password */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Password (optional)</label>
+          <label className="block text-gray-700 font-medium mb-1">
+            Password (optional)
+          </label>
           <input
             type="password"
             value={password}
@@ -167,6 +182,7 @@ export default function UpdateProfile() {
           </button>
         </div>
       </form>
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

@@ -2,7 +2,7 @@ import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
 import axios from "axios";
 
-const baseUrl = "https://site2demo.in/doach/";
+const baseUrl = "http://localhost:8000/";
 // const v3BaseUrl = "";
 
 export const registerUser = async (name, email, phone_number, password) => {
@@ -150,6 +150,28 @@ export const storiesHomePage = async () => {
 export const coachesHomePage = async () => {
   try {
     const response = await fetch(`${baseUrl}api/v1/coaches`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+
+export const eventContestAwardsHomePage = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/event-contest-awards`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
