@@ -1,22 +1,46 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getSettings, updateSettings } from "../../../utils/fetchAdminApi";
 
 export default function Configration() {
   const [websiteName, setWebsiteName] = useState("");
   const [websiteEmail, setWebsiteEmail] = useState("");
   const [websitePhone, setWebsitePhone] = useState("");
-  const [webLogo, setWebLogo] = useState(null);
+  const [websiteAddress, setWebsiteAddress] = useState("");
   const [footerInfo, setFooterInfo] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [webLogo, setWebLogo] = useState(null);
 
   const [previewLogo, setPreviewLogo] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // image preview
+  // ✅ Fetch settings on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getSettings();
+        if (res.status && res.data) {
+          setWebsiteName(res.data.website_name || "");
+          setWebsiteEmail(res.data.website_email || "");
+          setWebsitePhone(res.data.website_phone || "");
+          setWebsiteAddress(res.data.website_address || "");
+          setFooterInfo(res.data.footer_info || "");
+
+          if (res.data.web_logo) {
+            setPreviewLogo(res.data.web_logo); // ✅ use directly
+          }
+        }
+      } catch (err) {
+        toast.error("Failed to fetch settings.");
+      }
+    };
+    fetchData();
+  }, []);
+
+  // image preview + set
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     setWebLogo(file);
@@ -24,11 +48,10 @@ export default function Configration() {
       const reader = new FileReader();
       reader.onloadend = () => setPreviewLogo(reader.result);
       reader.readAsDataURL(file);
-    } else {
-      setPreviewLogo(null);
     }
   };
 
+  // ✅ Save settings
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,17 +64,16 @@ export default function Configration() {
     formData.append("website_name", websiteName);
     formData.append("website_email", websiteEmail);
     formData.append("website_phone", websitePhone);
+    formData.append("website_address", websiteAddress);
     formData.append("footer_info", footerInfo);
     if (webLogo) formData.append("web_logo", webLogo);
 
     try {
       setLoading(true);
-      // replace this with your API helper
-      // await updateSettings(formData);
+      await updateSettings(formData);
       toast.success("Settings updated successfully!");
-      setTimeout(() => router.push("/administor/dashboard"), 2000);
+      setTimeout(() => router.push("/administor/dashboard"), 1500);
     } catch (error) {
-      console.error(error);
       toast.error(error.message || "Failed to update settings.");
     } finally {
       setLoading(false);
@@ -62,7 +84,6 @@ export default function Configration() {
     <div className="bg-white shadow-lg rounded-xl p-6 mt-6">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Website Settings</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
-
         {/* Website Name */}
         <div>
           <label className="block text-gray-700 font-medium mb-1">Website Name</label>
@@ -99,6 +120,18 @@ export default function Configration() {
             placeholder="Enter website phone"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
             required
+          />
+        </div>
+
+        {/* Website Address */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Website Address</label>
+          <input
+            type="text"
+            value={websiteAddress}
+            onChange={(e) => setWebsiteAddress(e.target.value)}
+            placeholder="Enter website address"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
           />
         </div>
 

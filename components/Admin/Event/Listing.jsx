@@ -66,7 +66,7 @@ export default function Listing() {
             {/* Search Box */}
             <input
               type="text"
-              placeholder="Search by name, description, or date..."
+              placeholder="🔍 Search by name, description, or date..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);

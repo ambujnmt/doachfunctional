@@ -23,19 +23,19 @@ export default function HomeFooter() {
                                     </Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                    <Link href="/shop">Shop</Link>
+                                    <Link className="no-underline text-dark" href="/shop">Shop</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                    <Link href="/company">Company</Link>
+                                    <Link className="no-underline text-dark" href="/company">Company</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                    <Link href="/media">Media</Link>
+                                    <Link className="no-underline text-dark" href="/media">Media</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                    <Link href="/careers">Careers</Link>
+                                    <Link className="no-underline text-dark" href="/careers">Careers</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                    <Link href="/contactUs">Contact Us</Link>
+                                    <Link className="no-underline text-dark" href="/contactUs">Contact Us</Link>
                                 </div>
                             </div>
                         </div>
@@ -44,25 +44,25 @@ export default function HomeFooter() {
                             <div className="text-left">
                                 <div className="xl:mt-12 mt-0"></div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=private-policy`}>Private Policy</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=private-policy`}>Private Policy</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=terms-and-conditions`}>Terms</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=terms-and-conditions`}>Terms</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=private-policy`}>Cookie Settings</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=private-policy`}>Cookie Settings</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=accessibility`}>Accessibility</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=accessibility`}>Accessibility</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=fraud-warning`}>Fraud Warning</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=fraud-warning`}>Fraud Warning</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=do-not-sell-or-share`}>Do Not Sell/Share My Personal Infomation</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=do-not-sell-or-share`}>Do Not Sell/Share My Personal Infomation</Link>
                                 </div>
                                 <div className="text-black text-[15px] font-bold no-underline text-dark">
-                                     <Link href={`/dynamicPage?id=doach-circle-rules`}>DOACH Circle Rules</Link>
+                                     <Link className="no-underline text-dark" href={`/dynamicPage?id=doach-circle-rules`}>DOACH Circle Rules</Link>
                                 </div>
                             </div>
                         </div>
