@@ -3,7 +3,7 @@ import Header from "../../../components/Customer/Layouts/Header";
 import Sidebar from "../../../components/Customer/Layouts/SideBar";
 import Footer from "../../../components/Customer/Layouts/Footer";
 import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
-import MySession from "../../../components/Customer/MySession/MySession";
+import MySession from "../../../components/Customer/MySession/Listing";
 
 export default function session() {
   const [menuOpen, setMenuOpen] = useState(false); 
