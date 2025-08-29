@@ -86,56 +86,72 @@ export default function YellowCircleMenu() {
               </Link>
             </>
           ) : (
+            <>
             <Link
               href="/customer/dashboard"
               className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
             >
               Dashboard
             </Link>
+
+            <Link
+              href="/customer/dashboard"
+              className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+            >
+              Unleash a Session
+            </Link>
+
+            <Link
+              href="/customer/profile/info"
+              className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+            >
+              My Account
+            </Link>
+             </>
           )}
+
+          <Link
+              href="/event/listing"
+              className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+            >
+              DOACH Events
+            </Link>
+
+            <Link
+            href="/community"
+            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+          >
+            Community
+          </Link>
+
           <Link
             href="/contests"
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
           >
-            Events / Contests / Awards
+            Challenge/Awards
           </Link>
-          <Link
-            href="contactUs"
-            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Contact / Help
-          </Link>
-          <Link
-            href={`/dynamicPage?id=terms-and-conditions`}
-            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Privacy & Terms
-          </Link>
+
           <Link
             href="#"
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
           >
             Download App
           </Link>
-          <Link
-            href="#"
-            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
-          >
-            Sessions
-          </Link>
+
           <Link
             href="#"
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
           >
             MyDoach
           </Link>
+
           {isLoggedIn && (
-            <a
+            <Link
               onClick={handleLogout}
               className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
             >
               Logout
-            </a>
+            </Link>
           )}
           
         </div>

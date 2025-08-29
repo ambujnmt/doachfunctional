@@ -16,9 +16,9 @@ export default function Login() {
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    if (token && user?.onboarding_complete == 1) {
+    if (token && Number(user?.onboarding_complete) === 1) {
       router.push("/customer/dashboard");
-    } else if (token && user?.onboarding_complete != 1) {
+    } else if (token) {
       router.push("/onboarding");
     }
   }, [router]);
@@ -42,7 +42,7 @@ export default function Login() {
 
       toast.success("Login successful!");
       setTimeout(() => {
-        if (res.data.onboarding_complete === 1) {
+        if (Number(res.data.onboarding_complete) === 1) {
           router.push("/customer/dashboard");
         } else {
           router.push("/onboarding");

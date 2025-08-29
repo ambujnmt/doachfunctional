@@ -5,23 +5,26 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function UpdateProfile() {
-  const [profileData, setProfileData] = useState(null);
-  const [onboardingData, setOnboardingData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState({});
+  const [onboardingData, setOnboardingData] = useState({});
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = 25; // replace dynamically if needed
-      const response = await getUserData(userId);
-      setProfileData(response.data);
-      setOnboardingData(response.onboarding);
-      setLoading(false);
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
+      try {
+        const response = await getUserData(userId);
+        if (response.data) setProfileData((prev) => ({ ...prev, ...response.data }));
+        if (response.onboarding) setOnboardingData((prev) => ({ ...prev, ...response.onboarding }));
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
     };
+
     fetchData();
   }, []);
-
-  if (loading) return <p className="p-6">Loading data...</p>;
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -46,6 +49,18 @@ export default function UpdateProfile() {
       setSaving(false);
     }
   };
+
+  const formatArrayField = (field) => {
+  if (!field) return "";
+  if (Array.isArray(field)) return field.join(", ");
+  try {
+    const parsed = JSON.parse(field);
+    if (Array.isArray(parsed)) return parsed.join(", ");
+    return String(parsed);
+  } catch {
+    return String(field);
+  }
+};
 
   return (
     <div className="py-6 bg-gray-100 min-h-screen">
@@ -100,146 +115,146 @@ export default function UpdateProfile() {
         </div>
 
         {/* Onboarding Fields */}
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Onboarding Info</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="font-semibold">Handle</label>
-                <input
-                  type="text"
-                  name="handle"
-                  value={onboardingData.handle || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Age</label>
-                <input
-                  type="text"
-                  name="age"
-                  value={onboardingData.age || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Height</label>
-                <input
-                  type="text"
-                  name="height"
-                  value={onboardingData.height || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Weight</label>
-                <input
-                  type="text"
-                  name="weight"
-                  value={onboardingData.weight || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Position</label>
-                <input
-                  type="text"
-                  name="position"
-                  value={onboardingData.position || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Level</label>
-                <input
-                  type="text"
-                  name="level"
-                  value={onboardingData.level || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Goal</label>
-                <input
-                  type="text"
-                  name="goal"
-                  value={onboardingData.goal || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Primary Sport</label>
-                <input
-                  type="text"
-                  name="primary_sport"
-                  value={onboardingData.primary_sport || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Skill Level</label>
-                <input
-                  type="text"
-                  name="skill_level"
-                  value={onboardingData.skill_level || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="font-semibold">Mode</label>
-                <input
-                  type="text"
-                  name="mode"
-                  value={onboardingData.mode || ""}
-                  onChange={handleOnboardingChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Onboarding Info</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="font-semibold">Handle</label>
+              <input
+                type="text"
+                name="handle"
+                value={onboardingData.handle || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
             </div>
 
-            {/* Arrays */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="font-semibold mb-2">Training Goals (comma separated)</label>
-                <input
-                  type="text"
-                  name="training_goals"
-                  value={onboardingData.training_goals ? JSON.parse(onboardingData.training_goals) : ""}
-                  onChange={(e) =>
-                    handleOnboardingChange({
-                      target: {
-                        name: "training_goals",
-                        value: JSON.stringify(e.target.value.split(",").map((v) => v.trim())),
-                      },
-                    })
-                  }
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
+            <div>
+              <label className="font-semibold">Age</label>
+              <input
+                type="text"
+                name="age"
+                value={onboardingData.age || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-              <div>
-                <label className="font-semibold mb-2">Skills (comma separated)</label>
-                <input
+            <div>
+              <label className="font-semibold">Height</label>
+              <input
+                type="text"
+                name="height"
+                value={onboardingData.height || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Weight</label>
+              <input
+                type="text"
+                name="weight"
+                value={onboardingData.weight || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Position</label>
+              <input
+                type="text"
+                name="position"
+                value={onboardingData.position || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Level</label>
+              <input
+                type="text"
+                name="level"
+                value={onboardingData.level || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Goal</label>
+              <input
+                type="text"
+                name="goal"
+                value={onboardingData.goal || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Primary Sport</label>
+              <input
+                type="text"
+                name="primary_sport"
+                value={onboardingData.primary_sport || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Skill Level</label>
+              <input
+                type="text"
+                name="skill_level"
+                value={onboardingData.skill_level || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Mode</label>
+              <input
+                type="text"
+                name="mode"
+                value={onboardingData.mode || ""}
+                onChange={handleOnboardingChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+          </div>
+
+          {/* Arrays */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="font-semibold mb-2">Training Goals (comma separated)</label>
+              <input
+                type="text"
+                name="training_goals"
+                value={formatArrayField(onboardingData.training_goals)}
+                onChange={(e) =>
+                  handleOnboardingChange({
+                    target: {
+                      name: "training_goals",
+                      value: JSON.stringify(e.target.value.split(",").map((v) => v.trim())),
+                    },
+                  })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold mb-2">Skills (comma separated)</label>
+              <input
                   type="text"
                   name="skills"
-                  value={onboardingData.skills ? JSON.parse(onboardingData.skills) : ""}
+                  value={formatArrayField(onboardingData.skills)}
                   onChange={(e) =>
                     handleOnboardingChange({
                       target: {
@@ -250,9 +265,9 @@ export default function UpdateProfile() {
                   }
                   className="w-full border rounded px-3 py-2"
                 />
-              </div>
             </div>
           </div>
+        </div>
 
         <button
           type="submit"

@@ -8,14 +8,24 @@ export default function GetProfile() {
   const [onboardingData, setOnboardingData] = useState({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
-      const userId = 25;
-      const response = await getUserData(userId);
-      console.log("Fetched user data:", response);
-      setProfileData(response.data || {});
-      setOnboardingData(response.onboarding || {});
-      setLoading(false);
+      // Get the user ID from localStorage
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        console.error("No user ID found in localStorage");
+        return;
+      }
+      try {
+        const response = await getUserData(userId);
+        console.log("Fetched user data:", response);
+        setProfileData(response.data || {});
+        setOnboardingData(response.onboarding || {});
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -38,7 +48,7 @@ export default function GetProfile() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-700">Profile Info</h2>
           <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
-            <Link href="/customer/profile/update">Edit Profile</Link>
+            <Link className="no-underline text-white" href="/customer/profile/update">Edit Profile</Link>
           </button>
         </div>
 

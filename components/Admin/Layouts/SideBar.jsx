@@ -26,7 +26,7 @@ export default function SideBar({ menuOpen }) {
     { name: "Stories", icon: <FaBookOpen className="text-indigo-500" />, href: "/administor/stories/listing" },
     { name: "Brands", icon: <FaTag className="text-orange-500" />, href: "/administor/brand/listing" },
     { name: "Coaches", icon: <FaChalkboardTeacher className="text-teal-500" />, href: "/administor/coach/listing" },
-    { name: "Community", icon: <FaComments className="text-purple-500" />, href: "/community" },
+    { name: "Community", icon: <FaComments className="text-purple-500" />, href: "/administor/dashboard" },
     { name: "Event Contests", icon: <FaTrophy className="text-yellow-500" />, href: "/administor/eventContests/listing" },
     { name: "Pages", icon: <FaListAlt className="text-yellow-500" />, href: "/administor/pages/dynamic" },
     { name: "Support", icon: <FaHeadset className="text-red-500" />, href: "/administor/pages/support" },

@@ -1,21 +1,27 @@
+"use client"; // needed in App Router
 import React from "react";
 import {
   FaHome,
-  FaUser,
   FaUsers,
   FaPhoneAlt,
   FaHeadset,
-  FaStar,
   FaSignOutAlt,
-  FaVideo,   
+  FaVideo,
   FaHistory,
   FaFire,
-  FaUserTie ,
-  FaCog,
+  FaUserTie,
+  FaUser,
 } from "react-icons/fa";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar({ menuOpen }) {
+  const pathname = usePathname();
+
+  // helper for active link
+  const isActive = (path) =>
+    pathname === path ? "bg-gray-700 text-yellow-400" : "text-white";
+
   return (
     <aside
       className={`
@@ -34,38 +40,48 @@ export default function Sidebar({ menuOpen }) {
       <nav className="flex flex-col space-y-3">
         <Link
           href="/customer/dashboard"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/dashboard"
+          )}`}
         >
           <FaHome /> <span>Dashboard</span>
         </Link>
 
         <Link
           href="/customer/community"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/community"
+          )}`}
         >
           <FaUsers /> <span>Community</span>
         </Link>
 
-        <Link
-          href="/customer/profile/info"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        {/* <Link
+          href="/customer/video/demoVideo"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/video/demoVideo"
+          )}`}
         >
           <FaVideo /> <span>Demo Video List</span>
-        </Link>
+        </Link> */}
 
         <Link
-          href="/customer/profile/info"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+          href="/customer/session/history"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/session/history"
+          )}`}
         >
-          <FaHistory /> <span>Session History</span>
+          <FaHistory /> <span>Session</span>
         </Link>
 
-        <Link
-          href="/customer/profile/info"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        {/* <Link
+          href="/customer/mySteak/steaks"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/mySteak/steaks"
+          )}`}
         >
           <FaFire /> <span>My Steak</span>
-        </Link>
+        </Link> */}
 
         <Link
           href="/customer/profile/info"
@@ -75,36 +91,44 @@ export default function Sidebar({ menuOpen }) {
         </Link>
 
         <Link
-          href="/customer/page/support"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+          href="/customer/page/contact"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/page/contact"
+          )}`}
         >
           <FaPhoneAlt /> <span>Contact</span>
         </Link>
 
         <Link
           href="/customer/page/support"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/page/support"
+          )}`}
         >
           <FaHeadset /> <span>Support</span>
         </Link>
 
-        <Link
-          href="/customer/dashboard"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
+        {/* <Link
+          href="/customer/dashboard/setting"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/dashboard/setting"
+          )}`}
         >
-          <FaCog  /> <span>Setting</span>
+          <FaCog /> <span>Setting</span>
+        </Link> */}
+
+        <Link
+          href="/customer/mySession/session"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/myDoach/doach"
+          )}`}
+        >
+          <FaUserTie /> <span>My Session</span>
         </Link>
 
         <Link
-          href="/customer/dashboard"
-          className="flex items-center space-x-2 hover:bg-gray-700 p-2 rounded no-underline text-white"
-        >
-          <FaUserTie  /> <span>My Doach</span>
-        </Link>
-
-        <Link
-          href="/customer/dashboard"
-          className="flex items-center space-x-2 hover:bg-red-600 p-2 rounded no-underline text-white"
+          href="/logout"
+          className="flex items-center space-x-2 p-2 rounded no-underline hover:bg-red-600 text-white"
         >
           <FaSignOutAlt /> <span>Logout</span>
         </Link>
@@ -112,4 +136,3 @@ export default function Sidebar({ menuOpen }) {
     </aside>
   );
 }
-
