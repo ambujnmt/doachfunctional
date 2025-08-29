@@ -147,7 +147,7 @@ export default function Sidebar({ menuOpen }) {
         </Link> */}
 
         <Link
-          href="/customer/mySession/session"
+          href="/customer/mySession/listing"
           className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
             "/customer/myDoach/doach"
           )}`}

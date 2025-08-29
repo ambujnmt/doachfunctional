@@ -3,7 +3,7 @@ import Header from "../../../components/Customer/Layouts/Header";
 import Sidebar from "../../../components/Customer/Layouts/SideBar";
 import Footer from "../../../components/Customer/Layouts/Footer";
 import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
-import History from "../../../components/Customer/Session/History";
+import Listing from "../../../components/Customer/Session/Listing";
 
 export default function listing() {
   const [menuOpen, setMenuOpen] = useState(false); 
@@ -23,7 +23,7 @@ export default function listing() {
           
           {/* Dashboard content */}
           <div className="flex-1">
-            <History />
+            <Listing />
           </div>
 
           {/* Footer INSIDE dashboard */}
