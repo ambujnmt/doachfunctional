@@ -39,7 +39,7 @@ export default function Login() {
       localStorage.setItem("authToken", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(res.data));
       localStorage.setItem("userId", res.data.id);
-
+     console.log(res.data);
       toast.success("Login successful!");
       setTimeout(() => {
         if (Number(res.data.onboarding_complete) === 1) {
@@ -47,7 +47,7 @@ export default function Login() {
         } else {
           router.push("/onboarding");
         }
-      }, 1000);
+      }, 3000);
     } catch (err) {
       toast.error(err.message || "Login failed");
     } finally {

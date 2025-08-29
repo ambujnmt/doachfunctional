@@ -1,5 +1,7 @@
 "use client"; // needed in App Router
 import React from "react";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 import {
   FaHome,
   FaUsers,
@@ -17,10 +19,37 @@ import { usePathname } from "next/navigation";
 
 export default function Sidebar({ menuOpen }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   // helper for active link
   const isActive = (path) =>
     pathname === path ? "bg-gray-700 text-yellow-400" : "text-white";
+  
+  const handleLogout = () => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will be logged out of your account.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Logout!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("authToken");
+          Swal.fire({
+            title: "Logged Out!",
+            text: "Your session has been ended.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
+        }
+      });
+    };
 
   return (
     <aside
@@ -66,7 +95,7 @@ export default function Sidebar({ menuOpen }) {
         </Link> */}
 
         <Link
-          href="/customer/session/history"
+          href="/customer/session/listing"
           className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
             "/customer/session/history"
           )}`}
@@ -125,13 +154,12 @@ export default function Sidebar({ menuOpen }) {
         >
           <FaUserTie /> <span>My Session</span>
         </Link>
-
-        <Link
-          href="/logout"
-          className="flex items-center space-x-2 p-2 rounded no-underline hover:bg-red-600 text-white"
-        >
-          <FaSignOutAlt /> <span>Logout</span>
-        </Link>
+        <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 p-2 rounded no-underline hover:bg-red-600 text-white"
+              >
+                 <FaSignOutAlt /> <span>Logout</span>
+              </button>
       </nav>
     </aside>
   );

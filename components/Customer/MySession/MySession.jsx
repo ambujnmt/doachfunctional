@@ -1,49 +1,57 @@
 import React from "react";
 
 export default function MySession() {
-  const coaches = [
+  const sessions = [
     {
-      name: "John Smith",
-      title: "Fitness Coach",
-      bio: "Helping people achieve their health and fitness goals.",
-      image: "https://via.placeholder.com/150",
+      id: 1,
+      date: "2025-08-20",
+      title: "Shooting Drill",
+      duration: "45 mins",
+      status: "Completed",
     },
     {
-      name: "Emily Johnson",
-      title: "Life Coach",
-      bio: "Guiding individuals to unlock their full potential.",
-      image: "https://via.placeholder.com/150",
+      id: 2,
+      date: "2025-08-22",
+      title: "Ball Handling Practice",
+      duration: "30 mins",
+      status: "Missed",
     },
     {
-      name: "David Lee",
-      title: "Business Coach",
-      bio: "Empowering entrepreneurs to grow and scale successfully.",
-      image: "https://via.placeholder.com/150",
+      id: 3,
+      date: "2025-08-25",
+      title: "Strength Training",
+      duration: "60 mins",
+      status: "Completed",
     },
   ];
 
   return (
     <div className="py-6 bg-gray-100 min-h-screen">
-      {/* Heading */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Meet Our Coaches</h1>
-        <p className="text-gray-500 text-sm mt-1">
-          Our expert coaches are here to guide, support, and inspire you on your journey.
-        </p>
+        <h1 className="text-3xl font-bold text-gray-800">Session History</h1>
+        <p className="text-gray-600 mt-1">Explore Session History</p>
       </div>
-
-      {/* Coach Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {coaches.map((coach, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
-            <img
-              src={coach.image}
-              alt={coach.name}
-              className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
-            />
-            <h3 className="text-lg font-semibold">{coach.name}</h3>
-            <p className="text-sm text-blue-600">{coach.title}</p>
-            <p className="text-gray-600 mt-2 text-sm">{coach.bio}</p>
+      <div className="space-y-4">
+        {sessions.map((session) => (
+          <div
+            key={session.id}
+            className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+          >
+            <div>
+              <h3 className="font-semibold text-lg">{session.title}</h3>
+              <p className="text-sm text-gray-600">
+                {session.date} • {session.duration}
+              </p>
+            </div>
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                session.status === "Completed"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {session.status}
+            </span>
           </div>
         ))}
       </div>

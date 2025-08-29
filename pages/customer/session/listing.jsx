@@ -5,7 +5,7 @@ import Footer from "../../../components/Customer/Layouts/Footer";
 import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
 import History from "../../../components/Customer/Session/History";
 
-export default function demoVideo() {
+export default function listing() {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   return (

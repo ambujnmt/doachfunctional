@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DashboardBox from "./DashboardBox";
 
 // Scoreboard Component
@@ -223,10 +223,20 @@ function DashboardHighlights({ highlights }) {
 
 // Main Dashboard
 export default function Dashboard() {
+  const [userName, setUserName] = useState("Player");
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      setUserName(user.name); // assuming API response me name field hai
+    }
+  }, []);
+
   return (
     <div className="py-6 bg-gray-100 min-h-screen px-2 sm:px-6 lg:px-12">
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Hi, Player Handle!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Hi, {userName}!</h1>
       </div>
 
       {/* Sections */}
