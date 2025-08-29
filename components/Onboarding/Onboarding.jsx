@@ -45,9 +45,18 @@ export default function Onboarding() {
   ];
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    if (user?.onboarding_complete === 1) router.replace("/customer/dashboard");
-  }, [router]);
+  try {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user?.onboarding_complete === 1) {
+        router.replace("/customer/dashboard");
+      }
+    }
+  } catch (err) {
+    console.error("Error parsing user data:", err);
+  }
+}, [router]);
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
@@ -69,7 +78,7 @@ export default function Onboarding() {
         ...u,
         ...data.data,
         skills: JSON.parse(data.data.skills || "[]"),
-        onboarding_complete: true,
+        onboarding_complete: 1,
       };
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -142,9 +151,9 @@ export default function Onboarding() {
               onChange={(e) => setForm({ ...form, primarySport: e.target.value })}
               className="w-full px-4 py-2 rounded-md border border-gray-500 bg-transparent text-white placeholder-gray-400"
             >
-              <option value="">Select Primary Sport</option>
+              <option className="text-dark" value="">Select Primary Sport</option>
               {["Basketball", "Volleyball", "Golf", "Soccer", "Tennis"].map((sport) => (
-                <option key={sport} value={sport}>{sport}</option>
+                <option className="text-dark" key={sport} value={sport}>{sport}</option>
               ))}
             </select>
             <select
@@ -152,9 +161,9 @@ export default function Onboarding() {
               onChange={(e) => setForm({ ...form, skillLevel: e.target.value })}
               className="w-full px-4 py-2 rounded-md border border-gray-500 bg-transparent text-white placeholder-gray-400"
             >
-              <option value="">Select Skill Level</option>
+              <option className="text-dark" value="">Select Skill Level</option>
               {["Beginner", "Intermediate", "Advanced", "Elite"].map((level) => (
-                <option key={level} value={level}>{level}</option>
+                <option className="text-dark" key={level} value={level}>{level}</option>
               ))}
             </select>
             <div className="flex flex-wrap gap-2 mt-2">
