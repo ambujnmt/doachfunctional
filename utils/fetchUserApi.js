@@ -65,4 +65,14 @@ export const updateUserData = async (onboardingId, payload) => {
   }
 };
 
+export const getSubscribedDetailById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/subscribed-detail/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getCustomerDetail error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
 

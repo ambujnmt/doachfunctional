@@ -11,6 +11,8 @@ import {
   FaBookOpen,
   FaTag,
   FaChalkboardTeacher,
+  FaCreditCard,
+  FaUserCheck ,
 } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -30,6 +32,8 @@ export default function SideBar({ menuOpen }) {
     { name: "Event Contests", icon: <FaTrophy className="text-yellow-500" />, href: "/administor/eventContests/listing" },
     { name: "Pages", icon: <FaListAlt className="text-yellow-500" />, href: "/administor/pages/dynamic" },
     { name: "Support", icon: <FaHeadset className="text-red-500" />, href: "/administor/pages/support" },
+    { name: "Subscription", icon: <FaCreditCard className="text-red-500" />, href: "/administor/subscription/listing" },
+    { name: "Subscribed", icon: <FaUserCheck  className="text-red-500" />, href: "/administor/customer/subscribedCustomer" },
     { name: "Settings", icon: <FaCog className="text-gray-600" />, href: "/administor/settings/configration" },
   ];
 

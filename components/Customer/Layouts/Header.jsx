@@ -75,7 +75,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
         <Link href="/customer/community" className="hover:text-gray-200 no-underline text-white">Community</Link>
         <Link href="/contactUs" className="hover:text-gray-200 no-underline text-white">Contact Us</Link>
         <Link href="/customer/profile/info" className="hover:text-gray-200 no-underline text-white">Profile</Link>
-        <Link href="/customer/dashboard" className="hover:text-gray-200 no-underline text-white">Member Ship</Link>
+        <Link href="/subscription" className="hover:text-gray-200 no-underline text-white">Member Ship</Link>
       </nav>
 
       {/* Right Profile + Notification */}
