@@ -103,14 +103,14 @@ export default function Sidebar({ menuOpen }) {
           <FaHistory /> <span>Session</span>
         </Link>
 
-        {/* <Link
-          href="/customer/mySteak/steaks"
+        <Link
+          href="/customer/profile/subscribedDetail"
           className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
             "/customer/mySteak/steaks"
           )}`}
         >
-          <FaFire /> <span>My Steak</span>
-        </Link> */}
+          <FaFire /> <span>Your Plan</span>
+        </Link>
 
         <Link
           href="/customer/profile/info"

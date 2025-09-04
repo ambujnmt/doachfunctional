@@ -220,6 +220,29 @@ export const saveSupportMessage = async (formData) => {
 };
 
 
+export const getSubscriptionsList = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/subscriptions`);
+    return response.data.data || [];
+  } catch (error) {
+    console.error("Error fetching subscriptions:", error);
+    return [];
+  }
+};
+
+export const checkoutSubscription = async (payload) => {
+  try {
+    const res = await axios.post(`${baseUrl}api/v1/subscription/checkout`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res.data; // { url: "https://checkout.stripe.com/..." }
+  } catch (error) {
+    console.error("checkoutSubscription error:", error);
+    return { url: null, error: error.message };
+  }
+};
 
 
 

@@ -475,3 +475,107 @@ export const updateSettings = async (formData) => {
 };
 
 
+// ----------------- Get Subscription  -----------------
+export const createSubscription = async (formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/subscription-plan/create`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
+
+export const getSubscriptionById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/admin/v2/subscription-plan/view/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getCoach error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+
+export const updateSubscription = async (id, data) => {
+  const res = await fetch(`${baseUrl}api/admin/v2/subscription-plan/update/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to update subscription");
+  }
+
+  return res.json();
+};
+
+
+export const getSubscriptionsList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/subscription-plan/list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+
+export const getSubscribedCustomers = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/subscribed-customers`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const getSubscribedCustomerDetailById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/admin/v2/subscribed-customer-detail/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getCustomerDetail error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+
