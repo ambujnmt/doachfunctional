@@ -51,25 +51,25 @@ export default function UpdateProfile() {
   };
 
   const formatArrayField = (field) => {
-  if (!field) return "";
-  if (Array.isArray(field)) return field.join(", ");
-  try {
-    const parsed = JSON.parse(field);
-    if (Array.isArray(parsed)) return parsed.join(", ");
-    return String(parsed);
-  } catch {
-    return String(field);
-  }
-};
+    if (!field) return "";
+    if (Array.isArray(field)) return field.join(", ");
+    try {
+      const parsed = JSON.parse(field);
+      if (Array.isArray(parsed)) return parsed.join(", ");
+      return String(parsed);
+    } catch {
+      return String(field);
+    }
+  };
 
   return (
-    <div className="py-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Edit Profile</h1>
+    <div className="py-6 bg-black text-white">
+      <h1 className="text-3xl font-bold mb-6 text-yellow-400">Edit Profile</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Profile Fields */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Profile Info</h2>
+        <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-yellow-400">Profile Info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="font-semibold">Name</label>
@@ -78,7 +78,7 @@ export default function UpdateProfile() {
                 name="name"
                 value={profileData.name || ""}
                 onChange={handleProfileChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
             <div>
@@ -88,7 +88,7 @@ export default function UpdateProfile() {
                 name="email"
                 value={profileData.email || ""}
                 onChange={handleProfileChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
             <div>
@@ -98,7 +98,7 @@ export default function UpdateProfile() {
                 name="phone_number"
                 value={profileData.phone_number || ""}
                 onChange={handleProfileChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
             <div>
@@ -108,15 +108,15 @@ export default function UpdateProfile() {
                 name="address"
                 value={profileData.address || ""}
                 onChange={handleProfileChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
           </div>
         </div>
 
         {/* Onboarding Fields */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Onboarding Info</h2>
+        <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-yellow-400">Onboarding Info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="font-semibold">Handle</label>
@@ -125,7 +125,7 @@ export default function UpdateProfile() {
                 name="handle"
                 value={onboardingData.handle || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -136,7 +136,7 @@ export default function UpdateProfile() {
                 name="age"
                 value={onboardingData.age || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -147,7 +147,7 @@ export default function UpdateProfile() {
                 name="height"
                 value={onboardingData.height || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -158,7 +158,7 @@ export default function UpdateProfile() {
                 name="weight"
                 value={onboardingData.weight || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -169,7 +169,7 @@ export default function UpdateProfile() {
                 name="position"
                 value={onboardingData.position || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -180,7 +180,7 @@ export default function UpdateProfile() {
                 name="level"
                 value={onboardingData.level || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -191,7 +191,7 @@ export default function UpdateProfile() {
                 name="goal"
                 value={onboardingData.goal || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -202,7 +202,7 @@ export default function UpdateProfile() {
                 name="primary_sport"
                 value={onboardingData.primary_sport || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -213,7 +213,7 @@ export default function UpdateProfile() {
                 name="skill_level"
                 value={onboardingData.skill_level || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
@@ -224,7 +224,7 @@ export default function UpdateProfile() {
                 name="mode"
                 value={onboardingData.mode || ""}
                 onChange={handleOnboardingChange}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
           </div>
@@ -245,26 +245,26 @@ export default function UpdateProfile() {
                     },
                   })
                 }
-                className="w-full border rounded px-3 py-2"
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
               />
             </div>
 
             <div>
               <label className="font-semibold mb-2">Skills (comma separated)</label>
               <input
-                  type="text"
-                  name="skills"
-                  value={formatArrayField(onboardingData.skills)}
-                  onChange={(e) =>
-                    handleOnboardingChange({
-                      target: {
-                        name: "skills",
-                        value: JSON.stringify(e.target.value.split(",").map((v) => v.trim())),
-                      },
-                    })
-                  }
-                  className="w-full border rounded px-3 py-2"
-                />
+                type="text"
+                name="skills"
+                value={formatArrayField(onboardingData.skills)}
+                onChange={(e) =>
+                  handleOnboardingChange({
+                    target: {
+                      name: "skills",
+                      value: JSON.stringify(e.target.value.split(",").map((v) => v.trim())),
+                    },
+                  })
+                }
+                className="w-full border border-gray-600 rounded px-3 py-2 bg-black text-white focus:outline-none focus:border-yellow-400"
+              />
             </div>
           </div>
         </div>
@@ -272,7 +272,7 @@ export default function UpdateProfile() {
         <button
           type="submit"
           disabled={saving}
-          className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+          className="bg-yellow-400 text-black px-6 py-2 rounded-md hover:bg-yellow-500 transition"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>

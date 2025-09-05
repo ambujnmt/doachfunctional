@@ -1,18 +1,23 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createEvent } from "../../../utils/fetchAdminApi";
+import { createcommunityList } from "../../../utils/fetchAdminApi"; // ✅ Correct API function
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import dynamic from "next/dynamic";
 
-export default function Create() {
-  const [eventName, setEventName] = useState("");
-  const [eventDate, setEventDate] = useState("");
+// Dynamically import React Quill
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+
+export default function CreateCommunity() {
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState(""); // Event category
-  const [image, setImage] = useState(null); // Event image
+  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [video, setVideo] = useState(null); // Video file
+  const [video, setVideo] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -44,78 +49,72 @@ export default function Create() {
     }
   };
 
-  // Submit form
+  // Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
-    if (!eventName || !description || !eventDate || !image || !category) {
-      alert("Please fill all fields and upload an image.");
-      return;
-    }
-
-    if (category === "video_content" && !video) {
-      alert("Please upload a video for Video Content category.");
+    if (!title || !category || !description || !image || !date) {
+      toast.error("Please fill all fields and upload an image.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("event_name", eventName);
-    formData.append("event_date", eventDate);
-    formData.append("description", description);
+    formData.append("title", title);
+    formData.append("date", date);
     formData.append("category", category);
+    formData.append("description", description);
     formData.append("image", image);
 
-    if (category === "video_content" && video) {
+    if (video) {
       formData.append("video", video);
     }
 
     try {
       setLoading(true);
-      await createEvent(formData);
-      toast.success("Event Created successfully!");
-      setTimeout(() => {
-        router.push("/administor/event/listing");
-      }, 2000);
+      await createcommunityList(formData); // ✅ Correct API call
+      toast.success("Community content created successfully!");
+      setTimeout(() => router.push("/administor/community/listing"), 2000);
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Failed to create event.");
+      toast.error(error.message || "Failed to create content.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Create Event</h1>
+    <div className="bg-white shadow-lg rounded-xl p-6 mt-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        Create Community Content
+      </h1>
+
       <form onSubmit={handleSubmit} className="space-y-5">
-        
-        {/* Event Name */}
+        {/* Title */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Event Name</label>
+          <label className="block text-gray-700 font-medium mb-1">Title</label>
           <input
             type="text"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-            placeholder="Enter event name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter title"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
             required
           />
         </div>
 
-        {/* Event Date */}
+        {/* Date */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Event Date</label>
+          <label className="block text-gray-700 font-medium mb-1">Date</label>
           <input
             type="date"
-            value={eventDate}
-            onChange={(e) => setEventDate(e.target.value)}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
             required
           />
         </div>
 
-        {/* Event Category */}
+        {/* Category */}
         <div>
           <label className="block text-gray-700 font-medium mb-1">Category</label>
           <select
@@ -125,33 +124,37 @@ export default function Create() {
             required
           >
             <option value="">Select category</option>
-            <option value="video_content">Video Content</option>
-            <option value="articles">Articles</option>
-            <option value="news">News</option>
+            <option value="Video Content">Video Content</option>
+            <option value="Articles">Articles</option>
+            <option value="News">News</option>
           </select>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter event description"
-            rows="4"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
+          <label className="block text-gray-700 font-medium mb-1">
+            Description
+          </label>
+          <div className="border border-gray-300 rounded-lg p-2">
+            <ReactQuill
+              theme="snow"
+              value={description}
+              onChange={setDescription}
+              placeholder="Enter description or article content"
+            />
+          </div>
         </div>
 
         {/* Image Upload */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Event Image</label>
+        <div className="border border-gray-300 rounded-lg p-3 mt-3">
+          <label className="block text-gray-700 font-medium mb-1">
+            Thumbnail / Image
+          </label>
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full"
+            className="w-full border border-gray-200 rounded-lg p-2"
           />
           {preview && (
             <img
@@ -162,31 +165,31 @@ export default function Create() {
           )}
         </div>
 
-        {/* Video Upload (only for Video Content) */}
-        {category === "video_content" && (
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Event Video</label>
-            <input
-              type="file"
-              accept="video/*"
-              onChange={handleVideoChange}
-              className="w-full"
+        {/* Video Upload */}
+        <div className="border border-gray-300 rounded-lg p-3 mt-3">
+          <label className="block text-gray-700 font-medium mb-1">
+            Video (Optional)
+          </label>
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleVideoChange}
+            className="w-full border border-gray-200 rounded-lg p-2"
+          />
+          {videoPreview && (
+            <video
+              src={videoPreview}
+              controls
+              className="mt-3 w-64 h-36 rounded-lg shadow"
             />
-            {videoPreview && (
-              <video
-                src={videoPreview}
-                controls
-                className="mt-3 w-64 h-36 rounded-lg shadow"
-              />
-            )}
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Actions */}
         <div className="flex justify-between items-center">
           <button
             type="button"
-            onClick={() => router.push("/administor/event")}
+            onClick={() => router.push("/administor/community/listing")}
             className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
           >
             Cancel
@@ -196,10 +199,11 @@ export default function Create() {
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
           >
-            {loading ? "Creating..." : "Create Event"}
+            {loading ? "Creating..." : "Create Content"}
           </button>
         </div>
       </form>
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
