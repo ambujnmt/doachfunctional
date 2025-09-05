@@ -26,28 +26,31 @@ export default function Listing() {
   ];
 
   return (
-    <div className="py-6 bg-gray-100 min-h-screen">
+    <div className="py-6 bg-black min-h-screen">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">My Session</h1>
-        <p className="text-gray-600 mt-1">Explore Session History</p>
+        <h1 className="text-3xl font-bold text-white">My Session</h1>
+        <p className="text-gray-400 mt-1">Explore Session History</p>
       </div>
+
       <div className="space-y-4">
         {sessions.map((session) => (
           <div
             key={session.id}
-            className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+            className="bg-[#1A1A1A] p-4 rounded-lg shadow-md flex justify-between items-center border border-[#333]"
           >
             <div>
-              <h3 className="font-semibold text-lg">{session.title}</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-lg text-white">
+                {session.title}
+              </h3>
+              <p className="text-sm text-gray-400">
                 {session.date} • {session.duration}
               </p>
             </div>
             <span
               className={`px-3 py-1 rounded-full text-sm font-medium ${
                 session.status === "Completed"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-gray-500/20 text-white"
+                  : "bg-gray-500/20 text-yellow-400"
               }`}
             >
               {session.status}

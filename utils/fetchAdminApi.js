@@ -579,3 +579,71 @@ export const getSubscribedCustomerDetailById = async (id) => {
 };
 
 
+export const getcommunityList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/community-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const createcommunityList = async (formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/community-create`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
+export const getcommunityDetailById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/admin/v2/community-get/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getCustomerDetail error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+
+export const updatecommunity = async (id, formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/community-update/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("updateEvent error:", error);
+    throw new Error(error.response?.data?.message || "Failed to update event");
+  }
+};
+
+
+
+
