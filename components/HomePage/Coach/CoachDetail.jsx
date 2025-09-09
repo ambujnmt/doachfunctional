@@ -205,7 +205,7 @@ export default function CoachDetail({ slug, token }) {
                   key={coach.id}
                   className="flex gap-3 cursor-pointer hover:bg-gray-800 p-2 rounded-lg"
                 >
-                  <Link href={`/coach/${coach.slug}`} className="flex gap-3 w-full">
+                  <Link href={`/coach/${coach.slug}`} className="flex gap-3 w-full no-underline">
                     {/* Thumbnail */}
                     <img
                       src={coach.coach_image || "https://via.placeholder.com/200x120"}

@@ -34,7 +34,7 @@ export default function EventList() {
                         <div className="grid grid-cols-12 gap-4">
                             {events.length > 0 ? (
                                 events.slice(0, 200).map((event) => (
-                                    <div key={event.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4">
+                                    <div key={event.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4 no-underline">
                                         <Link
                                         href={`/event/${event.slug}`}
                                         className="block bg-[#FFC32B] rounded-3xl cursor-pointer"

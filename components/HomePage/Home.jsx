@@ -12,7 +12,7 @@ import { eventHomePage, storiesHomePage, coachesHomePage  } from "../../utils/fe
 
 // Event Card
 const EventCard = ({ event }) => (
-  <Link href={`/event/${event.slug}`} className="block">
+  <Link href={`/event/${event.slug}`} className="block no-underline">
     <div className="bg-[#FFC32B] rounded-3xl cursor-pointer hover:shadow-lg transition">
       <img
         src={event.event_image || "/placeholder.jpg"}
@@ -38,7 +38,7 @@ const EventCard = ({ event }) => (
 
 // Story Card
 const StoryCard = ({ story }) => (
-  <Link href={`/story/${story.slug}`} className="block">
+  <Link href={`/story/${story.slug}`} className="block no-underline">
     <div className="bg-[#FFC32B] rounded-3xl cursor-pointer hover:shadow-lg transition">
       <img
         src={story.story_image || "/placeholder.jpg"}
@@ -63,7 +63,7 @@ const StoryCard = ({ story }) => (
 );
 // Coach Card
 const CoachCard = ({ coach }) => (
-  <Link href={`/coach/${coach.slug}`} className="block">
+  <Link href={`/coach/${coach.slug}`} className="block no-underline">
     <div className="bg-[#FFC32B] rounded-3xl cursor-pointer hover:shadow-lg transition">
       <img
         src={coach.coach_image || "/placeholder.jpg"}

@@ -144,7 +144,7 @@ export default function StoryDetail({ slug, token }) {
                   key={story.id}
                   className="flex gap-3 cursor-pointer hover:bg-gray-800 p-2 rounded-lg"
                 >
-                  <Link href={`/story/${story.slug}`} className="flex gap-3 w-full">
+                  <Link href={`/story/${story.slug}`} className="flex gap-3 w-full no-underline">
                     {/* Thumbnail */}
                     <img
                       src={story.story_image || "https://via.placeholder.com/200x120"}
