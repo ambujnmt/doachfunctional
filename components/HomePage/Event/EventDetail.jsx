@@ -144,7 +144,7 @@ export default function EventDetail({ slug, token }) {
                 key={event.id}
                 className="flex gap-3 cursor-pointer hover:bg-gray-800 p-2 rounded-lg"
               >
-                <Link href={`/event/${event.slug}`} className="flex gap-3 w-full">
+                <Link href={`/event/${event.slug}`} className="flex gap-3 w-full no-underline">
                   {/* Thumbnail */}
                   <img
                     src={event.event_image || "https://via.placeholder.com/200x120"}

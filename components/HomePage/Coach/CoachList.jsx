@@ -40,7 +40,7 @@ export default function CoachList() {
                                     >
                                         <Link
                                             href={`/coach/${coach.slug}`}
-                                            className="block bg-[#FFC32B] rounded-3xl cursor-pointer"
+                                            className="block bg-[#FFC32B] rounded-3xl cursor-pointer no-underline"
                                         >
                                             <img 
                                                 src={coach.coach_image || 'https://via.placeholder.com/400x250'} 

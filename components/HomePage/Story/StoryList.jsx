@@ -40,7 +40,7 @@ export default function StoriesSection() {
                   >
                     <Link
                       href={`/story/${story.slug}`}
-                      className="block bg-[#FFC32B] rounded-3xl"
+                      className="block bg-[#FFC32B] rounded-3xl no-underline"
                     >
                       <img
                         src={story.story_image || "https://via.placeholder.com/400x250"}
