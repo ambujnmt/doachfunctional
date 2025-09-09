@@ -45,15 +45,15 @@ export default function EventList() {
                                             className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" 
                                         />
                                         <div className="p-3">
-                                            <h5 className="text-black text-[18px] font-semibold mb-1">{event.event_name}</h5>
-                                            <p className="text-gray-800 mb-2">{event.date || event.created_at?.split("T")[0]}</p>
-                                            <div className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
+                                            <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{event.event_name}</h5>
+                                            <p className="text-gray-800 mb-2 no-underline">{event.date || event.created_at?.split("T")[0]}</p>
+                                            <div className="no-underline overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
                                             {event.description
                                                 ? event.description.replace(/<[^>]+>/g, "").substring(0, 50) + "..."
                                                 : ""}
                                             </div>
-                                            <span className="flex justify-end text-[14px] font-medium text-black">
-                                            {event.readTime || "2 min. read"}
+                                            <span className="flex justify-end text-[14px] font-medium text-black no-underline">
+                                            {event.readTime || "Read More"}
                                             </span>
                                         </div>
                                         </Link>

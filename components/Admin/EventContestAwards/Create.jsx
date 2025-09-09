@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { eventContestAwardCreate } from "../../../utils/fetchAdminApi"; // ✅ your helper
+import { eventContestAwardCreate } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -47,7 +47,7 @@ export default function Create() {
 
     try {
       setLoading(true);
-      await eventContestAwardCreate(formData); // ✅ use helper API
+      await eventContestAwardCreate(formData);
       toast.success("Contest created successfully!");
       setTimeout(() => {
         router.push("/administor/eventContests/listing");
@@ -61,110 +61,112 @@ export default function Create() {
   };
 
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        Create Event Contest Award
-      </h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Contest Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">
-            Contest Name
-          </label>
-          <input
-            type="text"
-            value={contestName}
-            onChange={(e) => setContestName(e.target.value)}
-            placeholder="Enter contest name"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Contest Date */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">
-            Contest Date
-          </label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Contest Time */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">
-            Contest Time
-          </label>
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Contest Location */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">
-            Contest Location
-          </label>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Enter contest location"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Contest Image */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">
-            Contest Image
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full"
-          />
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="mt-3 w-48 h-32 object-cover rounded-lg shadow"
+    <div className="bg-[#0F0F0F] py-6">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-white mb-4">
+          🏆 Create Event Contest Award
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Contest Name */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">
+              Contest Name
+            </label>
+            <input
+              type="text"
+              value={contestName}
+              onChange={(e) => setContestName(e.target.value)}
+              placeholder="Enter contest name"
+              className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administor/event")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Creating..." : "Create Contest"}
-          </button>
-        </div>
-      </form>
+          {/* Contest Date */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">
+              Contest Date
+            </label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+              required
+            />
+          </div>
+
+          {/* Contest Time */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">
+              Contest Time
+            </label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+              required
+            />
+          </div>
+
+          {/* Contest Location */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">
+              Contest Location
+            </label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Enter contest location"
+              className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+              required
+            />
+          </div>
+
+          {/* Contest Image */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">
+              Contest Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full text-white"
+            />
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                className="mt-3 w-48 h-32 object-cover rounded-lg shadow-md border border-[#444]"
+              />
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/event")}
+              className="px-4 py-2 bg-[#333] text-white rounded-lg hover:bg-[#444] transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-[#FFC32B] text-black font-semibold rounded-lg hover:bg-[#e6ad24] transition disabled:opacity-50"
+            >
+              {loading ? "Creating..." : "Create Contest"}
+            </button>
+          </div>
+        </form>
+      </div>
 
       {/* Toast Container */}
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </div>
   );
 }

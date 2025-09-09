@@ -102,7 +102,7 @@ export default function EventDetail({ slug, token }) {
                 🔗 Share
               </button>
 
-              <a href={currentEvent.event_video || currentEvent.event_image} download className="bg-green-600 text-white px-3 py-1 rounded">
+              <a href={currentEvent.event_video || currentEvent.event_image} download className="bg-green-600 text-white px-3 py-1 rounded no-underline">
                 ⬇ Download
               </a>
             </div>
@@ -125,7 +125,7 @@ export default function EventDetail({ slug, token }) {
                   Comment
                 </button>
               </div>
-              <ul>
+              <ul className="px-0">
                 {comments.map((c, i) => (
                   <li key={i} className="border-b border-gray-700 py-2 text-gray-200">
                     <strong>{c.user?.name || "User"}:</strong> {c.comment}
@@ -138,7 +138,7 @@ export default function EventDetail({ slug, token }) {
           {/* Right: Related Events (Sidebar like YouTube) */}
         <div className="lg:w-1/3 pr-2 pr-2">
           <h3 className="text-white font-semibold mb-3">Related Events</h3>
-          <ul className="space-y-3">
+          <ul className="space-y-3 px-0">
             {relatedEvents.slice(0, 6).map((event) => (
               <li
                 key={event.id}
@@ -154,10 +154,10 @@ export default function EventDetail({ slug, token }) {
 
                   {/* Details */}
                   <div className="flex flex-col justify-between flex-1">
-                    <h5 className="text-white font-medium line-clamp-2">
+                    <h5 className="text-white font-medium line-clamp-2 no-underline">
                       {event.event_name}
                     </h5>
-                    <p className="text-gray-400 text-xs">
+                    <p className="text-gray-400 text-xs no-underline">
                       {event.date || event.created_at?.split("T")[0]}
                     </p>
                   </div>

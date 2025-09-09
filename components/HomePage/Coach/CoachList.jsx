@@ -48,15 +48,15 @@ export default function CoachList() {
                                                 className="w-full h-[250px] object-cover rounded-tl-3xl rounded-tr-3xl" 
                                             />
                                             <div className="p-3">
-                                                <h5 className="text-black text-[18px] font-semibold mb-1">{coach.name}</h5>
-                                                <p className="text-[14px] font-medium text-black mb-1">{coach.speciality}</p>
-                                                <p className="text-gray-800 mb-2">{coach.date || coach.created_at?.split("T")[0]}</p>
-                                                <div className="overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
+                                                <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{coach.name}</h5>
+                                                <p className="text-[14px] font-medium text-black mb-1 no-underline">{coach.speciality}</p>
+                                                <p className="text-gray-800 mb-2 no-underline">{coach.date || coach.created_at?.split("T")[0]}</p>
+                                                <div className="no-underline overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] text-[14px] font-medium mb-2 text-black">
                                                     {coach.bio_data
                                                         ? coach.bio_data.replace(/<[^>]+>/g, "").substring(0, 50) + "..."
                                                         : ""}
                                                 </div>
-                                                <span className="flex justify-end text-[14px] font-medium text-black">
+                                                <span className="flex justify-end text-[14px] font-medium text-black no-underline">
                                                     View Profile
                                                 </span>
                                             </div>
