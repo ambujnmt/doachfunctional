@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import Link from "next/link";
-import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
-import { dynamicPageList } from "../../../utils/fetchAdminApi"; // adjust the path
+import { FaEdit } from "react-icons/fa";
+import { dynamicPageList } from "../../../utils/fetchAdminApi";
 
 export default function PageList() {
   const [pages, setPages] = useState([]);
@@ -16,7 +16,7 @@ export default function PageList() {
     const fetchPages = async () => {
       setLoading(true);
       const data = await dynamicPageList();
-      setPages(data);
+      setPages(data || []);
       setLoading(false);
     };
     fetchPages();
@@ -24,8 +24,8 @@ export default function PageList() {
 
   const filteredPages = pages.filter(
     (p) =>
-      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.slug.toLowerCase().includes(searchTerm.toLowerCase())
+      p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.slug?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLast = currentPage * pagesPerPage;
@@ -34,35 +34,43 @@ export default function PageList() {
   const totalPages = Math.ceil(filteredPages.length / pagesPerPage);
 
   return (
-    <div className="py-4">
-      <div className="bg-white shadow-lg rounded-xl p-6">
+    <div className="py-6 bg-black">
+      <div className="bg-[#111] border border-yellow-500 shadow-lg rounded-xl p-6">
+        {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Pages List</h1>
-            <p className="text-gray-600 mt-1">Manage and view static pages here.</p>
+            <h1 className="text-2xl font-bold text-white">Pages List</h1>
+            <p className="text-gray-400 mt-1">Manage and view static pages here.</p>
           </div>
-
           <div className="flex space-x-2">
             <input
               type="text"
-              placeholder="Search by title or slug..."
+              placeholder="🔍 Search by title or slug..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="border border-gray-300 rounded-lg px-4 py-2 w-72"
+              className="border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 w-72 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>
         </div>
 
-        <div className="bg-white border rounded-lg overflow-hidden">
+        {/* Table */}
+        <div className="bg-black border border-yellow-500 rounded-lg overflow-hidden">
           {loading ? (
-            <p className="p-4 text-center text-gray-500">Loading pages...</p>
+            <div className="p-6 text-center">
+              <img
+                src="https://i.gifer.com/ZZ5H.gif"
+                alt="Loading..."
+                className="mx-auto w-12 h-12"
+              />
+              <p className="mt-2 text-gray-400">Loading pages...</p>
+            </div>
           ) : (
-            <>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-100 text-gray-700">
+            <div>
+              <table className="w-full border-collapse text-white">
+                <thead className="bg-[#222] text-yellow-500">
                   <tr>
                     <th className="p-3 text-left">#</th>
                     <th className="p-3 text-left">Title</th>
@@ -73,25 +81,31 @@ export default function PageList() {
                 <tbody>
                   {currentPages.length > 0 ? (
                     currentPages.map((page, index) => (
-                      <tr key={page.id} className="border-b hover:bg-gray-50 transition">
+                      <tr
+                        key={page.id}
+                        className="border-b border-gray-700 hover:bg-[#222] transition"
+                      >
                         <td className="p-3">{indexOfFirst + index + 1}</td>
-                        <td className="p-3 font-medium text-gray-800">{page.title}</td>
-                        <td className="p-3">{page.slug}</td>
+                        <td className="p-3 font-medium text-white">{page.title}</td>
+                        <td className="p-3 text-gray-300">{page.slug}</td>
                         <td className="p-3 text-center">
-                           <div className="flex justify-center space-x-2">
+                          <div className="flex justify-center space-x-2">
                             <Link
-                              href={`/administor/pages/dynamicUpdate?page=${page.slug}`} // Pass brand ID in the URL
-                              className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition"
+                              href={`/administor/pages/dynamicUpdate?page=${page.slug}`}
+                              className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition"
                             >
-                              <FaEdit className="text-green-600 text-lg" />
+                              <FaEdit className="text-white text-lg" />
                             </Link>
-                            </div>
+                          </div>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="p-4 text-center text-gray-500 italic">
+                      <td
+                        colSpan="4"
+                        className="p-4 text-center text-gray-400 italic"
+                      >
                         No pages found.
                       </td>
                     </tr>
@@ -99,21 +113,26 @@ export default function PageList() {
                 </tbody>
               </table>
 
+              {/* Pagination */}
               {totalPages > 1 && (
-                <div className="p-4 flex justify-between items-center border-t">
-                  <span className="text-gray-600 text-sm">
-                    Showing {indexOfFirst + 1} to {Math.min(indexOfLast, filteredPages.length)} of{" "}
+                <div className="p-4 flex justify-between items-center border-t border-gray-700">
+                  <span className="text-gray-400 text-sm">
+                    Showing {indexOfFirst + 1} to{" "}
+                    {Math.min(indexOfLast, filteredPages.length)} of{" "}
                     {filteredPages.length} entries
                   </span>
                   <Pagination
                     count={totalPages}
                     page={currentPage}
                     onChange={(e, value) => setCurrentPage(value)}
-                    color="primary"
+                    sx={{
+                      "& .MuiPaginationItem-root": { color: "white" },
+                      "& .Mui-selected": { backgroundColor: "#FFD700 !important", color: "black" },
+                    }}
                   />
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

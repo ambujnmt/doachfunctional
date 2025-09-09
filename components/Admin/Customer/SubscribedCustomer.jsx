@@ -5,7 +5,7 @@ import { getSubscribedCustomers } from "../../../utils/fetchAdminApi";
 import Pagination from "@mui/material/Pagination";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { confirmDelete } from "../../../utils/confirmDelete"; 
+import { confirmDelete } from "../../../utils/confirmDelete";
 
 export default function SubscribedCustomer() {
   const [customers, setCustomers] = useState([]);
@@ -17,6 +17,7 @@ export default function SubscribedCustomer() {
   const router = useRouter();
 
   const fetchCustomers = async () => {
+    setLoading(true);
     const data = await getSubscribedCustomers();
     setCustomers(data || []);
     setLoading(false);
@@ -30,7 +31,6 @@ export default function SubscribedCustomer() {
     await confirmDelete(`/delete/subscriptionCustomer/${id}`, fetchCustomers);
   };
 
-  // Search filter
   const filteredCustomers = customers.filter(
     (customer) =>
       customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -41,38 +41,34 @@ export default function SubscribedCustomer() {
         .includes(searchTerm.toLowerCase())
   );
 
-  // Pagination
   const indexOfLast = currentPage * customersPerPage;
   const indexOfFirst = indexOfLast - customersPerPage;
   const currentCustomers = filteredCustomers.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredCustomers.length / customersPerPage);
 
   return (
-    <div className="py-4">
-      <div className="bg-white shadow-lg rounded-xl p-6">
+    <div className="py-6 bg-black">
+      <div className="bg-[#111] border border-yellow-500 shadow-lg rounded-xl p-6">
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Subscribed Customers List</h1>
-            <p className="text-gray-600 mt-1">
-              Manage and view Subscribed customers details here.
-            </p>
+            <h1 className="text-2xl font-bold text-white">Subscribed Customers List</h1>
+            <p className="text-gray-400 mt-1">Manage and view subscribed customer details here.</p>
           </div>
           <div className="flex space-x-2">
             <input
               type="text"
-              placeholder="Search by name, email, phone or subscription..."
+              placeholder="🔍 Search by name, email, phone or subscription..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="border border-gray-300 rounded-lg px-4 py-2 w-72"
+              className="border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 w-72 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
-
             <button
               onClick={() => router.back()}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+              className="px-4 py-2 rounded-lg bg-yellow-500 text-black font-semibold hover:bg-yellow-600 transition"
             >
               ← Back
             </button>
@@ -80,7 +76,7 @@ export default function SubscribedCustomer() {
         </div>
 
         {/* Table */}
-        <div className="bg-white border rounded-lg overflow-hidden">
+        <div className="bg-black border border-yellow-500 rounded-lg overflow-hidden">
           {loading ? (
             <div className="p-6 text-center">
               <img
@@ -88,12 +84,12 @@ export default function SubscribedCustomer() {
                 alt="Loading..."
                 className="mx-auto w-12 h-12"
               />
-              <p className="mt-2 text-gray-500">Loading customers...</p>
+              <p className="mt-2 text-gray-400">Loading customers...</p>
             </div>
           ) : (
             <div>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-100 text-gray-700">
+              <table className="w-full border-collapse text-white">
+                <thead className="bg-[#222] text-yellow-500">
                   <tr>
                     <th className="p-3 text-left">#</th>
                     <th className="p-3 text-left">Name</th>
@@ -110,30 +106,28 @@ export default function SubscribedCustomer() {
                     currentCustomers.map((customer, index) => (
                       <tr
                         key={customer.id}
-                        className="border-b hover:bg-gray-50 transition"
+                        className="border-b border-gray-700 hover:bg-[#222] transition"
                       >
                         <td className="p-3">{indexOfFirst + index + 1}</td>
-                        <td className="p-3 font-medium text-gray-800">
-                          {customer.name}
-                        </td>
-                        <td className="p-3">{customer.email}</td>
-                        <td className="p-3">{customer.phone}</td>
-                        <td className="p-3">
+                        <td className="p-3 font-medium text-white">{customer.name}</td>
+                        <td className="p-3 text-gray-300">{customer.email}</td>
+                        <td className="p-3 text-gray-300">{customer.phone}</td>
+                        <td className="p-3 text-gray-300">
                           {customer.subscription?.subscription_name || "-"}
                         </td>
-                        <td className="p-3">
+                        <td className="p-3 text-gray-300">
                           ${customer.subscription?.price || "0.00"}
                         </td>
                         <td className="p-3">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-medium ${
                               customer.status === "active"
-                                ? "bg-green-100 text-green-700"
+                                ? "bg-green-600 text-white"
                                 : customer.status === "inactive"
-                                ? "bg-gray-200 text-gray-700"
+                                ? "bg-gray-600 text-white"
                                 : customer.status === "banned"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-yellow-100 text-yellow-700"
+                                ? "bg-red-600 text-white"
+                                : "bg-yellow-500 text-black"
                             }`}
                           >
                             {customer.status
@@ -146,15 +140,15 @@ export default function SubscribedCustomer() {
                           <div className="flex justify-center space-x-2">
                             <Link
                               href={`/administor/customer/subscribedCustomerDetail?id=${customer.id}`}
-                              className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition"
+                              className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition"
                             >
-                              <FaEye className="text-blue-600 text-lg" />
+                              <FaEye className="text-white text-lg" />
                             </Link>
                             <button
                               onClick={() => handleDelete(customer.id)}
-                              className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition"
+                              className="p-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
                             >
-                              <FaTrash className="text-red-600 text-lg" />
+                              <FaTrash className="text-white text-lg" />
                             </button>
                           </div>
                         </td>
@@ -162,10 +156,7 @@ export default function SubscribedCustomer() {
                     ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan="8"
-                        className="p-4 text-center text-gray-500 italic"
-                      >
+                      <td colSpan="8" className="p-4 text-center text-gray-400 italic">
                         No customers found.
                       </td>
                     </tr>
@@ -174,21 +165,24 @@ export default function SubscribedCustomer() {
               </table>
 
               {/* Pagination */}
-              <div className="p-4 flex justify-between items-center border-t">
-                <span className="text-gray-600 text-sm">
-                  Showing {indexOfFirst + 1} to{" "}
-                  {Math.min(indexOfLast, filteredCustomers.length)} of{" "}
-                  {filteredCustomers.length} entries
-                </span>
-                {totalPages > 1 && (
+              {totalPages > 1 && (
+                <div className="p-4 flex justify-between items-center border-t border-gray-700">
+                  <span className="text-gray-400 text-sm">
+                    Showing {indexOfFirst + 1} to{" "}
+                    {Math.min(indexOfLast, filteredCustomers.length)} of{" "}
+                    {filteredCustomers.length} entries
+                  </span>
                   <Pagination
                     count={totalPages}
                     page={currentPage}
                     onChange={(e, value) => setCurrentPage(value)}
-                    color="primary"
+                    sx={{
+                      "& .MuiPaginationItem-root": { color: "white" },
+                      "& .Mui-selected": { backgroundColor: "#FFD700 !important", color: "black" },
+                    }}
                   />
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -245,4 +245,136 @@ export const checkoutSubscription = async (payload) => {
 };
 
 
+// Fetch feedback for a specific story
+export const fetchStoryFeedback = async (storyId, token) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/stories/${storyId}/feedback`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching story feedback:", err);
+    return { likes: 0, dislikes: 0, comments: [] };
+  }
+};
+
+// React to a story (like/dislike)
+export const reactToStory = async (storyId, type, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/stories/${storyId}/react`,
+      { type, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error reacting to story:", err);
+    return { likes: 0, dislikes: 0 };
+  }
+};
+
+// Add a comment
+export const addCommentToStory = async (storyId, comment, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/stories/${storyId}/comment`,
+      { comment, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data.data;
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    return null;
+  }
+};
+
+
+// Fetch feedback for an event
+export const fetchEventFeedback = async (eventId, token) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/events/${eventId}/feedback`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching event feedback:", err);
+    return { likes: 0, dislikes: 0, comments: [] };
+  }
+};
+
+// React to an event
+export const reactToEvent = async (eventId, type, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/events/${eventId}/react`,
+      { type, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error reacting to event:", err);
+    return { likes: 0, dislikes: 0 };
+  }
+};
+
+// Add comment to an event
+export const addCommentToEvent = async (eventId, comment, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/events/${eventId}/comment`,
+      { comment, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data.data;
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    return null;
+  }
+};
+
+
+// Fetch feedback for an coach
+export const fetchCoachFeedback = async (coachId, token) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/coaches/${coachId}/feedback`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching event feedback:", err);
+    return { likes: 0, dislikes: 0, comments: [] };
+  }
+};
+
+// React to an event
+export const reactToCoach = async (coachId, type, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/coaches/${coachId}/react`,
+      { type, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error reacting to event:", err);
+    return { likes: 0, dislikes: 0 };
+  }
+};
+
+// Add comment to an event
+export const addCommentToCoach = async (coachId, comment, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/coaches/${coachId}/comment`,
+      { comment, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data.data;
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    return null;
+  }
+};
+
+
 

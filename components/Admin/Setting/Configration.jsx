@@ -12,12 +12,10 @@ export default function Configration() {
   const [websiteAddress, setWebsiteAddress] = useState("");
   const [footerInfo, setFooterInfo] = useState("");
   const [webLogo, setWebLogo] = useState(null);
-
   const [previewLogo, setPreviewLogo] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // ✅ Fetch settings on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,10 +26,7 @@ export default function Configration() {
           setWebsitePhone(res.data.website_phone || "");
           setWebsiteAddress(res.data.website_address || "");
           setFooterInfo(res.data.footer_info || "");
-
-          if (res.data.web_logo) {
-            setPreviewLogo(res.data.web_logo); // ✅ use directly
-          }
+          if (res.data.web_logo) setPreviewLogo(res.data.web_logo);
         }
       } catch (err) {
         toast.error("Failed to fetch settings.");
@@ -40,7 +35,6 @@ export default function Configration() {
     fetchData();
   }, []);
 
-  // image preview + set
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     setWebLogo(file);
@@ -51,10 +45,8 @@ export default function Configration() {
     }
   };
 
-  // ✅ Save settings
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!websiteName || !websiteEmail || !websitePhone) {
       toast.error("Please fill all required fields.");
       return;
@@ -81,109 +73,111 @@ export default function Configration() {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Website Settings</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Website Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Website Name</label>
-          <input
-            type="text"
-            value={websiteName}
-            onChange={(e) => setWebsiteName(e.target.value)}
-            placeholder="Enter website name"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Website Email */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Website Email</label>
-          <input
-            type="email"
-            value={websiteEmail}
-            onChange={(e) => setWebsiteEmail(e.target.value)}
-            placeholder="Enter website email"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Website Phone */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Website Phone</label>
-          <input
-            type="text"
-            value={websitePhone}
-            onChange={(e) => setWebsitePhone(e.target.value)}
-            placeholder="Enter website phone"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Website Address */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Website Address</label>
-          <input
-            type="text"
-            value={websiteAddress}
-            onChange={(e) => setWebsiteAddress(e.target.value)}
-            placeholder="Enter website address"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-          />
-        </div>
-
-        {/* Web Logo */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Web Logo</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleLogoChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-          />
-          {previewLogo && (
-            <img
-              src={previewLogo}
-              alt="Logo Preview"
-              className="mt-2 h-20 w-auto object-contain"
+    <div className="bg-black py-6">
+      <div className="bg-[#111] border border-yellow-500 shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-white mb-6">Website Settings</h1>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Website Name */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Website Name</label>
+            <input
+              type="text"
+              value={websiteName}
+              onChange={(e) => setWebsiteName(e.target.value)}
+              placeholder="Enter website name"
+              className="w-full border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 focus:ring focus:ring-yellow-500"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        {/* Footer Info */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Footer Info</label>
-          <textarea
-            value={footerInfo}
-            onChange={(e) => setFooterInfo(e.target.value)}
-            placeholder="Enter footer info"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            rows={3}
-          />
-        </div>
+          {/* Website Email */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Website Email</label>
+            <input
+              type="email"
+              value={websiteEmail}
+              onChange={(e) => setWebsiteEmail(e.target.value)}
+              placeholder="Enter website email"
+              className="w-full border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 focus:ring focus:ring-yellow-500"
+              required
+            />
+          </div>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administor/dashboard")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Saving..." : "Save Settings"}
-          </button>
-        </div>
-      </form>
-      <ToastContainer position="top-right" autoClose={3000} />
+          {/* Website Phone */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Website Phone</label>
+            <input
+              type="text"
+              value={websitePhone}
+              onChange={(e) => setWebsitePhone(e.target.value)}
+              placeholder="Enter website phone"
+              className="w-full border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 focus:ring focus:ring-yellow-500"
+              required
+            />
+          </div>
+
+          {/* Website Address */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Website Address</label>
+            <input
+              type="text"
+              value={websiteAddress}
+              onChange={(e) => setWebsiteAddress(e.target.value)}
+              placeholder="Enter website address"
+              className="w-full border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 focus:ring focus:ring-yellow-500"
+            />
+          </div>
+
+          {/* Web Logo */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Web Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleLogoChange}
+              className="w-full border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 focus:ring focus:ring-yellow-500"
+            />
+            {previewLogo && (
+              <img
+                src={previewLogo}
+                alt="Logo Preview"
+                className="mt-2 h-20 w-auto object-contain border border-yellow-500"
+              />
+            )}
+          </div>
+
+          {/* Footer Info */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Footer Info</label>
+            <textarea
+              value={footerInfo}
+              onChange={(e) => setFooterInfo(e.target.value)}
+              placeholder="Enter footer info"
+              className="w-full border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 focus:ring focus:ring-yellow-500"
+              rows={3}
+            />
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/dashboard")}
+              className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-600 transition disabled:opacity-50"
+            >
+              {loading ? "Saving..." : "Save Settings"}
+            </button>
+          </div>
+        </form>
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </div>
   );
 }

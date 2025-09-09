@@ -19,7 +19,7 @@ export default function configration() {
           <SideBar menuOpen={menuOpen} />
   
           {/* Main Content (Dashboard + Footer inside) */}
-          <main className="flex-1 bg-gray-100 p-6 ml-0 md:ml-64 overflow-auto min-h-[calc(100vh-4rem)] flex flex-col">
+          <main className="flex-1 bg-black p-6 ml-0 md:ml-64 overflow-auto min-h-[calc(100vh-4rem)] flex flex-col">
             
             {/* Dashboard content */}
             <div className="flex-1">

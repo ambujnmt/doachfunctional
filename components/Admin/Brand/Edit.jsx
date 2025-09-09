@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function EditBrand() {
   const searchParams = useSearchParams();
-  const brandId = searchParams.get("id"); // ✅ from query string
+  const brandId = searchParams.get("id"); 
   const router = useRouter();
 
   const [brandName, setBrandName] = useState("");
@@ -24,7 +24,7 @@ export default function EditBrand() {
           if (res.status) {
             setBrandName(res.data.brand_name || "");
             setDescription(res.data.description || "");
-            setPreview(res.data.brand_image || null); // API image url
+            setPreview(res.data.brand_image || null);
           } else {
             toast.error("Brand not found");
           }
@@ -56,7 +56,7 @@ export default function EditBrand() {
     const formData = new FormData();
     formData.append("brand_name", brandName);
     formData.append("description", description);
-    if (image) formData.append("image", image); // only if new image selected
+    if (image) formData.append("image", image);
 
     try {
       setLoading(true);
@@ -74,66 +74,75 @@ export default function EditBrand() {
   };
 
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Brand</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        
-        {/* Brand Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Brand Name</label>
-          <input
-            type="text"
-            value={brandName}
-            onChange={(e) => setBrandName(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="4"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Image */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Brand Image</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="mt-3 w-48 h-32 object-cover rounded-lg shadow"
+    <div className="bg-[#0F0F0F] min-h-screen py-6">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-white mb-4">Edit Brand</h1>
+        <form onSubmit={handleSubmit} className="space-y-5 text-white">
+          
+          {/* Brand Name */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Brand Name</label>
+            <input
+              type="text"
+              value={brandName}
+              onChange={(e) => setBrandName(e.target.value)}
+              placeholder="Enter brand name"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white placeholder-gray-400 focus:ring focus:ring-[#FFEA70]"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administor/brand/listing")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Updating..." : "Update Brand"}
-          </button>
-        </div>
-      </form>
-      <ToastContainer position="top-right" autoClose={3000} />
+          {/* Description */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter brand description"
+              rows="4"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white placeholder-gray-400 focus:ring focus:ring-[#FFEA70]"
+              required
+            />
+          </div>
+
+          {/* Image Upload */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Brand Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white cursor-pointer hover:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-[#FFEA70]"
+            />
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                className="mt-3 w-48 h-32 object-cover rounded-lg shadow border border-yellow-500"
+              />
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/brand/listing")}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-[#FFD700] text-black rounded-lg hover:bg-[#FFEA70] transition disabled:opacity-50"
+            >
+              {loading ? "Updating..." : "Update Brand"}
+            </button>
+          </div>
+        </form>
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </div>
   );
 }
