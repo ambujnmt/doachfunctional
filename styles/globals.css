@@ -377,3 +377,13 @@ button.swal2-confirm.swal2-styled {
 button.swal2-cancel.swal2-styled {
     background-color: #d33;
 }
+
+.ql-editor {
+  min-height: 100px;
+  color: #ffffff; /* typed text bhi white */
+}
+
+.ql-editor.ql-blank::before {
+  color: #ffffff !important;
+  opacity: 0.6;
+}

@@ -105,75 +105,85 @@ export default function DynamicPageUpdate() {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Page</h1>
+    <div className="bg-[#0F0F0F] py-6">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-white mb-4">📝 Edit Page</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Title */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={loading ? "" : pageData.title}
-            onChange={handleChange}
-            placeholder={loading ? "Loading..." : "Enter title"}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-            disabled={loading}
-          />
-        </div>
-
-        {/* Slug (read-only, optional) */}
-        {pageData.slug ? (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Title */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Slug</label>
+            <label className="block text-[#FFC32B] font-medium mb-1">Title</label>
             <input
               type="text"
-              name="slug"
-              value={pageData.slug}
-              readOnly
-              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-4 py-2"
+              name="title"
+              value={loading ? "" : pageData.title}
+              onChange={handleChange}
+              placeholder={loading ? "Loading..." : "Enter title"}
+              className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+              required
+              disabled={loading}
             />
           </div>
-        ) : null}
 
-        {/* Content - ReactQuill */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Content</label>
-          {loading ? (
-            <div className="w-full h-40 rounded-lg bg-gray-100 animate-pulse" />
-          ) : (
-            <ReactQuill
-              theme="snow"
-              value={pageData.content}
-              onChange={handleContentChange}
-              modules={quillModules}
-              className="bg-white text-black rounded-lg"
-            />
-          )}
-        </div>
+          {/* Slug (read-only) */}
+          {pageData.slug ? (
+            <div>
+              <label className="block text-[#FFC32B] font-medium mb-1">Slug</label>
+              <input
+                type="text"
+                name="slug"
+                value={pageData.slug}
+                readOnly
+                className="w-full bg-[#333] border border-[#444] rounded-lg px-4 py-2 text-gray-300"
+              />
+            </div>
+          ) : null}
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administor/pages/listing")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={saving || loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {saving ? "Updating..." : loading ? "Loading..." : "Update Page"}
-          </button>
-        </div>
-      </form>
+          {/* Content - ReactQuill */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">Content</label>
+            {loading ? (
+              <div className="w-full h-40 rounded-lg bg-[#333] animate-pulse" />
+            ) : (
+              <ReactQuill
+                  value={pageData.content}
+                  onChange={handleContentChange}
+                  placeholder="Enter coach bio data"
+                  modules={{
+                    toolbar: [
+                      [{ header: [1, 2, false] }],
+                      ["bold", "italic", "underline", "strike"],
+                      [{ list: "ordered" }, { list: "bullet" }],
+                      ["link", "image", "video"],
+                      ["clean"]
+                    ]
+                  }}
+                  className="bg-[#222222] text-white rounded-lg border"
+                />
+            )}
+          </div>
 
-      <ToastContainer position="top-right" autoClose={3000} />
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/pages/listing")}
+              className="px-4 py-2 bg-[#333] text-white rounded-lg hover:bg-[#444] transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving || loading}
+              className="px-4 py-2 bg-[#FFC32B] text-black font-semibold rounded-lg hover:bg-[#e6ad24] transition disabled:opacity-50"
+            >
+              {saving ? "Updating..." : loading ? "Loading..." : "Update Page"}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </div>
   );
 }

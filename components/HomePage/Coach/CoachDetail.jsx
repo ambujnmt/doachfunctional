@@ -151,7 +151,7 @@ export default function CoachDetail({ slug, token }) {
               <a
                 href={currentCoach.coach_video || currentCoach.coach_image}
                 download
-                className="bg-green-600 text-white px-3 py-1 rounded"
+                className="bg-green-600 text-white px-3 py-1 rounded no-underline"
               >
                 ⬇ Download
               </a>
@@ -182,7 +182,7 @@ export default function CoachDetail({ slug, token }) {
                   Comment
                 </button>
               </div>
-              <ul>
+              <ul className="px-0">
                 {comments.map((c, i) => (
                   <li
                     key={i}
@@ -199,7 +199,7 @@ export default function CoachDetail({ slug, token }) {
           {/* Right: Related Coaches (Sidebar like YouTube) */}
           <div className="lg:w-1/3 pr-2 pr-2">
             <h3 className="text-white font-semibold mb-3">Related Coaches</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 px-0">
               {relatedCoaches.slice(0, 7).map((coach) => (
                 <li
                   key={coach.id}
@@ -215,10 +215,10 @@ export default function CoachDetail({ slug, token }) {
 
                     {/* Details */}
                     <div className="flex flex-col justify-between flex-1">
-                      <h5 className="text-white font-medium line-clamp-2">
+                      <h5 className="text-white font-medium line-clamp-2 no-underline">
                         {coach.name}
                       </h5>
-                      <p className="text-gray-400 text-xs">
+                      <p className="text-gray-400 text-xs no-underline">
                         {coach.date || coach.created_at?.split("T")[0]}
                       </p>
                     </div>

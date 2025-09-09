@@ -20,9 +20,9 @@ const EventCard = ({ event }) => (
         className="w-full h-[250px] object-cover rounded-t-3xl"
       />
       <div className="p-3">
-        <h5 className="text-black text-[18px] font-semibold mb-1">{event.event_name}</h5>
-        <p className="text-[14px] font-medium text-black mb-1">{event.date || event.created_at?.split("T")[0]}</p>
-        <p className="text-[14px] font-medium text-black mb-2" style={{
+        <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{event.event_name}</h5>
+        <p className="text-[14px] font-medium text-black mb-1 no-underline">{event.date || event.created_at?.split("T")[0]}</p>
+        <p className="text-[14px] font-medium text-black mb-2 no-underline" style={{
           display: "-webkit-box",
           WebkitLineClamp: 2,
           WebkitBoxOrient: "vertical",
@@ -30,7 +30,7 @@ const EventCard = ({ event }) => (
         }}>
           {event.description?.replace(/<[^>]+>/g, "") || ""}
         </p>
-        <p className="flex justify-end text-[14px] font-medium text-black">2 min. read</p>
+        <p className="flex justify-end text-[14px] font-medium text-black no-underline">Read More</p>
       </div>
     </div>
   </Link>
@@ -46,9 +46,9 @@ const StoryCard = ({ story }) => (
         className="w-full h-[250px] object-cover rounded-t-3xl"
       />
       <div className="p-3">
-        <h5 className="text-black text-[18px] font-semibold mb-1">{story.story_title}</h5>
-        <p className="text-[14px] font-medium text-black mb-1">{story.date || story.created_at?.split("T")[0]}</p>
-        <p className="text-[14px] font-medium text-black mb-2" style={{
+        <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{story.story_title}</h5>
+        <p className="text-[14px] font-medium text-black mb-1 no-underline">{story.date || story.created_at?.split("T")[0]}</p>
+        <p className="text-[14px] font-medium text-black mb-2 no-underline" style={{
           display: "-webkit-box",
           WebkitLineClamp: 2,
           WebkitBoxOrient: "vertical",
@@ -56,7 +56,7 @@ const StoryCard = ({ story }) => (
         }}>
           {story.description?.replace(/<[^>]+>/g, "") || ""}
         </p>
-        <p className="flex justify-end text-[14px] font-medium text-black">2 min. read</p>
+        <p className="flex justify-end text-[14px] font-medium text-black no-underline">Read More</p>
       </div>
     </div>
   </Link>
@@ -71,9 +71,9 @@ const CoachCard = ({ coach }) => (
         className="w-full h-[250px] object-cover rounded-t-3xl"
       />
       <div className="p-3">
-        <h5 className="text-black text-[18px] font-semibold mb-1">{coach.specialization}</h5>
-        <p className="text-[14px] font-medium text-black mb-1">{coach.date || coach.created_at?.split("T")[0]}</p>
-        <p className="text-[14px] font-medium text-black mb-2" style={{
+        <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{coach.specialization}</h5>
+        <p className="text-[14px] font-medium text-black mb-1 no-underline">{coach.date || coach.created_at?.split("T")[0]}</p>
+        <p className="text-[14px] font-medium text-black mb-2 no-underline" style={{
           display: "-webkit-box",
           WebkitLineClamp: 2,
           WebkitBoxOrient: "vertical",
@@ -81,7 +81,7 @@ const CoachCard = ({ coach }) => (
         }}>
           {coach.bio_data?.replace(/<[^>]+>/g, "") || ""}
         </p>
-        <p className="flex justify-end text-[14px] font-medium text-black">2 min. read</p>
+        <p className="flex justify-end text-[14px] font-medium text-black no-underline">Read More</p>
       </div>
     </div>
   </Link>
@@ -161,7 +161,7 @@ export default function Home() {
           <Container>
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-white text-[22px] font-bold">Events</h4>
-              <Link href="/event/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md">View All</Link>
+              <Link href="/event/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
             </div>
             <div className="grid grid-cols-12 gap-4">
               {events.slice(0,3).map(e => <div key={e.id} className="col-span-12 xl:col-span-4"><EventCard event={e} /></div>)}
@@ -174,7 +174,7 @@ export default function Home() {
           <Container>
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-white text-[22px] font-bold">Stories</h4>
-              <Link href="/story/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md">View All</Link>
+              <Link href="/story/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
             </div>
             <div className="grid grid-cols-12 gap-4">
               {stories.slice(0,3).map(s => <div key={s.id} className="col-span-12 xl:col-span-4"><StoryCard story={s} /></div>)}
@@ -187,7 +187,7 @@ export default function Home() {
           <Container>
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-white text-[22px] font-bold">Coaches</h4>
-              <Link href="/coach/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md">View All</Link>
+              <Link href="/coach/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
             </div>
             <div className="grid grid-cols-12 gap-4">
               {coaches.slice(0,3).map(c => <div key={c.id} className="col-span-12 xl:col-span-4"><CoachCard coach={c} /></div>)}
