@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
+import { FaEye, FaTrash } from "react-icons/fa";
 import { customerList } from "../../../utils/fetchAdminApi";
 import Pagination from "@mui/material/Pagination";
 import { useRouter } from "next/router";
@@ -16,9 +16,7 @@ export default function Listing() {
 
   const router = useRouter();
 
-  // Fetch customers (made reusable)
   const fetchCustomers = async () => {
-    // setLoading(true);
     const data = await customerList();
     setCustomers(data || []);
     setLoading(false);
@@ -47,13 +45,13 @@ export default function Listing() {
   const totalPages = Math.ceil(filteredCustomers.length / customersPerPage);
 
   return (
-    <div className="py-4">
-      <div className="bg-white shadow-lg rounded-xl p-6">
+    <div className="py-6 bg-black">
+      <div className="bg-[#111] border border-yellow-500 shadow-lg rounded-xl p-6">
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Customer List</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl font-bold text-white">Customer List</h1>
+            <p className="text-gray-400 mt-1">
               Manage and view customer details here.
             </p>
           </div>
@@ -67,13 +65,13 @@ export default function Listing() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="border border-gray-300 rounded-lg px-4 py-2 w-72"
+              className="border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 w-72 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
 
             {/* Back Button */}
             <button
               onClick={() => router.back()}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+              className="px-4 py-2 rounded-lg bg-yellow-500 text-black font-semibold hover:bg-yellow-600 transition"
             >
               ← Back
             </button>
@@ -81,7 +79,7 @@ export default function Listing() {
         </div>
 
         {/* Table */}
-        <div className="bg-white border rounded-lg overflow-hidden">
+        <div className="bg-black border border-yellow-500 rounded-lg overflow-hidden">
           {loading ? (
             <div className="p-6 text-center">
               <img
@@ -89,12 +87,12 @@ export default function Listing() {
                 alt="Loading..."
                 className="mx-auto w-12 h-12"
               />
-              <p className="mt-2 text-gray-500">Loading customers...</p>
+              <p className="mt-2 text-gray-400">Loading customers...</p>
             </div>
           ) : (
             <div>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-100 text-gray-700">
+              <table className="w-full border-collapse text-white">
+                <thead className="bg-[#222] text-yellow-500">
                   <tr>
                     <th className="p-3 text-left">#</th>
                     <th className="p-3 text-left">Name</th>
@@ -109,24 +107,26 @@ export default function Listing() {
                     currentCustomers.map((customer, index) => (
                       <tr
                         key={customer.id}
-                        className="border-b hover:bg-gray-50 transition"
+                        className="border-b border-gray-700 hover:bg-[#222] transition"
                       >
                         <td className="p-3">{indexOfFirst + index + 1}</td>
-                        <td className="p-3 font-medium text-gray-800">
+                        <td className="p-3 font-medium text-white">
                           {customer.name}
                         </td>
-                        <td className="p-3">{customer.email}</td>
-                        <td className="p-3">{customer.phone_number}</td>
+                        <td className="p-3 text-gray-300">{customer.email}</td>
+                        <td className="p-3 text-gray-300">
+                          {customer.phone_number}
+                        </td>
                         <td className="p-3">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-medium ${
                               customer.status === "active"
-                                ? "bg-green-100 text-green-700"
+                                ? "bg-green-600 text-white"
                                 : customer.status === "inactive"
-                                ? "bg-gray-200 text-gray-700"
+                                ? "bg-gray-600 text-white"
                                 : customer.status === "banned"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-yellow-100 text-yellow-700"
+                                ? "bg-red-600 text-white"
+                                : "bg-yellow-600 text-black"
                             }`}
                           >
                             {customer.status
@@ -139,23 +139,18 @@ export default function Listing() {
                           <div className="flex justify-center space-x-2">
                             {/* View Button */}
                             <Link
-                              href={`/administor/customer/view?id=${customer.id}`} // Pass coach ID in the URL
-                              className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition"
+                              href={`/administor/customer/view?id=${customer.id}`}
+                              className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition"
                             >
-                              <FaEye className="text-blue-600 text-lg" />
+                              <FaEye className="text-black text-lg" />
                             </Link>
-
-                            {/* Edit Button */}
-                            {/* <button className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition">
-                              <FaEdit className="text-green-600 text-lg" />
-                            </button> */}
 
                             {/* Delete Button */}
                             <button
                               onClick={() => handleDelete(customer.id)}
-                              className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition"
+                              className="p-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
                             >
-                              <FaTrash className="text-red-600 text-lg" />
+                              <FaTrash className="text-white text-lg" />
                             </button>
                           </div>
                         </td>
@@ -165,7 +160,7 @@ export default function Listing() {
                     <tr>
                       <td
                         colSpan="6"
-                        className="p-4 text-center text-gray-500 italic"
+                        className="p-4 text-center text-gray-400 italic"
                       >
                         No customers found.
                       </td>
@@ -175,8 +170,8 @@ export default function Listing() {
               </table>
 
               {/* Pagination */}
-              <div className="p-4 flex justify-between items-center border-t">
-                <span className="text-gray-600 text-sm">
+              <div className="p-4 flex justify-between items-center border-t border-gray-700">
+                <span className="text-gray-400 text-sm">
                   Showing {indexOfFirst + 1} to{" "}
                   {Math.min(indexOfLast, filteredCustomers.length)} of{" "}
                   {filteredCustomers.length} entries
@@ -186,7 +181,15 @@ export default function Listing() {
                     count={totalPages}
                     page={currentPage}
                     onChange={(e, value) => setCurrentPage(value)}
-                    color="primary"
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        color: "white",
+                      },
+                      "& .Mui-selected": {
+                        backgroundColor: "#FFD700 !important",
+                        color: "black",
+                      },
+                    }}
                   />
                 )}
               </div>

@@ -4,21 +4,25 @@ import { useRouter } from "next/navigation";
 import { createEvent } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
+// Dynamically import ReactQuill
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function Create() {
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState(""); // Event category
-  const [image, setImage] = useState(null); // Event image
+  const [contentType, setContentType] = useState(""); 
+  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [video, setVideo] = useState(null); // Video file
+  const [video, setVideo] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  // Image preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -26,12 +30,9 @@ export default function Create() {
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result);
       reader.readAsDataURL(file);
-    } else {
-      setPreview(null);
-    }
+    } else setPreview(null);
   };
 
-  // Video preview
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     setVideo(file);
@@ -39,23 +40,13 @@ export default function Create() {
       const reader = new FileReader();
       reader.onloadend = () => setVideoPreview(reader.result);
       reader.readAsDataURL(file);
-    } else {
-      setVideoPreview(null);
-    }
+    } else setVideoPreview(null);
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validation
-    if (!eventName || !description || !eventDate || !image || !category) {
-      alert("Please fill all fields and upload an image.");
-      return;
-    }
-
-    if (category === "video_content" && !video) {
-      alert("Please upload a video for Video Content category.");
+    if (!eventName || !description || !eventDate || !image || !contentType) {
+      toast.error("Please fill all fields and upload an image.");
       return;
     }
 
@@ -63,144 +54,149 @@ export default function Create() {
     formData.append("event_name", eventName);
     formData.append("event_date", eventDate);
     formData.append("description", description);
-    formData.append("category", category);
+    formData.append("content_type", contentType);
     formData.append("image", image);
-
-    if (category === "video_content" && video) {
-      formData.append("video", video);
-    }
+    if (video) formData.append("video", video);
 
     try {
       setLoading(true);
       await createEvent(formData);
-      toast.success("Event Created successfully!");
-      setTimeout(() => {
-        router.push("/administor/event/listing");
-      }, 2000);
+      toast.success("Event created successfully!");
+      setTimeout(() => router.push("/administor/event/listing"), 2000);
     } catch (error) {
-      console.error(error);
       toast.error(error.message || "Failed to create event.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Custom Quill modules
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image", "video"],
+      ["clean"],
+    ],
+  };
+
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Create Event</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        
-        {/* Event Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Event Name</label>
-          <input
-            type="text"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-            placeholder="Enter event name"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Event Date */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Event Date</label>
-          <input
-            type="date"
-            value={eventDate}
-            onChange={(e) => setEventDate(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Event Category */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Category</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          >
-            <option value="">Select category</option>
-            <option value="video_content">Video Content</option>
-            <option value="articles">Articles</option>
-            <option value="news">News</option>
-          </select>
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter event description"
-            rows="4"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Image Upload */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Event Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full"
-          />
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="mt-3 w-48 h-32 object-cover rounded-lg shadow"
-            />
-          )}
-        </div>
-
-        {/* Video Upload (only for Video Content) */}
-        {category === "video_content" && (
+    <div className="bg-[#0F0F0F] py-6">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Create Event</h1>
+        <form onSubmit={handleSubmit} className="space-y-5 text-[#FFFFFF]">
+          
+          {/* Event Name */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Event Video</label>
+            <label className="block text-yellow-500 font-medium mb-1">Event Name *</label>
             <input
-              type="file"
-              accept="video/*"
-              onChange={handleVideoChange}
-              className="w-full"
+              type="text"
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+              placeholder="Enter event name"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              required
             />
-            {videoPreview && (
-              <video
-                src={videoPreview}
-                controls
-                className="mt-3 w-64 h-36 rounded-lg shadow"
-              />
-            )}
           </div>
-        )}
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administor/event")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Creating..." : "Create Event"}
-          </button>
-        </div>
-      </form>
-      <ToastContainer position="top-right" autoClose={3000} />
+          {/* Event Date */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Event Date *</label>
+            <input
+              type="date"
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+              required
+            />
+          </div>
+
+          {/* Content Type */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
+            <select
+              value={contentType}
+              onChange={(e) => setContentType(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+              required
+            >
+              <option value="">Select Content Type</option>
+              <option value="Video">Video Content</option>
+              <option value="Articles">Articles</option>
+              <option value="News">News</option>
+            </select>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Description *</label>
+            <div className="border border-[#FFD700] rounded-lg">
+              <ReactQuill
+                theme="snow"
+                value={description}
+                onChange={setDescription}
+                placeholder="Enter description or article content"
+                modules={quillModules}
+                className="bg-[#222222] text-white rounded-lg"
+              />
+            </div>
+          </div>
+
+          {/* Image & Video Upload in 2 columns */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Image Upload */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Event Image *</label>
+              <input type="file" accept="image/*" onChange={handleImageChange} className="w-full" />
+              {preview && (
+                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="object-cover w-full h-full rounded-md"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Video Upload */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Event Video (Optional)</label>
+              <input type="file" accept="video/*" onChange={handleVideoChange} className="w-full" />
+              {videoPreview && (
+                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
+                  <video
+                    src={videoPreview}
+                    controls
+                    className="object-cover w-full h-full rounded-md"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/event/listing")}
+              className="px-4 py-2 bg-[#444] text-[#FFFFFF] rounded-lg hover:bg-[#555] transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-[#FFD700] text-[#000000] rounded-lg hover:bg-[#FFEA70] transition disabled:opacity-50"
+            >
+              {loading ? "Creating..." : "Create Event"}
+            </button>
+          </div>
+        </form>
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </div>
   );
 }

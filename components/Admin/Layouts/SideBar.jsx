@@ -22,24 +22,24 @@ export default function SideBar({ menuOpen }) {
   const currentPath = router.pathname; // current route
 
   const menuItems = [
-    { name: "Dashboard", icon: <FaHome className="text-blue-500"/>, href: "/administor/dashboard" },
-    { name: "Customers", icon: <FaUsers className="text-green-500" />, href: "/administor/customer/listing" },
-    { name: "Event", icon: <FaStar className="text-pink-500" />, href: "/administor/event/listing" },
-    { name: "Stories", icon: <FaBookOpen className="text-indigo-500" />, href: "/administor/stories/listing" },
-    { name: "Brands", icon: <FaTag className="text-orange-500" />, href: "/administor/brand/listing" },
-    { name: "Coaches", icon: <FaChalkboardTeacher className="text-teal-500" />, href: "/administor/coach/listing" },
-    { name: "Community", icon: <FaComments className="text-purple-500" />, href: "/administor/community/listing" },
-    { name: "Event Contests", icon: <FaTrophy className="text-yellow-500" />, href: "/administor/eventContests/listing" },
-    { name: "Pages", icon: <FaListAlt className="text-yellow-500" />, href: "/administor/pages/dynamic" },
-    { name: "Support", icon: <FaHeadset className="text-red-500" />, href: "/administor/pages/support" },
-    { name: "Subscription", icon: <FaCreditCard className="text-red-500" />, href: "/administor/subscription/listing" },
-    { name: "Subscribed", icon: <FaUserCheck className="text-red-500" />, href: "/administor/customer/subscribedCustomer" },
-    { name: "Settings", icon: <FaCog className="text-gray-600" />, href: "/administor/settings/configration" },
+    { name: "Dashboard", icon: <FaHome className="text-yellow-400"/>, href: "/administor/dashboard" },
+    { name: "Customers", icon: <FaUsers className="text-yellow-400" />, href: "/administor/customer/listing" },
+    { name: "Event", icon: <FaStar className="text-yellow-400" />, href: "/administor/event/listing" },
+    { name: "Stories", icon: <FaBookOpen className="text-yellow-400" />, href: "/administor/stories/listing" },
+    { name: "Brands", icon: <FaTag className="text-yellow-400" />, href: "/administor/brand/listing" },
+    { name: "Coaches", icon: <FaChalkboardTeacher className="text-yellow-400" />, href: "/administor/coach/listing" },
+    { name: "Community", icon: <FaComments className="text-yellow-400" />, href: "/administor/community/listing" },
+    { name: "Event Contests", icon: <FaTrophy className="text-yellow-400" />, href: "/administor/eventContests/listing" },
+    { name: "Pages", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/pages/dynamic" },
+    { name: "Support", icon: <FaHeadset className="text-yellow-400" />, href: "/administor/pages/support" },
+    { name: "Subscription", icon: <FaCreditCard className="text-yellow-400" />, href: "/administor/subscription/listing" },
+    { name: "Subscribed", icon: <FaUserCheck className="text-yellow-400" />, href: "/administor/customer/subscribedCustomer" },
+    { name: "Settings", icon: <FaCog className="text-yellow-400" />, href: "/administor/settings/configration" },
   ];
 
   return (
     <aside
-      className={`bg-white text-gray-800 w-64 py-3 px-2
+      className={`bg-[#1f2937] text-gray-100 w-64 py-3 px-2
         fixed top-16 left-0 h-[calc(100vh-4rem)] transition-transform duration-300
         ${menuOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0
@@ -53,8 +53,8 @@ export default function SideBar({ menuOpen }) {
               href={item.href}
               className={`flex items-center space-x-2 p-2 rounded-md transition no-underline ${
                 currentPath === item.href
-                  ? "bg-gray-200 font-semibold text-black"
-                  : "hover:bg-gray-100 text-dark"
+                  ? "bg-yellow-500 text-black font-semibold"
+                  : "hover:bg-gray-700 text-gray-200"
               }`}
             >
               {item.icon} <span>{item.name}</span>

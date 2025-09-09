@@ -1,13 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getCoachById, updateCoach } from "../../../utils/fetchAdminApi"; 
+import { getCoachById, updateCoach } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
+import dynamic from "next/dynamic";
 import "react-toastify/dist/ReactToastify.css";
+import "react-quill/dist/quill.snow.css";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function EditCoach() {
   const searchParams = useSearchParams();
-  const coachId = searchParams.get("id"); // ✅ from query string
+  const coachId = searchParams.get("id");
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -16,8 +20,11 @@ export default function EditCoach() {
   const [specialization, setSpecialization] = useState("");
   const [experience, setExperience] = useState("");
   const [bioData, setBioData] = useState("");
+  const [contentType, setContentType] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [video, setVideo] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Fetch coach data
@@ -32,7 +39,9 @@ export default function EditCoach() {
             setSpecialization(res.data.specialization || "");
             setExperience(res.data.experience_years || "");
             setBioData(res.data.bio_data || "");
+            setContentType(res.data.content_type || "");
             setPreview(res.data.coach_image || null);
+            if (res.data.coach_video) setVideoPreview(res.data.coach_video);
           } else {
             toast.error("Coach not found");
           }
@@ -49,15 +58,24 @@ export default function EditCoach() {
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result);
       reader.readAsDataURL(file);
-    }
+    } else setPreview(null);
   };
 
-  // Submit form
+  // Video preview
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    setVideo(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setVideoPreview(reader.result);
+      reader.readAsDataURL(file);
+    } else setVideoPreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !email || !phone || !specialization || !experience || !bioData) {
-      toast.error("Please fill all fields");
+    if (!name || !email || !phone || !specialization || !experience || !bioData || !contentType) {
+      toast.error("Please fill all required fields");
       return;
     }
 
@@ -68,15 +86,15 @@ export default function EditCoach() {
     formData.append("specialization", specialization);
     formData.append("experience_years", experience);
     formData.append("bio_data", bioData);
-    if (image) formData.append("image", image); // only if new image selected
+    formData.append("content_type", contentType);
+    if (image) formData.append("image", image);
+    if (video) formData.append("video", video);
 
     try {
       setLoading(true);
       await updateCoach(formData, coachId);
       toast.success("Coach updated successfully!");
-      setTimeout(() => {
-        router.push("/administor/coach/listing");
-      }, 2000);
+      setTimeout(() => router.push("/administor/coach/listing"), 2000);
     } catch (error) {
       console.error(error);
       toast.error(error.message || "Failed to update coach.");
@@ -86,114 +104,152 @@ export default function EditCoach() {
   };
 
   return (
-    <div className="mx-auto bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Coach</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
+    <div className="bg-[#0F0F0F] py-6 min-h-screen">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Edit Coach</h1>
 
-        {/* Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-5 text-[#FFFFFF]">
 
-        {/* Email */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Phone */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Phone</label>
-          <input
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Specialization */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Specialization</label>
-          <input
-            type="text"
-            value={specialization}
-            onChange={(e) => setSpecialization(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Experience */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Experience (years)</label>
-          <input
-            type="number"
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Bio Data */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Bio Data</label>
-          <textarea
-            value={bioData}
-            onChange={(e) => setBioData(e.target.value)}
-            rows="4"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
-        {/* Image */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Coach Image</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="mt-3 w-48 h-32 object-cover rounded-lg shadow"
+          {/* Name */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Name *</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administor/coach/listing")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Updating..." : "Update Coach"}
-          </button>
-        </div>
-      </form>
-      <ToastContainer position="top-right" autoClose={3000} />
+          {/* Email */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Email *</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              required
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Phone *</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              required
+            />
+          </div>
+
+          {/* Specialization */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Specialization *</label>
+            <input
+              type="text"
+              value={specialization}
+              onChange={(e) => setSpecialization(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              required
+            />
+          </div>
+
+          {/* Experience */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Experience (years) *</label>
+            <input
+              type="number"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              required
+            />
+          </div>
+
+          {/* Content Type */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
+            <select
+              value={contentType}
+              onChange={(e) => setContentType(e.target.value)}
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+              required
+            >
+              <option value="">Select Content Type</option>
+              <option value="Video">Video</option>
+              <option value="Article">Article</option>
+              <option value="News">News</option>
+            </select>
+          </div>
+
+          {/* Bio Data (Rich Text Editor) */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">Bio Data *</label>
+            <div className="border border-[#FFD700] rounded-lg">
+              <ReactQuill
+                value={bioData}
+                onChange={setBioData}
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ["bold", "italic", "underline", "strike"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image", "video"],
+                    ["clean"]
+                  ]
+                }}
+                className="bg-[#222222] text-white rounded-lg"
+              />
+            </div>
+          </div>
+
+          {/* Image + Video */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Coach Image *</label>
+              <input type="file" accept="image/*" onChange={handleImageChange} />
+              {preview && (
+                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
+                  <img src={preview} alt="Preview" className="object-cover w-full h-full rounded-md" />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Coach Video (Optional)</label>
+              <input type="file" accept="video/*" onChange={handleVideoChange} />
+              {videoPreview && (
+                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
+                  <video src={videoPreview} controls className="object-cover w-full h-full rounded-md" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/coach/listing")}
+              className="px-4 py-2 bg-[#444] text-[#FFFFFF] rounded-lg hover:bg-[#555] transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-[#FFD700] text-[#000000] rounded-lg hover:bg-[#FFEA70] transition disabled:opacity-50"
+            >
+              {loading ? "Updating..." : "Update Coach"}
+            </button>
+          </div>
+        </form>
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </div>
   );
 }

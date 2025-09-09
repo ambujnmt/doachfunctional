@@ -70,6 +70,12 @@ export default function YellowCircleMenu() {
         </button>
 
         <div className="space-y-6 mt-16">
+          <Link
+                href="/home"
+                className="block px-3 py-3 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+              >
+                Home
+              </Link>
           {!isLoggedIn ? (
             <>
               <Link
