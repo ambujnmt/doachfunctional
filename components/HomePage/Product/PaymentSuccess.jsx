@@ -54,10 +54,10 @@ export default function PaymentSuccess() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => router.push("/customer/dashboard")}
+              onClick={() => router.push("/customer/order/listing")}
               className="bg-[#e9c055] text-[#182530] font-semibold py-3 px-6 rounded-xl hover:bg-yellow-500 transition"
             >
-              🚀 Go to Dashboard
+              🚀 Go to Orders
             </button>
             <button
               onClick={() => router.push("/")}

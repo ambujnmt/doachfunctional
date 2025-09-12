@@ -37,7 +37,7 @@ export default function EventList() {
                                     <div key={event.id} className="col-span-12 xl:col-span-4 md:col-span-6 lg:col-span-4 no-underline">
                                         <Link
                                         href={`/event/${event.slug}`}
-                                        className="block bg-[#FFC32B] rounded-3xl cursor-pointer"
+                                        className="block bg-[#FFC32B] rounded-3xl cursor-pointer no-underline"
                                         >
                                         <img 
                                             src={event.event_image || 'https://via.placeholder.com/400x250'} 

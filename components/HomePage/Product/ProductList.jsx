@@ -122,7 +122,7 @@ export default function ProductList() {
                         <div className="w-full lg:w-3/4 grid grid-cols-12 gap-6">
                             {filteredProducts.length > 0 ? filteredProducts.map(product => (
                                 <div key={product.id} className="col-span-12 md:col-span-6 xl:col-span-4">
-                                    <Link href={`/product/${product.slug}`}>
+                                    <Link href={`/product/${product.slug}`} className='no-underline'>
                                         <div className="bg-yellow-400 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 cursor-pointer">
                                             <img
                                                 src={product.images?.find(img => img.type === "thumbnail")?.image_url || 'https://via.placeholder.com/400x250'}

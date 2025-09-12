@@ -89,6 +89,9 @@ export default function ProductDetail() {
 
       if (res?.status) {
         toast.success(res.message || "Product added to cart!");
+        setTimeout(() => {
+          router.push("/cart/list"); 
+        }, 1000);
       } else {
         toast.error(res.message || "Failed to add product to cart.");
       }
