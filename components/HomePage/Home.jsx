@@ -142,7 +142,7 @@ export default function Home() {
                 <AiOutlinePlus className="text-white text-[50px]" />
                 <img src="https://nmtdevserver.com/doach/cavs-logo.png" alt="CAVS" className="w-[170px]" />
                 <h4 className="text-white text-[22px] font-thin mt-5 xl:mt-0" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
-                  National free throw challenge <br /> OCT 17 • 23 2025
+                  National free throw challenge <br /> OCT 17 2026
                 </h4>
               </div>
               <CountdownTimer />
@@ -157,7 +157,7 @@ export default function Home() {
         </section>
 
         {/* Events */}
-        {/* <section className="event-sec">
+        <section className="event-sec">
           <Container>
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-white text-[22px] font-bold">Events</h4>
@@ -167,10 +167,10 @@ export default function Home() {
               {events.slice(0,3).map(e => <div key={e.id} className="col-span-12 xl:col-span-4"><EventCard event={e} /></div>)}
             </div>
           </Container>
-        </section> */}
+        </section>
 
         {/* Stories */}
-        {/* <section className="event-sec mt-5">
+        <section className="event-sec mt-5">
           <Container>
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-white text-[22px] font-bold">Stories</h4>
@@ -180,10 +180,10 @@ export default function Home() {
               {stories.slice(0,3).map(s => <div key={s.id} className="col-span-12 xl:col-span-4"><StoryCard story={s} /></div>)}
             </div>
           </Container>
-        </section> */}
+        </section>
 
         {/* Coaches */}
-        {/* <section className="event-sec mt-5">
+        <section className="event-sec mt-5">
           <Container>
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-white text-[22px] font-bold">Coaches</h4>
@@ -193,11 +193,11 @@ export default function Home() {
               {coaches.slice(0,3).map(c => <div key={c.id} className="col-span-12 xl:col-span-4"><CoachCard coach={c} /></div>)}
             </div>
           </Container>
-        </section> */}
+        </section>
 
-        {/* <div className="mt-12 flex justify-center">
+        <div className="mt-12 flex justify-center">
           <button onClick={openSignupModal} className="px-8 py-3 bg-[#FFC32B] text-black rounded-full font-semibold">View Challenge</button>
-        </div> */}
+        </div>
 
         <HomeFooter />
       </div>
