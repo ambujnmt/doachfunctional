@@ -9,8 +9,9 @@ export default function CountdownTimer() {
   });
 
   useEffect(() => {
-    // 🎯 Target Date (change this to your event date)
-    const targetDate = new Date("2025-08-27T00:00:00").getTime();
+    // 🎯 Target Date: Oct 17, 2026 at 9:00 AM EST
+    const targetDate = new Date("2026-10-17T14:00:00Z").getTime(); 
+    // 9 AM EST = 14:00 UTC
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -35,7 +36,10 @@ export default function CountdownTimer() {
   return (
     <div className="text-white flex flex-col items-center">
       {/* Heading */}
-      <h2 className="text-[24px] font-thin mb-4" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>
+      <h2
+        className="text-[24px] font-thin mb-4"
+        style={{ fontFamily: "Bebas Neue, sans-serif" }}
+      >
         TIME REMAINING
       </h2>
 
@@ -43,23 +47,63 @@ export default function CountdownTimer() {
       <div className="flex space-x-8 text-center">
         {/* Days */}
         <div>
-          <div className="xl:text-[70px] text-[40px] leading-[55px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>{timeLeft.days}</div>
-          <div className="text-[22px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>DAYS</div>
+          <div
+            className="xl:text-[70px] text-[40px] leading-[55px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            {timeLeft.days}
+          </div>
+          <div
+            className="text-[22px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            DAYS
+          </div>
         </div>
         {/* Hours */}
         <div>
-          <div className="xl:text-[70px] text-[40px] leading-[55px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>{timeLeft.hours}</div>
-          <div className="text-[22px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>HOURS</div>
+          <div
+            className="xl:text-[70px] text-[40px] leading-[55px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            {timeLeft.hours}
+          </div>
+          <div
+            className="text-[22px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            HOURS
+          </div>
         </div>
         {/* Minutes */}
         <div>
-          <div className="xl:text-[70px] text-[40px] leading-[55px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>{timeLeft.minutes}</div>
-          <div className="text-[22px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>MINUTES</div>
+          <div
+            className="xl:text-[70px] text-[40px] leading-[55px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            {timeLeft.minutes}
+          </div>
+          <div
+            className="text-[22px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            MINUTES
+          </div>
         </div>
         {/* Seconds */}
         <div>
-          <div className="xl:text-[70px] text-[40px] leading-[55px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>{timeLeft.seconds}</div>
-          <div className="text-[22px]" style={{ fontFamily: "Bebas Neue, sans-serif;" }}>SECONDS</div>
+          <div
+            className="xl:text-[70px] text-[40px] leading-[55px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            {timeLeft.seconds}
+          </div>
+          <div
+            className="text-[22px]"
+            style={{ fontFamily: "Bebas Neue, sans-serif" }}
+          >
+            SECONDS
+          </div>
         </div>
       </div>
     </div>

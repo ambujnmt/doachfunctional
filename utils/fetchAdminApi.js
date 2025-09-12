@@ -645,5 +645,151 @@ export const updatecommunity = async (id, formData) => {
 };
 
 
+// category section
+export const categoryList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/category-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const createCategory = async (formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/category-create`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
+export const getCategoryById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/admin/v2/category-get/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getEvent error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+export const updateCategory = async (formData, id) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/category-update/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("updateEvent error:", error);
+    throw new Error(error.response?.data?.message || "Failed to update event");
+  }
+};
+
+
+// product section
+export const productList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/product-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const createProduct = async (formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/product-create`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
+export const getProductById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/admin/v2/product-get/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getEvent error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+export const updateProduct = async (formData, id) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/product-update/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("updateEvent error:", error);
+    throw new Error(error.response?.data?.message || "Failed to update event");
+  }
+};
+
+export const deleteGalleryImage = async (id) => {
+  try {
+    const response = await axios.delete(`${baseUrl}api/admin/v2/product-gallery/${id}`);
+    if (response.data?.status) { // ✅ optional chaining
+      return true; // success
+    } else {
+      console.warn("Delete API returned false:", response.data);
+      return false;
+    }
+  } catch (error) {
+    console.error("Delete API error:", error.response?.data || error.message);
+    return false;
+  }
+};
+
 
 

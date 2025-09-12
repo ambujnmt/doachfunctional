@@ -44,6 +44,8 @@ export default function AdminHeader({ menuOpen, setMenuOpen }) {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("adminAuthToken");
+        localStorage.removeItem("admin");
+        localStorage.removeItem("adminId");
         Swal.fire({
           title: "Logged Out",
           text: "Your session has ended.",

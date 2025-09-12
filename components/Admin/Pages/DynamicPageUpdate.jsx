@@ -105,7 +105,7 @@ export default function DynamicPageUpdate() {
   };
 
   return (
-    <div className="bg-[#0F0F0F] py-6">
+    <div className="bg-[#000] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
         <h1 className="text-2xl font-bold text-white mb-4">📝 Edit Page</h1>
 

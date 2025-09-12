@@ -1,6 +1,7 @@
 import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
 import axios from "axios";
+import { productList } from "./fetchAdminApi";
 
 const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
@@ -376,5 +377,105 @@ export const addCommentToCoach = async (coachId, comment, userId, token) => {
   }
 };
 
+// category section
+export const getCategoriesList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/get-category-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch categories");
+    }
+
+    const result = await response.json();
+    return result; 
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return { status: false, data: [] }; // fallback
+  }
+};
 
 
+// productList
+export const getProductsList = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/get-product-list`);
+    return response.data || { status: false, data: [] }; // return full response
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return { status: false, data: [] };
+  }
+};
+
+export const getProductBySlug = async (slug) => {
+  try {
+    const res = await fetch(`${baseUrl}api/v1/get-product-detail/${slug}`);
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    return { status: false };
+  }
+};
+
+
+export const addToCart = async (cartData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/v1/cart/add`, cartData);
+    return response.data;
+  } catch (error) {
+    console.error("Add to cart error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+// cart list fetch karne ka helper
+export const getCartList = async (userId) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/cart/list/${userId}`);
+    return res.data; // JSON response return karega
+  } catch (err) {
+    console.error("Error fetching cart list:", err);
+    return { status: false, message: "Error fetching cart" };
+  }
+};
+
+export const updateCartQuantity = async (cartId, quantity) => {
+  try {
+    const res = await fetch(`${baseUrl}api/v1/cart/update-quantity`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}` // If using token
+      },
+      body: JSON.stringify({ cart_id: cartId, quantity }),
+    });
+    return await res.json();
+  } catch (error) {
+    console.error("API error:", error);
+    return { status: false, message: "Something went wrong." };
+  }
+};
+
+export const productChechout = async (cartData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/v1/product/checkout`, cartData);
+    return response.data;
+  } catch (error) {
+    console.error("Checkout error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+export const removeCartItem = async (itemId) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/cart/item-delete/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Remove cart item error:", error);
+    return { status: false, message: error.message };
+  }
+};
