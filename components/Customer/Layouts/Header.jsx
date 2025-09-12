@@ -42,6 +42,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userId");
         Swal.fire({
           title: "Logged Out!",
           text: "Your session has been ended.",
@@ -70,13 +72,13 @@ export default function Header({ menuOpen, setMenuOpen }) {
       </Link>
 
       {/* Center Menu */}
-      <nav className="hidden md:flex flex-1 justify-center space-x-6">
+      {/* <nav className="hidden md:flex flex-1 justify-center space-x-6">
         <Link href="/" className="hover:text-gray-200 no-underline text-white">Home</Link>
         <Link href="/customer/community" className="hover:text-gray-200 no-underline text-white">Community</Link>
         <Link href="/contactUs" className="hover:text-gray-200 no-underline text-white">Contact Us</Link>
         <Link href="/customer/profile/info" className="hover:text-gray-200 no-underline text-white">Profile</Link>
         <Link href="/subscription" className="hover:text-gray-200 no-underline text-white">Member Ship</Link>
-      </nav>
+      </nav> */}
 
       {/* Right Profile + Notification */}
       <div className="flex items-center space-x-4">

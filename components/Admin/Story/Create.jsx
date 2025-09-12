@@ -82,7 +82,7 @@ export default function Create() {
   };
 
   return (
-    <div className="bg-[#0F0F0F] py-6">
+    <div className="bg-[#000] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
         <h1 className="text-2xl font-bold text-[#FFF] mb-4">Create Story</h1>
 

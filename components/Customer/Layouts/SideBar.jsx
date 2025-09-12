@@ -37,6 +37,8 @@ export default function Sidebar({ menuOpen }) {
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("userId");
           Swal.fire({
             title: "Logged Out!",
             text: "Your session has been ended.",
@@ -68,6 +70,15 @@ export default function Sidebar({ menuOpen }) {
 
       <nav className="flex flex-col space-y-3">
         <Link
+          href="/customer/session/listing"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/session/listing"
+          )}`}
+        >
+          <FaHistory /> <span>Unleash a Session</span>
+        </Link>
+
+        <Link
           href="/customer/dashboard"
           className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
             "/customer/dashboard"
@@ -85,6 +96,15 @@ export default function Sidebar({ menuOpen }) {
           <FaUsers /> <span>Community</span>
         </Link>
 
+        <Link
+          href="/customer/order/listing"
+          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
+            "/customer/community"
+          )}`}
+        >
+          <FaUsers /> <span>Orders</span>
+        </Link>
+
         {/* <Link
           href="/customer/video/demoVideo"
           className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
@@ -93,15 +113,6 @@ export default function Sidebar({ menuOpen }) {
         >
           <FaVideo /> <span>Demo Video List</span>
         </Link> */}
-
-        <Link
-          href="/customer/session/listing"
-          className={`flex items-center space-x-2 p-2 rounded no-underline hover:bg-gray-700 ${isActive(
-            "/customer/session/history"
-          )}`}
-        >
-          <FaHistory /> <span>Session</span>
-        </Link>
 
         <Link
           href="/customer/profile/subscribedDetail"

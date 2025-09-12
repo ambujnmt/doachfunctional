@@ -27,6 +27,8 @@ export default function YellowCircleMenu() {
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("userId");
           Swal.fire({
             title: "Logged Out",
             text: "Your session has ended.",
@@ -93,19 +95,19 @@ export default function YellowCircleMenu() {
             </>
           ) : (
             <>
-            <Link
+            {/* <Link
               href="/customer/dashboard"
               className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
             >
               Dashboard
-            </Link>
+            </Link> */}
 
-            <Link
+            {/* <Link
               href="/customer/dashboard"
               className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
             >
               Unleash a Session
-            </Link>
+            </Link> */}
 
             <Link
               href="/customer/profile/info"
@@ -118,12 +120,19 @@ export default function YellowCircleMenu() {
               href="/subscription"
               className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
             >
-              Member Ship
+              My Subscriptions
             </Link>
              </>
           )}
 
           <Link
+              href="/product/listing"
+              className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+            >
+              Products
+            </Link>
+
+            <Link
               href="/event/listing"
               className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
             >
@@ -152,10 +161,17 @@ export default function YellowCircleMenu() {
           </Link>
 
           <Link
-            href="#"
+            href="https://www.doach.app"
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
           >
             MyDoach
+          </Link>
+
+          <Link
+            href="/cart/list"
+            className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
+          >
+            Cart
           </Link>
 
           {isLoggedIn && (

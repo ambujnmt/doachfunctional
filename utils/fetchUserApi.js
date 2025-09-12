@@ -75,4 +75,15 @@ export const getSubscribedDetailById = async (id) => {
   }
 };
 
+// order list fetch karne ka helper
+export const getOrderList = async (userId) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/customer/orders/${userId}`);
+    return res.data; // JSON response return karega
+  } catch (err) {
+    console.error("Error fetching cart list:", err);
+    return { status: false, message: "Error fetching cart" };
+  }
+};
+
 

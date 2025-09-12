@@ -23,6 +23,8 @@ export default function SideBar({ menuOpen }) {
 
   const menuItems = [
     { name: "Dashboard", icon: <FaHome className="text-yellow-400"/>, href: "/administor/dashboard" },
+    { name: "Products", icon: <FaTag className="text-yellow-400" />, href: "/administor/product/listing" },
+    { name: "Category", icon: <FaTag className="text-yellow-400" />, href: "/administor/category/listing" },
     { name: "Customers", icon: <FaUsers className="text-yellow-400" />, href: "/administor/customer/listing" },
     { name: "Event", icon: <FaStar className="text-yellow-400" />, href: "/administor/event/listing" },
     { name: "Stories", icon: <FaBookOpen className="text-yellow-400" />, href: "/administor/stories/listing" },
@@ -30,6 +32,7 @@ export default function SideBar({ menuOpen }) {
     { name: "Coaches", icon: <FaChalkboardTeacher className="text-yellow-400" />, href: "/administor/coach/listing" },
     // { name: "Community", icon: <FaComments className="text-yellow-400" />, href: "/administor/community/listing" },
     { name: "Event Contests", icon: <FaTrophy className="text-yellow-400" />, href: "/administor/eventContests/listing" },
+    { name: "Dynamic Forms", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/form/dynamic" },
     { name: "Pages", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/pages/dynamic" },
     { name: "Support", icon: <FaHeadset className="text-yellow-400" />, href: "/administor/pages/support" },
     { name: "Subscription", icon: <FaCreditCard className="text-yellow-400" />, href: "/administor/subscription/listing" },

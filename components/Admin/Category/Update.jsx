@@ -1,73 +1,58 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getBrandById, updateBrand } from "../../../utils/fetchAdminApi"; 
+import { getCategoryById, updateCategory } from "../../../utils/fetchAdminApi"; 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function EditBrand() {
+export default function Update() {
   const searchParams = useSearchParams();
-  const brandId = searchParams.get("id"); 
+  const categoryId = searchParams.get("id"); 
   const router = useRouter();
 
-  const [brandName, setBrandName] = useState("");
+  const [categoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Fetch brand data
+  // Fetch category data
   useEffect(() => {
-    if (brandId) {
-      getBrandById(brandId)
+    if (categoryId) {
+      getCategoryById(categoryId)
         .then((res) => {
           if (res.status) {
-            setBrandName(res.data.brand_name || "");
+            setCategoryName(res.data.name || "");
             setDescription(res.data.description || "");
-            setPreview(res.data.brand_image || null);
           } else {
-            toast.error("Brand not found");
+            toast.error("Category not found");
           }
         })
-        .catch(() => toast.error("Failed to fetch brand"));
+        .catch(() => toast.error("Failed to fetch category"));
     }
-  }, [brandId]);
-
-  // Image preview
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
+  }, [categoryId]);
 
   // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!brandName || !description) {
+    if (!categoryName || !description) {
       toast.error("Please fill all fields");
       return;
     }
 
     const formData = new FormData();
-    formData.append("brand_name", brandName);
+    formData.append("name", categoryName);
     formData.append("description", description);
-    if (image) formData.append("image", image);
 
     try {
       setLoading(true);
-      await updateBrand(formData, brandId);
-      toast.success("Brand updated successfully!");
+      await updateCategory(formData, categoryId);
+      toast.success("Category updated successfully!");
       setTimeout(() => {
-        router.push("/administor/brand/listing");
+        router.push("/administor/category/listing");
       }, 2000);
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Failed to update brand.");
+      toast.error(error.message || "Failed to update category.");
     } finally {
       setLoading(false);
     }
@@ -76,17 +61,17 @@ export default function EditBrand() {
   return (
     <div className="bg-[#000] min-h-screen py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">Edit Brand</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">Edit Category</h1>
         <form onSubmit={handleSubmit} className="space-y-5 text-white">
           
-          {/* Brand Name */}
+          {/* Category Name */}
           <div>
-            <label className="block text-yellow-500 font-medium mb-1">Brand Name</label>
+            <label className="block text-yellow-500 font-medium mb-1">Category Name</label>
             <input
               type="text"
-              value={brandName}
-              onChange={(e) => setBrandName(e.target.value)}
-              placeholder="Enter brand name"
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+              placeholder="Enter category name"
               className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white placeholder-gray-400 focus:ring focus:ring-[#FFEA70]"
               required
             />
@@ -98,36 +83,18 @@ export default function EditBrand() {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter brand description"
+              placeholder="Enter category description"
               rows="4"
               className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white placeholder-gray-400 focus:ring focus:ring-[#FFEA70]"
               required
             />
           </div>
 
-          {/* Image Upload */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Brand Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white cursor-pointer hover:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-[#FFEA70]"
-            />
-            {preview && (
-              <img
-                src={preview}
-                alt="Preview"
-                className="mt-3 w-48 h-32 object-cover rounded-lg shadow border border-yellow-500"
-              />
-            )}
-          </div>
-
           {/* Actions */}
           <div className="flex justify-between items-center">
             <button
               type="button"
-              onClick={() => router.push("/administor/brand/listing")}
+              onClick={() => router.push("/administor/category/listing")}
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
             >
               Cancel
@@ -137,7 +104,7 @@ export default function EditBrand() {
               disabled={loading}
               className="px-4 py-2 bg-[#FFD700] text-black rounded-lg hover:bg-[#FFEA70] transition disabled:opacity-50"
             >
-              {loading ? "Updating..." : "Update Brand"}
+              {loading ? "Updating..." : "Update Category"}
             </button>
           </div>
         </form>
