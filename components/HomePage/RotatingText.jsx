@@ -1,31 +1,45 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { getDynamicPageList } from "../../utils/fetchApi";
 
 export default function RotatingText() {
-  const texts = [
-    { label: "The AI Coach That Adapts to You", href: "/#" },
-    { label: "Unleash a Session", href: "/#" },
-    { label: "Sign up now", href: "/signUp" },
-    { label: "Doach Events", href: "/event" },
-    { label: "Posts", href: "/#" },
-    { label: "Download app (also in other spots)", href: "/#" },
-  ];
-
+  const [slides, setSlides] = useState([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const pages = await getDynamicPageList();
+        const homeSlides = pages.filter((p) => p.type === "home_slider");
+        setSlides(homeSlides);
+      } catch (err) {
+        console.error("Failed to fetch slides:", err.message);
+      }
+    };
+
+    fetchSlides();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
+
     const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % texts.length);
+      setIndex((prevIndex) => (prevIndex + 1) % slides.length);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [texts.length]);
+  }, [slides]);
+
+  if (slides.length === 0) {
+    return <p className="text-center text-gray-400 mt-10">Loading slides...</p>;
+  }
 
   return (
     <div className="text-center">
-      <Link href={texts[index].href} className="no-underline">
+      <Link href={`${slides[index].url}`} className="no-underline">
         <p className="cursor-pointer mt-[50px] text-[13px] xl:text-lg md:text-xl text-black max-w-md mx-auto p-2 bg-[#FFC32B] rounded-full transition-all duration-500 hover:scale-105">
-          {texts[index].label}
+          {slides[index].title}
         </p>
       </Link>
     </div>

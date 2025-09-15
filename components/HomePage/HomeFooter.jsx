@@ -1,15 +1,30 @@
-import React from 'react';
-import Container from '@mui/material/Container';
-import Link from 'next/link';
-import { FaInstagram, FaYoutube, FaXTwitter, } from "react-icons/fa6";
-import { FaTiktok } from "react-icons/fa";  
-import { FaFacebook } from "react-icons/fa";
+"use client";
+import React, { useEffect, useState } from "react";
+import Container from "@mui/material/Container";
+import Link from "next/link";
+import { FaInstagram, FaYoutube, FaXTwitter } from "react-icons/fa6";
+import { FaTiktok, FaFacebook } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io";
-
+import { getDynamicPageList } from "../../utils/fetchApi";
 
 export default function HomeFooter() {
+  const [footerPages, setFooterPages] = useState([]);
+
+useEffect(() => {
+  const fetchPages = async () => {
+    try {
+      const pages = await getDynamicPageList();
+      const footerOnly = pages.filter((p) => p.type === "home_page");
+      setFooterPages(footerOnly);
+    } catch (err) {
+      console.error("Failed to load footer pages:", err.message);
+    }
+  };
+  fetchPages();
+}, []);
+
     return (
         <>
             <footer className="pt-10 pb-3 mt-[100px]">
@@ -40,30 +55,23 @@ export default function HomeFooter() {
                             </div>
                         </div>
 
+                        {/* Dynamic footer pages */}
                         <div className="col-span-12 xl:col-span-5 md:col-span-6 lg:col-span-5">
-                            <div className="text-left">
-                                <div className="xl:mt-12 mt-0"></div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=private-policy`}>Private Policy</Link>
+                            <div className="text-left xl:mt-12 mt-0">
+                            {footerPages.length > 0 ? (
+                                footerPages.map((page) => (
+                                <div key={page.id}>
+                                    <Link
+                                    className="block text-white font-bold text-[15px] no-underline"
+                                    href={`/dynamicPage?id=${page.slug}`}
+                                    >
+                                    {page.title}
+                                    </Link>
                                 </div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=terms-and-conditions`}>Terms</Link>
-                                </div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=private-policy`}>Cookie Settings</Link>
-                                </div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=accessibility`}>Accessibility</Link>
-                                </div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=fraud-warning`}>Fraud Warning</Link>
-                                </div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=do-not-sell-or-share`}>Do Not Sell/Share My Personal Infomation</Link>
-                                </div>
-                                <div className="text-black text-[15px] font-bold no-underline text-white">
-                                     <Link className="no-underline text-white" href={`/dynamicPage?id=doach-circle-rules`}>DOACH Circle Rules</Link>
-                                </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-400 italic">Loading footer links...</p>
+                            )}
                             </div>
                         </div>
 

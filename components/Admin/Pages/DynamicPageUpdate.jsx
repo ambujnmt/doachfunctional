@@ -12,15 +12,19 @@ import "react-quill/dist/quill.snow.css";
 
 export default function DynamicPageUpdate() {
   const searchParams = useSearchParams();
-  const slug = searchParams.get("page"); // ?page=terms
+  const slug = searchParams.get("page");
   const router = useRouter();
 
   const [pageData, setPageData] = useState({
     id: "",
     title: "",
     slug: "",
+    type: "",
     content: "",
+    url: "",
+    status: "1",
   });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -32,13 +36,17 @@ export default function DynamicPageUpdate() {
         const allPages = await dynamicPageList();
         const foundPage = Array.isArray(allPages)
           ? allPages.find((p) => p.slug === slug)
-          : allPages?.data?.find?.((p) => p.slug === slug); // safety
+          : allPages?.data?.find?.((p) => p.slug === slug);
+
         if (foundPage) {
           setPageData({
             id: foundPage.id,
             title: foundPage.title || "",
             slug: foundPage.slug || "",
+            type: foundPage.type || "normal",
             content: foundPage.content || "",
+            url: foundPage.url || "",
+            status: foundPage.status?.toString() || "1", // fix: reflect actual status
           });
         } else {
           toast.error("Page not found");
@@ -49,6 +57,7 @@ export default function DynamicPageUpdate() {
         setLoading(false);
       }
     };
+
     if (slug) fetchPage();
   }, [slug]);
 
@@ -62,52 +71,36 @@ export default function DynamicPageUpdate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!pageData?.id) {
-      toast.error("Invalid page data");
-      return;
-    }
-    if (!pageData.title?.trim()) {
-      toast.error("Title is required");
-      return;
-    }
-    if (!pageData.content?.trim()) {
-      toast.error("Content is required");
-      return;
-    }
+    if (!pageData.id) return toast.error("Invalid page data");
+    if (!pageData.title.trim()) return toast.error("Title is required");
 
     try {
       setSaving(true);
-      await dynamicPageUpdate(pageData.id, {
-        title: pageData.title,
-        content: pageData.content, // HTML from ReactQuill
-      });
+
+      let updateData = { title: pageData.title, status: pageData.status };
+
+      if (pageData.type === "home_slider") {
+        if (!pageData.url.trim()) return toast.error("URL is required");
+        updateData.url = pageData.url;
+      } else {
+        if (!pageData.content.trim()) return toast.error("Content is required");
+        updateData.content = pageData.content;
+      }
+
+      await dynamicPageUpdate(pageData.id, updateData);
       toast.success("Page updated successfully!");
-      setTimeout(() => {
-        router.push("/administor/pages/dynamic");
-      }, 1200);
-    } catch (error) {
+      setTimeout(() => router.push("/administor/pages/dynamic"), 1200);
+    } catch {
       toast.error("Failed to update page");
     } finally {
       setSaving(false);
     }
   };
 
-  // ReactQuill toolbar config
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ align: [] }],
-      ["link", "image"],
-      ["clean"],
-    ],
-  };
-
   return (
     <div className="bg-[#000] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">📝 Edit Page</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">Edit Page</h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Title */}
@@ -125,8 +118,8 @@ export default function DynamicPageUpdate() {
             />
           </div>
 
-          {/* Slug (read-only) */}
-          {pageData.slug ? (
+          {/* Slug */}
+          {pageData.slug && (
             <div>
               <label className="block text-[#FFC32B] font-medium mb-1">Slug</label>
               <input
@@ -137,30 +130,64 @@ export default function DynamicPageUpdate() {
                 className="w-full bg-[#333] border border-[#444] rounded-lg px-4 py-2 text-gray-300"
               />
             </div>
-          ) : null}
+          )}
 
-          {/* Content - ReactQuill */}
-          <div>
-            <label className="block text-[#FFC32B] font-medium mb-1">Content</label>
-            {loading ? (
-              <div className="w-full h-40 rounded-lg bg-[#333] animate-pulse" />
-            ) : (
-              <ReactQuill
+          {/* URL (only for slider) */}
+          {pageData.type === "home_slider" && (
+            <div>
+              <label className="block text-[#FFC32B] font-medium mb-1">URL</label>
+              <input
+                type="text"
+                name="url"
+                value={loading ? "" : pageData.url}
+                onChange={handleChange}
+                placeholder="Enter slider URL"
+                className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+                required
+                disabled={loading}
+              />
+            </div>
+          )}
+
+          {/* Content */}
+          {pageData.type !== "home_slider" && (
+            <div>
+              <label className="block text-[#FFC32B] font-medium mb-1">Content</label>
+              {loading ? (
+                <div className="w-full h-40 rounded-lg bg-[#333] animate-pulse" />
+              ) : (
+                <ReactQuill
                   value={pageData.content}
                   onChange={handleContentChange}
-                  placeholder="Enter coach bio data"
+                  placeholder="Enter page content"
                   modules={{
                     toolbar: [
-                      [{ header: [1, 2, false] }],
+                      [{ header: [1, 2, 3, false] }],
                       ["bold", "italic", "underline", "strike"],
                       [{ list: "ordered" }, { list: "bullet" }],
                       ["link", "image", "video"],
-                      ["clean"]
-                    ]
+                      ["clean"],
+                    ],
                   }}
                   className="bg-[#222222] text-white rounded-lg border"
                 />
-            )}
+              )}
+            </div>
+          )}
+
+          {/* Status Dropdown */}
+          <div>
+            <label className="block text-[#FFC32B] font-medium mb-1">Status</label>
+            <select
+              name="status"
+              value={pageData.status || "1"}
+              onChange={handleChange}
+              className="w-full bg-[#1E1E1E] border border-[#444] rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-[#FFC32B] focus:outline-none"
+              disabled={loading}
+            >
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+            </select>
           </div>
 
           {/* Actions */}
