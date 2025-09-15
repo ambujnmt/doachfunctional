@@ -1,7 +1,7 @@
 import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
-import axios from "axios";
 import { productList } from "./fetchAdminApi";
+import axios from "axios";
 
 const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
@@ -187,6 +187,16 @@ export const eventContestAwardsHomePage = async () => {
     return result.data || [];
   } catch (error) {
     console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const getDynamicPageList = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/page-list`);
+    return response.data.data || [];
+  } catch (error) {
+    console.error("Error fetching subscriptions:", error);
     return [];
   }
 };
@@ -478,4 +488,11 @@ export const removeCartItem = async (itemId) => {
     console.error("Remove cart item error:", error);
     return { status: false, message: error.message };
   }
+};
+
+// section hide show settings 
+
+export const getSettings = async () => {
+  const res = await axios.get(`${baseUrl}api/v1/get-settings`);
+  return res.data;
 };

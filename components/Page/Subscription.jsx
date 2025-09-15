@@ -99,6 +99,7 @@ export default function Subscription() {
 
                       <button
                         onClick={() => handlePay(sub)}
+                        disabled={!isActive} // ⬅ disables click when inactive
                         className={`mt-auto py-3 rounded-xl font-semibold text-white shadow-md transition-all duration-300 ${
                           isActive
                             ? "hover:opacity-90"
@@ -111,6 +112,7 @@ export default function Subscription() {
                       >
                         Pay ${sub.price}
                       </button>
+
                     </div>
                   </div>
                 );

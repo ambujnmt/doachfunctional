@@ -32,7 +32,7 @@ export default function SideBar({ menuOpen }) {
     { name: "Coaches", icon: <FaChalkboardTeacher className="text-yellow-400" />, href: "/administor/coach/listing" },
     // { name: "Community", icon: <FaComments className="text-yellow-400" />, href: "/administor/community/listing" },
     { name: "Event Contests", icon: <FaTrophy className="text-yellow-400" />, href: "/administor/eventContests/listing" },
-    { name: "Dynamic Forms", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/form/dynamic" },
+    { name: "Dynamic Forms", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/form/listing" },
     { name: "Pages", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/pages/dynamic" },
     { name: "Support", icon: <FaHeadset className="text-yellow-400" />, href: "/administor/pages/support" },
     { name: "Subscription", icon: <FaCreditCard className="text-yellow-400" />, href: "/administor/subscription/listing" },
@@ -50,19 +50,24 @@ export default function SideBar({ menuOpen }) {
     >
       <div>
         <nav className="flex flex-col space-y-1.5 mt-3">
-          {menuItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center space-x-2 p-2 rounded-md transition no-underline ${
-                currentPath === item.href
-                  ? "bg-yellow-500 text-black font-semibold"
-                  : "hover:bg-gray-700 text-gray-200"
-              }`}
-            >
-              {item.icon} <span>{item.name}</span>
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const basePath = item.href.replace("/listing", "");
+            const isActive = currentPath.startsWith(basePath);
+
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center space-x-2 p-2 rounded-md transition no-underline ${
+                  isActive
+                    ? "bg-yellow-500 text-black font-semibold"
+                    : "hover:bg-gray-700 text-gray-200"
+                }`}
+              >
+                {item.icon} <span>{item.name}</span>
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </aside>

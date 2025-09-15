@@ -378,6 +378,25 @@ export const dynamicPageList = async () => {
   }
 };
 
+export const dynamicPageCreate = async (formData) => {
+  try {
+    const response = await axios.post(`${baseUrl}api/admin/v2/page-create`, formData);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
 export const dynamicPageUpdate = async (id, formData) => {
   try {
     const response = await axios.post(`${baseUrl}api/admin/v2/page-update/${id}`, formData);
@@ -788,6 +807,63 @@ export const deleteGalleryImage = async (id) => {
   } catch (error) {
     console.error("Delete API error:", error.response?.data || error.message);
     return false;
+  }
+};
+
+// dynamic form 
+export const getFormList = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}api/admin/v2/form-list`);
+    return res.data.data || [];
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+export const getFormById = async (id) => {
+  try {
+    const res = await fetch(`${baseUrl}api/admin/v2/forms/${id}`);
+    console.log("API Response status:", res.status);
+    if (!res.ok) throw new Error("Network response not ok");
+    return await res.json();
+  } catch (err) {
+    console.error("Fetch form error:", err);
+    return { status: false, data: null };
+  }
+};
+
+export const saveForm = async (payload) => {
+  try {
+    const res = await axios.post(`${baseUrl}api/admin/v2/forms`, payload);
+    return res.data;
+  } catch (error) {
+    console.error("Error saving form:", error);
+    return { status: false, message: "Error saving form" };
+  }
+};
+
+export const updateForm = async (id, payload) => {
+  try {
+    const res = await fetch(`${baseUrl}api/admin/v2/form-update/${id}`, {
+      method: "post", // or PATCH depending on your backend
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      console.error("Update error response:", errData);
+      return { status: false, message: errData.message || "Failed to update" };
+    }
+
+    return await res.json(); // { status: true, data: { ... } }
+  } catch (err) {
+    console.error("updateForm error:", err);
+    return { status: false, message: "Something went wrong" };
   }
 };
 

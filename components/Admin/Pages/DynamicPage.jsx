@@ -2,36 +2,62 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import Link from "next/link";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { dynamicPageList } from "../../../utils/fetchAdminApi";
+import { confirmDelete } from "../../../utils/confirmDelete";
 
 export default function PageList() {
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const pagesPerPage = 5;
+  const pagesPerPage = 20;
 
-  useEffect(() => {
-    const fetchPages = async () => {
-      setLoading(true);
+  // Fetch pages
+  const fetchPages = async () => {
+    setLoading(true);
+    try {
       const data = await dynamicPageList();
       setPages(data || []);
+    } catch (err) {
+      console.error("Failed to fetch pages:", err.message);
+    } finally {
       setLoading(false);
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchPages();
   }, []);
 
+  // Delete handler
+  const handleDelete = async (id) => {
+    await confirmDelete(`/delete/page/${id}`, fetchPages);
+  };
+
+  // Search filter
   const filteredPages = pages.filter(
     (p) =>
       p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.slug?.toLowerCase().includes(searchTerm.toLowerCase())
+      p.slug?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.type?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Pagination logic
   const indexOfLast = currentPage * pagesPerPage;
   const indexOfFirst = indexOfLast - pagesPerPage;
   const currentPages = filteredPages.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredPages.length / pagesPerPage);
+
+  // Type label converter
+  const renderType = (type) => {
+    if (type === "home_page") return "Home Page";
+    if (type === "home_slider") return "Home Slider";
+    return type ? type.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) : "-";
+  };
+
+  // Status label converter
+  const renderStatus = (status) => (status == 1 ? "Active" : "Inactive");
 
   return (
     <div className="py-6 bg-black">
@@ -40,12 +66,15 @@ export default function PageList() {
         <div className="mb-6 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-white">Pages List</h1>
-            <p className="text-gray-400 mt-1">Manage and view static pages here.</p>
+            <p className="text-gray-400 mt-1">
+              Manage and view static pages here.
+            </p>
           </div>
           <div className="flex space-x-2">
+            {/* Search */}
             <input
               type="text"
-              placeholder="🔍 Search by title or slug..."
+              placeholder="🔍 Search by title, slug or type..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -53,6 +82,13 @@ export default function PageList() {
               }}
               className="border border-yellow-500 bg-black text-white rounded-lg px-4 py-2 w-72 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
+            {/* Create Button */}
+            <Link
+              href="/administor/pages/dynamicCreate"
+              className="px-4 py-2 rounded-lg bg-yellow-500 text-black font-semibold hover:bg-yellow-600 transition inline-block"
+            >
+              + Create
+            </Link>
           </div>
         </div>
 
@@ -75,6 +111,8 @@ export default function PageList() {
                     <th className="p-3 text-left">#</th>
                     <th className="p-3 text-left">Title</th>
                     <th className="p-3 text-left">Slug</th>
+                    <th className="p-3 text-left">Type</th>
+                    <th className="p-3 text-left">Status</th> {/* New column */}
                     <th className="p-3 text-center">Actions</th>
                   </tr>
                 </thead>
@@ -88,6 +126,10 @@ export default function PageList() {
                         <td className="p-3">{indexOfFirst + index + 1}</td>
                         <td className="p-3 font-medium text-white">{page.title}</td>
                         <td className="p-3 text-gray-300">{page.slug}</td>
+                        <td className="p-3 text-gray-300">{renderType(page.type)}</td>
+                        <td className={`p-3 font-semibold ${page.status == 1 ? "text-green-400" : "text-red-400"}`}>
+                          {renderStatus(page.status)}
+                        </td>
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
                             <Link
@@ -96,6 +138,12 @@ export default function PageList() {
                             >
                               <FaEdit className="text-white text-lg" />
                             </Link>
+                            <button
+                              onClick={() => handleDelete(page.id)}
+                              className="p-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
+                            >
+                              <FaTrash className="text-white text-lg" />
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -103,7 +151,7 @@ export default function PageList() {
                   ) : (
                     <tr>
                       <td
-                        colSpan="4"
+                        colSpan="6"
                         className="p-4 text-center text-gray-400 italic"
                       >
                         No pages found.
@@ -127,7 +175,10 @@ export default function PageList() {
                     onChange={(e, value) => setCurrentPage(value)}
                     sx={{
                       "& .MuiPaginationItem-root": { color: "white" },
-                      "& .Mui-selected": { backgroundColor: "#FFD700 !important", color: "black" },
+                      "& .Mui-selected": {
+                        backgroundColor: "#FFD700 !important",
+                        color: "black",
+                      },
                     }}
                   />
                 </div>

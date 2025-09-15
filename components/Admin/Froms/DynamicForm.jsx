@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import { saveForm } from "../../../utils/fetchAdminApi"; // helper import
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function DynamicForm() {
   const [fields, setFields] = useState([{ label: "", type: "text", options: [] }]);
   const [formName, setFormName] = useState("");
+  const router = useRouter();
 
   const handleFieldChange = (index, key, value) => {
     const updatedFields = [...fields];
@@ -10,14 +15,8 @@ export default function DynamicForm() {
     setFields(updatedFields);
   };
 
-  const addField = () => {
-    setFields([...fields, { label: "", type: "text", options: [] }]);
-  };
-
-  const removeField = (index) => {
-    const updatedFields = fields.filter((_, i) => i !== index);
-    setFields(updatedFields);
-  };
+  const addField = () => setFields([...fields, { label: "", type: "text", options: [] }]);
+  const removeField = (index) => setFields(fields.filter((_, i) => i !== index));
 
   const addOption = (index) => {
     const updatedFields = [...fields];
@@ -33,39 +32,25 @@ export default function DynamicForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = { name: formName, fields };
 
-    const payload = {
-      name: formName,
-      fields,
-    };
-
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/admin/v2/forms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      alert("Form saved successfully!");
-      console.log("Saved:", data);
-    } catch (err) {
-      console.error("Error saving form:", err);
+    const res = await saveForm(payload); // helper API call
+    if (res.status) {
+      toast.success("Form created successfully!");
+      setTimeout(() => router.push("/administor/form/listing"), 2000);
+    } else {
+      toast.error(error.message || "Failed to save form");
     }
   };
 
   return (
     <div className="bg-[#0F0F0F] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">
-          Dynamic Form Builder
-        </h1>
+        <h1 className="text-2xl font-bold text-white mb-4">Dynamic Form Builder</h1>
 
         {/* Form Name */}
         <div className="mb-6">
-          <label className="block text-yellow-400 font-medium mb-2">
-            Form Name *
-          </label>
+          <label className="block text-yellow-400 font-medium mb-2">Form Name *</label>
           <input
             type="text"
             value={formName}
@@ -78,27 +63,19 @@ export default function DynamicForm() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {fields.map((field, index) => (
-            <div
-              key={index}
-              className="p-4 bg-[#1f1f1f] rounded-lg border border-gray-600"
-            >
-              {/* Field Label & Type */}
+            <div key={index} className="p-4 bg-[#1f1f1f] rounded-lg border border-gray-600">
               <div className="flex space-x-3 items-center">
                 <input
                   type="text"
                   placeholder="Field Label"
                   value={field.label}
-                  onChange={(e) =>
-                    handleFieldChange(index, "label", e.target.value)
-                  }
+                  onChange={(e) => handleFieldChange(index, "label", e.target.value)}
                   className="flex-1 border border-yellow-500 p-2 rounded bg-[#1f1f1f] text-white placeholder-gray-400"
                   required
                 />
                 <select
                   value={field.type}
-                  onChange={(e) =>
-                    handleFieldChange(index, "type", e.target.value)
-                  }
+                  onChange={(e) => handleFieldChange(index, "type", e.target.value)}
                   className="border border-yellow-500 p-2 rounded bg-[#1f1f1f] text-white"
                 >
                   <option value="text">Text</option>
@@ -116,10 +93,7 @@ export default function DynamicForm() {
                 </button>
               </div>
 
-              {/* Options (only for select, radio, checkbox) */}
-              {(field.type === "select" ||
-                field.type === "radio" ||
-                field.type === "checkbox") && (
+              {(field.type === "select" || field.type === "radio" || field.type === "checkbox") && (
                 <div className="mt-3">
                   <p className="text-yellow-400 font-medium mb-2">Options:</p>
                   {field.options.map((opt, i) => (
@@ -127,9 +101,7 @@ export default function DynamicForm() {
                       key={i}
                       type="text"
                       value={opt}
-                      onChange={(e) =>
-                        handleOptionChange(index, i, e.target.value)
-                      }
+                      onChange={(e) => handleOptionChange(index, i, e.target.value)}
                       placeholder={`Option ${i + 1}`}
                       className="w-full border border-yellow-500 p-2 rounded mb-2 bg-[#1f1f1f] text-white placeholder-gray-400"
                     />
@@ -163,6 +135,7 @@ export default function DynamicForm() {
             </button>
           </div>
         </form>
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   );

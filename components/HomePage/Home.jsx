@@ -8,7 +8,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import PartnersSlider from "./PartnersSlider";
 import RotatingText from "./RotatingText";
-import { eventHomePage, storiesHomePage, coachesHomePage  } from "../../utils/fetchApi";
+import { eventHomePage, storiesHomePage, coachesHomePage , getSettings } from "../../utils/fetchApi";
 
 // Event Card
 const EventCard = ({ event }) => (
@@ -21,7 +21,9 @@ const EventCard = ({ event }) => (
       />
       <div className="p-3">
         <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{event.event_name}</h5>
-        <p className="text-[14px] font-medium text-black mb-1 no-underline">{event.date || event.created_at?.split("T")[0]}</p>
+        <p className="text-[14px] font-medium text-black mb-1 no-underline">
+          {event.date || event.created_at?.split("T")[0]}
+        </p>
         <p className="text-[14px] font-medium text-black mb-2 no-underline" style={{
           display: "-webkit-box",
           WebkitLineClamp: 2,
@@ -47,7 +49,9 @@ const StoryCard = ({ story }) => (
       />
       <div className="p-3">
         <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{story.story_title}</h5>
-        <p className="text-[14px] font-medium text-black mb-1 no-underline">{story.date || story.created_at?.split("T")[0]}</p>
+        <p className="text-[14px] font-medium text-black mb-1 no-underline">
+          {story.date || story.created_at?.split("T")[0]}
+        </p>
         <p className="text-[14px] font-medium text-black mb-2 no-underline" style={{
           display: "-webkit-box",
           WebkitLineClamp: 2,
@@ -61,6 +65,7 @@ const StoryCard = ({ story }) => (
     </div>
   </Link>
 );
+
 // Coach Card
 const CoachCard = ({ coach }) => (
   <Link href={`/coach/${coach.slug}`} className="block no-underline">
@@ -72,7 +77,9 @@ const CoachCard = ({ coach }) => (
       />
       <div className="p-3">
         <h5 className="text-black text-[18px] font-semibold mb-1 no-underline">{coach.specialization}</h5>
-        <p className="text-[14px] font-medium text-black mb-1 no-underline">{coach.date || coach.created_at?.split("T")[0]}</p>
+        <p className="text-[14px] font-medium text-black mb-1 no-underline">
+          {coach.date || coach.created_at?.split("T")[0]}
+        </p>
         <p className="text-[14px] font-medium text-black mb-2 no-underline" style={{
           display: "-webkit-box",
           WebkitLineClamp: 2,
@@ -87,11 +94,20 @@ const CoachCard = ({ coach }) => (
   </Link>
 );
 
+// Date formatter
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const options = { month: "short", day: "numeric", year: "numeric" };
+  return date.toLocaleDateString("en-US", options).toUpperCase(); 
+};
 
 export default function Home() {
   const [events, setEvents] = useState([]);
   const [stories, setStories] = useState([]);
   const [coaches, setCoaches] = useState([]);
+  const [settings, setSettings] = useState(null);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [age, setAge] = useState("");
   const [showParent, setShowParent] = useState(false);
@@ -99,9 +115,18 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setEvents(await eventHomePage());
-      setStories(await storiesHomePage());
-      setCoaches(await coachesHomePage());
+      const settingsRes = await getSettings();
+      setSettings(settingsRes?.data);
+
+      if (settingsRes?.data?.event === "1") {
+        setEvents(await eventHomePage());
+      }
+      if (settingsRes?.data?.story === "1") {
+        setStories(await storiesHomePage());
+      }
+      if (settingsRes?.data?.coach === "1") {
+        setCoaches(await coachesHomePage());
+      }
     };
     fetchData();
   }, []);
@@ -126,9 +151,12 @@ export default function Home() {
     <>
       <section className="relative h-screen flex flex-col justify-center items-center text-center bg-cover bg-center" 
         style={{backgroundImage: "url('https://nmtdevserver.com/doach/hero-img5.jpg')"}}>
+
         <HamburgerMenu />
         <div className="relative z-20 px-6 max-w-3xl hero-content">
-          <Link href="/"><img src="https://nmtdevserver.com/doach/logo.png" alt="logo" className="w-[500px] mx-auto" /></Link>
+          <Link href="/">
+            <img src="https://nmtdevserver.com/doach/logo.png" alt="logo" className="w-[500px] mx-auto" />
+          </Link>
           <RotatingText />
         </div>
       </section>
@@ -142,61 +170,74 @@ export default function Home() {
                 <AiOutlinePlus className="text-white text-[50px]" />
                 <img src="https://nmtdevserver.com/doach/cavs-logo.png" alt="CAVS" className="w-[170px]" />
                 <h4 className="text-white text-[22px] font-thin mt-5 xl:mt-0" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
-                  National free throw challenge <br /> OCT 17 2026
+                  National free throw challenge <br /> 
+                  {settings?.website_timer ? formatDate(settings.website_timer) : ""}
                 </h4>
               </div>
-              <CountdownTimer />
+
+              {/* Countdown Timer with dynamic date */}
+              <CountdownTimer targetDate={settings?.website_timer} />
+
               <div className="mt-12">
                 <button onClick={openSignupModal} className="px-8 py-3 bg-[#FFC32B] text-black rounded-full font-semibold">
                   Sign Up for Challenge
                 </button>
               </div>
+
               <PartnersSlider />
             </div>
           </Container>
         </section>
 
         {/* Events */}
-        <section className="event-sec">
-          <Container>
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="text-white text-[22px] font-bold">Events</h4>
-              <Link href="/event/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
-            </div>
-            <div className="grid grid-cols-12 gap-4">
-              {events.slice(0,3).map(e => <div key={e.id} className="col-span-12 xl:col-span-4"><EventCard event={e} /></div>)}
-            </div>
-          </Container>
-        </section>
+        {settings?.event === "1" && (
+          <section className="event-sec">
+            <Container>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-white text-[22px] font-bold">Events</h4>
+                <Link href="/event/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
+              </div>
+              <div className="grid grid-cols-12 gap-4">
+                {events.slice(0,3).map(e => <div key={e.id} className="col-span-12 xl:col-span-4"><EventCard event={e} /></div>)}
+              </div>
+            </Container>
+          </section>
+        )}
 
         {/* Stories */}
-        <section className="event-sec mt-5">
-          <Container>
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="text-white text-[22px] font-bold">Stories</h4>
-              <Link href="/story/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
-            </div>
-            <div className="grid grid-cols-12 gap-4">
-              {stories.slice(0,3).map(s => <div key={s.id} className="col-span-12 xl:col-span-4"><StoryCard story={s} /></div>)}
-            </div>
-          </Container>
-        </section>
+        {settings?.story === "1" && (
+          <section className="event-sec mt-5">
+            <Container>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-white text-[22px] font-bold">Stories</h4>
+                <Link href="/story/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
+              </div>
+              <div className="grid grid-cols-12 gap-4">
+                {stories.slice(0,3).map(s => <div key={s.id} className="col-span-12 xl:col-span-4"><StoryCard story={s} /></div>)}
+              </div>
+            </Container>
+          </section>
+        )}
 
         {/* Coaches */}
-        <section className="event-sec mt-5">
-          <Container>
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="text-white text-[22px] font-bold">Coaches</h4>
-              <Link href="/coach/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
-            </div>
-            <div className="grid grid-cols-12 gap-4">
-              {coaches.slice(0,3).map(c => <div key={c.id} className="col-span-12 xl:col-span-4"><CoachCard coach={c} /></div>)}
-            </div>
-          </Container>
-        </section>
+        {settings?.coach === "1" && (
+          <section className="event-sec mt-5">
+            <Container>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-white text-[22px] font-bold">Coaches</h4>
+                <Link href="/coach/listing" className="px-4 py-2 bg-[#FFC32B] text-black rounded-md no-underline">View All</Link>
+              </div>
+              <div className="grid grid-cols-12 gap-4">
+                {coaches.slice(0,3).map(c => <div key={c.id} className="col-span-12 xl:col-span-4"><CoachCard coach={c} /></div>)}
+              </div>
+            </Container>
+          </section>
+        )}
 
         <div className="mt-12 flex justify-center">
-          <button onClick={openSignupModal} className="px-8 py-3 bg-[#FFC32B] text-black rounded-full font-semibold">View Challenge</button>
+          <button onClick={openSignupModal} className="px-8 py-3 bg-[#FFC32B] text-black rounded-full font-semibold">
+            View Challenge
+          </button>
         </div>
 
         <HomeFooter />
