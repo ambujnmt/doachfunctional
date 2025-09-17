@@ -6,7 +6,7 @@ import {
   updateProduct,
   categoryList,
   deleteGalleryImage,
-  getFormList, // ✅ import
+  getFormList,
 } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,14 +32,13 @@ export default function Edit() {
     thumbnail: null,
     gallery: [],
     removed_images: [],
-    form_id: "", // ✅ add form_id
+    form_id: "",
   });
 
   const [categories, setCategories] = useState([]);
-  const [formList, setFormList] = useState([]); // ✅ form list
+  const [formList, setFormList] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
-  const [galleryPreview, setGalleryPreview] = useState([]);
-  const [existingGallery, setExistingGallery] = useState([]);
+  const [galleryPreview, setGalleryPreview] = useState([]); // {id?, url, file?}
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
@@ -74,7 +73,6 @@ export default function Edit() {
         const res = await getProductById(id);
         if (res?.status) {
           const product = res.data;
-
           setForm((prev) => ({
             ...prev,
             product_name: product.product_name || "",
@@ -85,14 +83,17 @@ export default function Edit() {
             stock: product.stock || "",
             status: String(product.status || "1"),
             category_id: product.category_id || "",
-            form_id: product.form_id || "", // ✅ load form_id
+            form_id: product.form_id || "",
           }));
 
           const thumbnail = product.images.find((img) => img.type === "thumbnail");
           const gallery = product.images.filter((img) => img.type === "gallery");
 
           setThumbnailPreview(thumbnail ? thumbnail.image_url : null);
-          setExistingGallery(gallery);
+
+          // Existing gallery with {id, url}
+          const existing = gallery.map((img) => ({ id: img.id, url: img.image_url }));
+          setGalleryPreview(existing);
         }
       } catch (error) {
         toast.error("Failed to fetch product.");
@@ -100,17 +101,8 @@ export default function Edit() {
         setFetching(false);
       }
     };
-
     fetchData();
   }, [id]);
-
-  // Update gallery preview
-  useEffect(() => {
-    const newGalleryUrls = form.gallery.map((file) => URL.createObjectURL(file));
-    setGalleryPreview([...existingGallery.map((img) => img.image_url), ...newGalleryUrls]);
-
-    return () => newGalleryUrls.forEach((url) => URL.revokeObjectURL(url));
-  }, [existingGallery, form.gallery]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -126,16 +118,18 @@ export default function Edit() {
       setThumbnailPreview(URL.createObjectURL(files[0]));
     } else if (name === "gallery") {
       const newFiles = Array.from(files);
+      const newPreviews = newFiles.map((file) => ({ file, url: URL.createObjectURL(file) }));
       setForm({ ...form, gallery: [...form.gallery, ...newFiles] });
+      setGalleryPreview((prev) => [...prev, ...newPreviews]);
     }
   };
 
   // Remove existing gallery image
-  const handleRemoveExistingGallery = async (imgId) => {
-    const success = await deleteGalleryImage(imgId);
+  const handleRemoveExistingGallery = async (idToRemove) => {
+    const success = await deleteGalleryImage(idToRemove);
     if (success) {
-      setExistingGallery((prev) => prev.filter((img) => img.id !== imgId));
-      setForm((prev) => ({ ...prev, removed_images: [...prev.removed_images, imgId] }));
+      setGalleryPreview((prev) => prev.filter((img) => img.id !== idToRemove));
+      setForm((prev) => ({ ...prev, removed_images: [...prev.removed_images, idToRemove] }));
       toast.success("Image removed successfully");
     } else {
       toast.error("Failed to remove image");
@@ -147,36 +141,41 @@ export default function Edit() {
     const newGallery = [...form.gallery];
     newGallery.splice(index, 1);
     setForm({ ...form, gallery: newGallery });
+
+    setGalleryPreview((prev) => {
+      const updated = [...prev];
+      updated.splice(prev.findIndex((p) => p.file && prev.indexOf(p) === index), 1);
+      return updated;
+    });
   };
 
-  // Handle ReactQuill changes
+  // ReactQuill change
   const handleQuillChange = (name, value) => {
     setForm({ ...form, [name]: value });
   };
 
-  // Form submit
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!form.product_name || !form.price || !form.stock || !form.category_id) {
       toast.error("Please fill required fields.");
       return;
     }
 
-    const formData = new FormData();
+    const formDataToSend = new FormData();
     Object.keys(form).forEach((key) => {
       if (key === "gallery") {
-        form.gallery.forEach((file) => formData.append("gallery[]", file));
+        form.gallery.forEach((file) => formDataToSend.append("gallery[]", file));
       } else if (key === "removed_images") {
-        form.removed_images.forEach((id) => formData.append("removed_images[]", id));
+        form.removed_images.forEach((id) => formDataToSend.append("removed_images[]", id));
       } else if (form[key] !== null) {
-        formData.append(key, form[key]);
+        formDataToSend.append(key, form[key]);
       }
     });
 
     try {
       setLoading(true);
-      await updateProduct(formData, id);
+      await updateProduct(formDataToSend, id);
       toast.success("Product updated successfully!");
       setTimeout(() => {
         router.push("/administor/product/listing");
@@ -189,9 +188,17 @@ export default function Edit() {
     }
   };
 
-  // if (!id || fetching) {
-  //   return <p className="text-white text-center mt-10">Loading product...</p>;
-  // }
+  // Cleanup object URLs on unmount
+  useEffect(() => {
+    return () => {
+      galleryPreview.forEach((item) => item.file && URL.revokeObjectURL(item.url));
+      if (thumbnailPreview && form.thumbnail) URL.revokeObjectURL(thumbnailPreview);
+    };
+  }, [galleryPreview, thumbnailPreview, form.thumbnail]);
+
+  if (!id || fetching) {
+    return <p className="text-white text-center mt-10">Loading product...</p>;
+  }
 
   return (
     <div className="bg-[#000] py-6 min-h-screen">
@@ -206,7 +213,6 @@ export default function Edit() {
           </button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-5 text-white">
-          
           {/* Product Name */}
           <div>
             <label className="block text-yellow-500 font-medium mb-1">Product Name</label>
@@ -221,9 +227,8 @@ export default function Edit() {
             />
           </div>
 
-          {/* Category + Form Dropdown */}
+          {/* Category + Form */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Category */}
             <div>
               <label className="block text-yellow-500 font-medium mb-1">Category</label>
               <select
@@ -242,7 +247,6 @@ export default function Edit() {
               </select>
             </div>
 
-            {/* Dynamic Form Dropdown */}
             <div>
               <label className="block text-yellow-500 font-medium mb-1">Select Form (Optional)</label>
               <select
@@ -260,7 +264,6 @@ export default function Edit() {
               </select>
             </div>
           </div>
-
 
           {/* Price and Discount */}
           <div className="grid grid-cols-2 gap-4">
@@ -346,33 +349,18 @@ export default function Edit() {
             />
 
             <div className="flex flex-wrap mt-2 gap-2">
-              {existingGallery.map((img) => (
-                <div key={img.id} className="relative">
-                  <img
-                    src={img.image_url}
-                    alt="Gallery Image"
-                    className="w-24 h-24 object-cover rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveExistingGallery(img.id)}
-                    className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700"
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-
-              {form.gallery.map((file, index) => (
+              {galleryPreview.map((img, index) => (
                 <div key={index} className="relative">
                   <img
-                    src={URL.createObjectURL(file)}
-                    alt="New Gallery"
+                    src={img.url}
+                    alt="Gallery"
                     className="w-24 h-24 object-cover rounded-lg"
                   />
                   <button
                     type="button"
-                    onClick={() => handleRemoveNewGallery(index)}
+                    onClick={() =>
+                      img.file ? handleRemoveNewGallery(index) : handleRemoveExistingGallery(img.id)
+                    }
                     className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700"
                   >
                     &times;
