@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getEvent, updateEvent } from "../../../utils/fetchAdminApi"; // helper functions
+import { getEvent, updateEvent, getFormList } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
@@ -18,12 +18,14 @@ export default function Edit() {
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [description, setDescription] = useState("");
+  const [formId, setFormId] = useState(""); // dynamic form dropdown
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [video, setVideo] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [formList, setFormList] = useState([]);
 
   // Fetch event data
   useEffect(() => {
@@ -35,6 +37,7 @@ export default function Edit() {
             setEventDate(res.data.event_date ? res.data.event_date.split(" ")[0] : "");
             setDescription(res.data.description || "");
             setCategory(res.data.content_type || "");
+            setFormId(res.data.form_id || "");
             setPreview(res.data.event_image || null);
             setVideoPreview(res.data.event_video || null);
           } else {
@@ -43,6 +46,13 @@ export default function Edit() {
         })
         .catch(() => toast.error("Failed to fetch event"));
     }
+
+    // Fetch dynamic form list
+    const fetchForms = async () => {
+      const data = await getFormList();
+      setFormList(data);
+    };
+    fetchForms();
   }, [eventId]);
 
   // Image preview
@@ -92,6 +102,7 @@ export default function Edit() {
     formData.append("event_date", eventDate);
     formData.append("description", description);
     formData.append("content_type", category);
+    if (formId) formData.append("form_id", formId);
     if (image) formData.append("image", image);
     if (video) formData.append("video", video);
 
@@ -111,7 +122,17 @@ export default function Edit() {
   return (
     <div className="bg-[#000] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Edit Event</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+            Edit Event
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 text-[#FFFFFF]">
 
@@ -140,21 +161,40 @@ export default function Edit() {
             />
           </div>
 
-          {/* Content Type */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
-              required
-            >
-              <option value="">Select Content Type</option>
-              <option value="Video">Video Content</option>
-              <option value="Articles">Articles</option>
-              <option value="News">News</option>
-            </select>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Content Type */}
+              <div>
+                <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+                  required
+                >
+                  <option value="">Select Content Type</option>
+                  <option value="Video">Video Content</option>
+                  <option value="Articles">Articles</option>
+                  <option value="News">News</option>
+                </select>
+              </div>
+
+              {/* Dynamic Form Dropdown */}
+              <div>
+                <label className="block text-yellow-500 font-medium mb-1">Select Form (Optional)</label>
+                <select
+                  value={formId}
+                  onChange={(e) => setFormId(e.target.value)}
+                  className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+                >
+                  <option value="">Select Form</option>
+                  {formList.map((form) => (
+                    <option key={form.id} value={form.id}>
+                      {form.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
           {/* Description */}
           <div>
@@ -167,7 +207,6 @@ export default function Edit() {
                 placeholder="Enter description or article content"
                 modules={quillModules}
                 className="bg-[#222222] text-white rounded-lg"
-                style={{ color: "#FFFFFF" }}
               />
             </div>
           </div>
@@ -179,12 +218,19 @@ export default function Edit() {
               <label className="block text-yellow-500 font-medium mb-1">Event Image *</label>
               <input type="file" accept="image/*" onChange={handleImageChange} />
               {preview && (
-                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
+                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] flex flex-col items-center justify-center">
                   <img
                     src={preview}
                     alt="Preview"
-                    className="object-cover w-full h-full rounded-md"
+                    className="object-cover w-full h-36 rounded-md mb-2"
                   />
+                  <a
+                    href={preview}
+                    download="event-image"
+                    className="px-3 py-1 bg-[#FFD700] text-[#000] rounded-lg hover:bg-[#FFEA70] transition"
+                  >
+                    Download Image
+                  </a>
                 </div>
               )}
             </div>
@@ -194,12 +240,19 @@ export default function Edit() {
               <label className="block text-yellow-500 font-medium mb-1">Event Video (Optional)</label>
               <input type="file" accept="video/*" onChange={handleVideoChange} />
               {videoPreview && (
-                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
+                <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] flex flex-col items-center justify-center">
                   <video
                     src={videoPreview}
                     controls
-                    className="object-cover w-full h-full rounded-md"
+                    className="object-cover w-full h-36 rounded-md mb-2"
                   />
+                  <a
+                    href={videoPreview}
+                    download="event-video"
+                    className="px-3 py-1 bg-[#FFD700] text-[#000] rounded-lg hover:bg-[#FFEA70] transition"
+                  >
+                    Download Video
+                  </a>
                 </div>
               )}
             </div>

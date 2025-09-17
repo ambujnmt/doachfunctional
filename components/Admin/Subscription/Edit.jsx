@@ -82,118 +82,120 @@ export default function EditSubscription() {
     }
   };
 
-  if (fetching) {
-    // return <div className="p-6 text-center">Loading subscription data...</div>;
-  }
+  // if (fetching) {
+  //   return <div className="p-6 text-center text-yellow-300">Loading subscription data...</div>;
+  // }
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 mt-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Subscription</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Subscription Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Subscription Name</label>
-          <input
-            type="text"
-            value={subscriptionName}
-            onChange={(e) => setSubscriptionName(e.target.value)}
-            placeholder="Enter subscription name"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
+    <div className="bg-[#000] py-6">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Edit Subscription</h1>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Subscription Name */}
+          <div>
+            <label className="block text-yellow-300 font-medium mb-1">Subscription Name</label>
+            <input
+              type="text"
+              value={subscriptionName}
+              onChange={(e) => setSubscriptionName(e.target.value)}
+              placeholder="Enter subscription name"
+              className="w-full border border-gray-700 rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-yellow-400"
+              required
+            />
+          </div>
 
-        {/* Price */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Price ($)</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="Enter price"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
+          {/* Price */}
+          <div>
+            <label className="block text-yellow-300 font-medium mb-1">Price ($)</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Enter price"
+              className="w-full border border-gray-700 rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-yellow-400"
+              required
+            />
+          </div>
 
-        {/* Plan Type */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Plan Type</label>
-          <select
-            value={planType}
-            onChange={(e) => setPlanType(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-          >
-            <option value="Monthly">Monthly</option>
-            <option value="Yearly">Yearly</option>
-          </select>
-        </div>
+          {/* Plan Type */}
+          <div>
+            <label className="block text-yellow-300 font-medium mb-1">Plan Type</label>
+            <select
+              value={planType}
+              onChange={(e) => setPlanType(e.target.value)}
+              className="w-full border border-gray-700 rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-yellow-400"
+            >
+              <option value="Monthly">Monthly</option>
+              <option value="Yearly">Yearly</option>
+            </select>
+          </div>
 
-        {/* Features */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Features</label>
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center mb-2 gap-2">
-              <input
-                type="text"
-                value={feature}
-                onChange={(e) => handleFeatureChange(index, e.target.value)}
-                placeholder={`Feature ${index + 1}`}
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-              />
-              {features.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeFeature(index)}
-                  className="px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                >
-                  &times;
-                </button>
-              )}
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={addFeature}
-            className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            + Add Feature
-          </button>
-        </div>
+          {/* Features */}
+          <div>
+            <label className="block text-yellow-300 font-medium mb-1">Features</label>
+            {features.map((feature, index) => (
+              <div key={index} className="flex items-center mb-2 gap-2">
+                <input
+                  type="text"
+                  value={feature}
+                  onChange={(e) => handleFeatureChange(index, e.target.value)}
+                  placeholder={`Feature ${index + 1}`}
+                  className="flex-1 border border-gray-700 rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-yellow-400"
+                />
+                {features.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeFeature(index)}
+                    className="px-2 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addFeature}
+              className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              + Add Feature
+            </button>
+          </div>
 
-        {/* Status */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Status</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
-          >
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
-          </select>
-        </div>
+          {/* Status */}
+          <div>
+            <label className="block text-yellow-300 font-medium mb-1">Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full border border-gray-700 rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-yellow-400"
+            >
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+            </select>
+          </div>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/administrator/subscription/listing")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Updating..." : "Update Subscription"}
-          </button>
-        </div>
-      </form>
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => router.push("/administor/subscription/listing")}
+              className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition disabled:opacity-50"
+            >
+              {loading ? "Updating..." : "Update Subscription"}
+            </button>
+          </div>
+        </form>
 
-      <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </div>
   );
 }

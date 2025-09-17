@@ -6,6 +6,7 @@ import {
   updateProduct,
   categoryList,
   deleteGalleryImage,
+  getFormList, // ✅ import
 } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,7 +17,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function Edit() {
   const searchParams = useSearchParams();
-  const id = searchParams?.get("id"); // ✅ optional chaining
+  const id = searchParams?.get("id");
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -31,14 +32,16 @@ export default function Edit() {
     thumbnail: null,
     gallery: [],
     removed_images: [],
+    form_id: "", // ✅ add form_id
   });
 
   const [categories, setCategories] = useState([]);
+  const [formList, setFormList] = useState([]); // ✅ form list
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [galleryPreview, setGalleryPreview] = useState([]);
   const [existingGallery, setExistingGallery] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(true); // ✅ loading while fetching product
+  const [fetching, setFetching] = useState(true);
 
   // Fetch categories
   useEffect(() => {
@@ -47,6 +50,19 @@ export default function Edit() {
       setCategories(list);
     };
     fetchCategories();
+  }, []);
+
+  // Fetch forms
+  useEffect(() => {
+    const fetchForms = async () => {
+      try {
+        const forms = await getFormList();
+        setFormList(forms);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchForms();
   }, []);
 
   // Fetch product details
@@ -69,6 +85,7 @@ export default function Edit() {
             stock: product.stock || "",
             status: String(product.status || "1"),
             category_id: product.category_id || "",
+            form_id: product.form_id || "", // ✅ load form_id
           }));
 
           const thumbnail = product.images.find((img) => img.type === "thumbnail");
@@ -92,7 +109,6 @@ export default function Edit() {
     const newGalleryUrls = form.gallery.map((file) => URL.createObjectURL(file));
     setGalleryPreview([...existingGallery.map((img) => img.image_url), ...newGalleryUrls]);
 
-    // Cleanup old object URLs
     return () => newGalleryUrls.forEach((url) => URL.revokeObjectURL(url));
   }, [existingGallery, form.gallery]);
 
@@ -173,15 +189,24 @@ export default function Edit() {
     }
   };
 
-  if (!id || fetching) {
-    return <p className="text-white text-center mt-10">Loading product...</p>;
-  }
+  // if (!id || fetching) {
+  //   return <p className="text-white text-center mt-10">Loading product...</p>;
+  // }
 
   return (
     <div className="bg-[#000] py-6 min-h-screen">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-6">Edit Product</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">Edit Product</h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-5 text-white">
+          
           {/* Product Name */}
           <div>
             <label className="block text-yellow-500 font-medium mb-1">Product Name</label>
@@ -196,24 +221,46 @@ export default function Edit() {
             />
           </div>
 
-          {/* Category */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Category</label>
-            <select
-              name="category_id"
-              value={form.category_id}
-              onChange={handleChange}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white focus:ring focus:ring-[#FFEA70]"
-              required
-            >
-              <option value="">-- Select Category --</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+          {/* Category + Form Dropdown */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Category */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Category</label>
+              <select
+                name="category_id"
+                value={form.category_id}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white focus:ring focus:ring-[#FFEA70]"
+                required
+              >
+                <option value="">-- Select Category --</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Dynamic Form Dropdown */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Select Form (Optional)</label>
+              <select
+                name="form_id"
+                value={form.form_id}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white focus:ring focus:ring-[#FFEA70]"
+              >
+                <option value="">Select Form</option>
+                {formList.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+
 
           {/* Price and Discount */}
           <div className="grid grid-cols-2 gap-4">

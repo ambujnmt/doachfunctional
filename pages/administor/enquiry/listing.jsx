@@ -3,9 +3,9 @@ import Header from '../../../components/Admin/Layouts/Header';
 import SideBar from '../../../components/Admin/Layouts/SideBar';
 import Footer from '../../../components/Admin/Layouts/Footer';
 import PrivateAdminRoute from "../../../components/PrivateRoute/PrivateAdminRoute";
-import Create from "../../../components/Admin/Subscription/Create";
+import Listing from "../../../components/Admin/Enquiry/Listing";
 
-export default function create() {
+export default function listing() {
    const [menuOpen, setMenuOpen] = useState(false); 
   
     return (
@@ -23,7 +23,7 @@ export default function create() {
             
             {/* Dashboard content */}
             <div className="flex-1">
-              <Create />
+              <Listing />
             </div>
   
             {/* Footer INSIDE dashboard */}

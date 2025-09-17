@@ -1,7 +1,7 @@
 import { useStoreLogin } from "../store/login";
 import { useUser } from "../context/UserContext"; // Import the hook to get user context
-import { productList } from "./fetchAdminApi";
 import axios from "axios";
+import { productList } from "./fetchAdminApi";
 
 const baseUrl = "https://site2demo.in/doach/";
 // const v3BaseUrl = "";
@@ -495,4 +495,63 @@ export const removeCartItem = async (itemId) => {
 export const getSettings = async () => {
   const res = await axios.get(`${baseUrl}api/v1/get-settings`);
   return res.data;
+};
+
+// export const submitDynamicForm = async (section, sectionId, formData, token) => {
+//   try {
+//     const response = await fetch(`${baseUrl}api/v1/form/submit`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${token}`,
+//       },
+//       body: JSON.stringify({ section, section_id: sectionId, form_data: formData }),
+//     });
+//     return await response.json();
+//   } catch (error) {
+//     console.error("Error submitting form:", error);
+//     return { success: false, message: "Something went wrong!" };
+//   }
+// };
+
+export const submitDynamicForm = async (payload, token = "") => {
+  try {
+    const response = await fetch(`${baseUrl}api/v1/form/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};
+
+// listing address
+export const getAddresses = async (token, userId) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/cart/address-list/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    return { status: false, message: error.message };
+  }
+};
+
+
+// Save new address
+export const saveAddress = async (token, addressData) => {
+  try {
+    const res = await axios.post(`${baseUrl}api/v1/cart/save-address`, addressData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    return { status: false, message: error.message };
+  }
 };

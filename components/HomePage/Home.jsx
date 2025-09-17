@@ -154,9 +154,21 @@ export default function Home() {
 
         <HamburgerMenu />
         <div className="relative z-20 px-6 max-w-3xl hero-content">
-          <Link href="/">
-            <img src="https://nmtdevserver.com/doach/logo.png" alt="logo" className="w-[500px] mx-auto" />
-          </Link>
+          {/* <Link href="/">
+              {settings?.web_logo ? (
+              <img
+                  src={settings.web_logo}
+                  alt={settings.website_name || "Logo"}
+                  className="w-[450px] mx-auto"
+              />
+              ) : (
+              <p className="text-white">Loading...</p>
+              )}
+          </Link> */}
+
+          <Link href="/" className="logo-bling-circle">
+                    <img src="https://nmtdevserver.com/doach/logo2.png" alt="image" className="w-[190px] lg:w-[500px] md:w-[400px] h-auto block m-auto" />
+                  </Link>
           <RotatingText />
         </div>
       </section>
@@ -168,8 +180,8 @@ export default function Home() {
               <div className="flex flex-col xl:flex-row items-center justify-center mb-5 gap-3">
                 <img src="https://nmtdevserver.com/doach/logo.png" alt="DOACH" className="w-[300px]" />
                 <AiOutlinePlus className="text-white text-[50px]" />
-                <img src="https://nmtdevserver.com/doach/cavs-logo.png" alt="CAVS" className="w-[170px]" />
-                <h4 className="text-white text-[22px] font-thin mt-5 xl:mt-0" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
+                <img src="https://nmtdevserver.com/doach/cavs-logo.png" alt="CAVS" className="w-[170px] relative top-[-11px]" />
+                <h4 className="text-white text-[22px] font-thin mt-2 xl:mt-0" style={{ fontFamily: "Bebas Neue, sans-serif" }}>
                   National free throw challenge <br /> 
                   {settings?.website_timer ? formatDate(settings.website_timer) : ""}
                 </h4>

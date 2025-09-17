@@ -1,7 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createProduct, categoryList } from "../../../utils/fetchAdminApi"; // ✅ categoryList added
+import {
+  createProduct,
+  categoryList,
+  getFormList,   // ✅ Form List API import
+} from "../../../utils/fetchAdminApi"; 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
@@ -18,24 +22,29 @@ export default function Create() {
     discount_price: "",
     stock: "",
     status: "1",
-    category_id: "", // ✅ added category field
+    category_id: "",
+    form_id: "",   // ✅ new field
     thumbnail: null,
     gallery: [],
   });
 
-  const [categories, setCategories] = useState([]); // ✅ category list
+  const [categories, setCategories] = useState([]);
+  const [formList, setFormList] = useState([]); // ✅ store form list
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [galleryPreview, setGalleryPreview] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // ✅ Fetch category list
+  // ✅ Fetch categories and forms
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       const list = await categoryList();
       setCategories(list);
+
+      const forms = await getFormList();
+      setFormList(forms);
     };
-    fetchCategories();
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -106,7 +115,15 @@ export default function Create() {
   return (
     <div className="bg-[#000] py-6 min-h-screen">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-6">Create Product</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">Create Product</h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-5 text-white">
 
           {/* Product Name */}
@@ -123,26 +140,47 @@ export default function Create() {
             />
           </div>
 
-          {/* ✅ Category Dropdown */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Category</label>
-            <select
-              name="category_id"
-              value={form.category_id}
-              onChange={handleChange}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white focus:ring focus:ring-[#FFEA70]"
-              required
-            >
-              <option value="">-- Select Category --</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+          {/* ✅ Category + Form in One Row */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Category */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Category</label>
+              <select
+                name="category_id"
+                value={form.category_id}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white focus:ring focus:ring-[#FFEA70]"
+                required
+              >
+                <option value="">-- Select Category --</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Form */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Form</label>
+              <select
+                name="form_id"
+                value={form.form_id}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-white focus:ring focus:ring-[#FFEA70]"
+              >
+                <option value="">-- Select Form --</option>
+                {formList.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Price and Discount */}
+          {/* Price + Discount */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-yellow-500 font-medium mb-1">Price</label>
@@ -167,7 +205,7 @@ export default function Create() {
             </div>
           </div>
 
-          {/* Stock and Status */}
+          {/* Stock + Status */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-yellow-500 font-medium mb-1">Stock</label>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getCoachById, updateCoach } from "../../../utils/fetchAdminApi";
+import { getCoachById, updateCoach, getFormList } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import dynamic from "next/dynamic";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +21,8 @@ export default function EditCoach() {
   const [experience, setExperience] = useState("");
   const [bioData, setBioData] = useState("");
   const [contentType, setContentType] = useState("");
+  const [formId, setFormId] = useState(""); // dynamic form
+  const [formList, setFormList] = useState([]);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [video, setVideo] = useState(null);
@@ -40,6 +42,7 @@ export default function EditCoach() {
             setExperience(res.data.experience_years || "");
             setBioData(res.data.bio_data || "");
             setContentType(res.data.content_type || "");
+            setFormId(res.data.form_id || "");
             setPreview(res.data.coach_image || null);
             if (res.data.coach_video) setVideoPreview(res.data.coach_video);
           } else {
@@ -50,7 +53,19 @@ export default function EditCoach() {
     }
   }, [coachId]);
 
-  // Image preview
+  // Fetch forms for dropdown
+  useEffect(() => {
+    const fetchForms = async () => {
+      try {
+        const forms = await getFormList();
+        setFormList(forms);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchForms();
+  }, []);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -61,7 +76,6 @@ export default function EditCoach() {
     } else setPreview(null);
   };
 
-  // Video preview
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     setVideo(file);
@@ -87,6 +101,7 @@ export default function EditCoach() {
     formData.append("experience_years", experience);
     formData.append("bio_data", bioData);
     formData.append("content_type", contentType);
+    if (formId) formData.append("form_id", formId); // dynamic form
     if (image) formData.append("image", image);
     if (video) formData.append("video", video);
 
@@ -106,7 +121,17 @@ export default function EditCoach() {
   return (
     <div className="bg-[#000] py-6 min-h-screen">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Edit Coach</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+            Edit Coach
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 text-[#FFFFFF]">
 
@@ -117,7 +142,7 @@ export default function EditCoach() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
               required
             />
           </div>
@@ -129,7 +154,7 @@ export default function EditCoach() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
               required
             />
           </div>
@@ -141,7 +166,7 @@ export default function EditCoach() {
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
               required
             />
           </div>
@@ -153,7 +178,7 @@ export default function EditCoach() {
               type="text"
               value={specialization}
               onChange={(e) => setSpecialization(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
               required
             />
           </div>
@@ -165,28 +190,44 @@ export default function EditCoach() {
               type="number"
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] placeholder-[#CCCCCC] focus:ring focus:ring-[#FFEA70]"
+              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
               required
             />
           </div>
 
-          {/* Content Type */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
-            <select
-              value={contentType}
-              onChange={(e) => setContentType(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
-              required
-            >
-              <option value="">Select Content Type</option>
-              <option value="Video">Video</option>
-              <option value="Article">Article</option>
-              <option value="News">News</option>
-            </select>
+          {/* Content Type + Form Dropdown */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
+              <select
+                value={contentType}
+                onChange={(e) => setContentType(e.target.value)}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+                required
+              >
+                <option value="">Select Content Type</option>
+                <option value="Video">Video</option>
+                <option value="Article">Article</option>
+                <option value="News">News</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Select Form (Optional)</label>
+              <select
+                value={formId}
+                onChange={(e) => setFormId(e.target.value)}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+              >
+                <option value="">Select Form</option>
+                {formList.map((form) => (
+                  <option key={form.id} value={form.id}>{form.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Bio Data (Rich Text Editor) */}
+          {/* Bio Data */}
           <div>
             <label className="block text-yellow-500 font-medium mb-1">Bio Data *</label>
             <div className="border border-[#FFD700] rounded-lg">

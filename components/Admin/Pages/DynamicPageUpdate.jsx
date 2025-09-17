@@ -194,7 +194,7 @@ export default function DynamicPageUpdate() {
           <div className="flex justify-between items-center">
             <button
               type="button"
-              onClick={() => router.push("/administor/pages/listing")}
+              onClick={() => router.push("/administor/pages/dynamic")}
               className="px-4 py-2 bg-[#333] text-white rounded-lg hover:bg-[#444] transition"
             >
               Cancel

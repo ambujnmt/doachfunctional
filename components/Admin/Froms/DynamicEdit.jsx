@@ -102,7 +102,17 @@ export default function EditForm() {
     <div className="bg-[#000] py-6 min-h-screen">
       <ToastContainer />
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-6">Edit Form</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+            Edit Form
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
 
         <div className="mb-6">
           <label className="block text-yellow-400 font-medium mb-2">Form Name *</label>

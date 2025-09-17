@@ -104,7 +104,7 @@ export default function Listing() {
                     <th className="p-3 text-left">Email</th>
                     {/* <th className="p-3 text-left">Phone</th> */}
                     <th className="p-3 text-left">Specialization</th>
-                    <th className="p-3 text-left">Experience</th>
+                    {/* <th className="p-3 text-left">Experience</th> */}
                     <th className="p-3 text-left">Image</th>
                     <th className="p-3 text-left">Video</th>
                     <th className="p-3 text-left">Status</th>
@@ -127,9 +127,9 @@ export default function Listing() {
                         <td className="p-3 text-gray-300">
                           {coach.specialization}
                         </td>
-                        <td className="p-3 text-gray-300">
+                        {/* <td className="p-3 text-gray-300">
                           {coach.experience_years}
-                        </td>
+                        </td> */}
                         <td className="p-3">
                           {coach.coach_image ? (
                             <img
@@ -165,9 +165,9 @@ export default function Listing() {
                         </td>
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
-                            <button className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition">
+                            {/* <button className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition">
                               <FaEye className="text-black text-lg" />
-                            </button>
+                            </button> */}
                             <Link
                               href={`/administor/coach/edit?id=${coach.id}`}
                               className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition"

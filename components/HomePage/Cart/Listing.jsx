@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getCartList, updateCartQuantity, removeCartItem, productChechout } from "../../../utils/fetchApi";
+import {
+  getCartList,
+  updateCartQuantity,
+  removeCartItem,
+  productChechout,
+  getAddresses,
+  saveAddress,
+  deleteAddress,
+} from "../../../utils/fetchApi";
+import { confirmDelete } from "../../../utils/confirmDelete";
 import HomeFooter from "../../HomePage/HomeFooter";
 import HamburgerMenu from "../../HomePage/HamburgerMenu";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,19 +21,27 @@ export default function Listing() {
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
-  const [addresses, setAddresses] = useState([
-    { id: 1, address_line: "123 Main St", city: "New York", state: "NY", pincode: "10001" },
-    { id: 2, address_line: "456 Elm St", city: "Los Angeles", state: "CA", pincode: "90001" },
-    { id: 3, address_line: "789 Oak St", city: "Chicago", state: "IL", pincode: "60007" },
-    { id: 4, address_line: "321 Pine St", city: "Houston", state: "TX", pincode: "77001" },
-  ]);
-  const [selectedAddress, setSelectedAddress] = useState(1);
-  const [newAddress, setNewAddress] = useState({ address_line: "", city: "", state: "", pincode: "" });
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    address_line: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   useEffect(() => {
-    if (userId) fetchCart();
+    if (userId) {
+      fetchCart();
+      fetchAddresses();
+    }
   }, [userId]);
 
   const fetchCart = async () => {
@@ -35,18 +52,32 @@ export default function Listing() {
     setLoading(false);
   };
 
+  const fetchAddresses = async () => {
+    const res = await getAddresses(token, userId);
+    if (res.status) {
+      setAddresses(res.data);
+      if (res.data.length > 0) setSelectedAddress(res.data[0].id);
+    }
+  };
+
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;
-    const item = cart.find(c => c.id === itemId);
+    const item = cart.find((c) => c.id === itemId);
     if (!item) return;
 
     try {
       const res = await updateCartQuantity(itemId, newQuantity);
       if (res.status) {
-        setCart(prev =>
-          prev.map(c =>
+        setCart((prev) =>
+          prev.map((c) =>
             c.id === itemId
-              ? { ...c, quantity: newQuantity, total_price: (newQuantity * Number(c.product.price)).toFixed(2) }
+              ? {
+                  ...c,
+                  quantity: newQuantity,
+                  total_price: (
+                    newQuantity * Number(c.product.price)
+                  ).toFixed(2),
+                }
               : c
           )
         );
@@ -62,7 +93,7 @@ export default function Listing() {
     try {
       const res = await removeCartItem(itemId);
       if (res.status) {
-        setCart(prev => prev.filter(c => c.id !== itemId));
+        setCart((prev) => prev.filter((c) => c.id !== itemId));
         toast.success("Item removed from cart!");
       } else toast.error(res.message || "Failed to remove item.");
     } catch (error) {
@@ -71,21 +102,52 @@ export default function Listing() {
     }
   };
 
-  const handleAddAddress = () => {
-    if (!newAddress.address_line || !newAddress.city || !newAddress.state || !newAddress.pincode) {
+  // Address Save
+  const handleSaveAddress = async () => {
+    if (
+      !newAddress.address_line ||
+      !newAddress.city ||
+      !newAddress.state ||
+      !newAddress.pincode
+    ) {
       return toast.error("All fields are required!");
     }
-    const id = addresses.length ? addresses[addresses.length - 1].id + 1 : 1;
-    setAddresses([...addresses, { id, ...newAddress }]);
-    setNewAddress({ address_line: "", city: "", state: "", pincode: "" });
-    toast.success("Address added!");
+
+    try {
+      const res = await saveAddress(token, { ...newAddress, user_id: userId });
+      if (res.status) {
+        setAddresses([...addresses, res.data]);
+        setNewAddress({ address_line: "", city: "", state: "", pincode: "" });
+        setShowAddressForm(false);
+        toast.success("Address added!");
+      } else {
+        toast.error(res.message || "Failed to save address");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong!");
+    }
   };
 
-  const handleDeleteAddress = (id) => {
-    setAddresses(prev => prev.filter(a => a.id !== id));
-    if (selectedAddress === id && addresses.length > 1) setSelectedAddress(addresses[0].id);
-    toast.success("Address deleted!");
+  const handleDeleteAddress = async (id) => {
+    try {
+      const res = await deleteAddress(token, id, userId);
+      if (res.status) {
+        setAddresses((prev) => prev.filter((a) => a.id !== id));
+        toast.success("Address deleted!");
+      } else {
+        toast.error(res.message || "Failed to delete address");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong!");
+    }
   };
+
+  // Delete event
+    const handleDelete = async (id) => {
+      await confirmDelete(`/delete/address/${id}`, fetchAddresses);
+    };
 
   const subtotal = cart.reduce((sum, item) => sum + Number(item.total_price), 0);
   const tax = subtotal * 0.1;
@@ -94,14 +156,15 @@ export default function Listing() {
   const handleCheckout = async () => {
     if (!userId) return toast.error("User not logged in!");
     if (cart.length === 0) return toast.error("Cart is empty!");
+    if (!selectedAddress) return toast.error("Please select an address!");
 
     setCheckoutLoading(true);
 
-    const selectedAddr = addresses.find(a => a.id === selectedAddress);
+    const selectedAddr = addresses.find((a) => a.id === selectedAddress);
 
     const cartData = {
       user_id: userId,
-      items: cart.map(item => ({
+      items: cart.map((item) => ({
         product_id: item.product.id,
         quantity: item.quantity,
         price: Number(item.product.price),
@@ -141,22 +204,33 @@ export default function Listing() {
     <div className="bg-gray-900 text-white min-h-screen">
       <HamburgerMenu />
       <div className="container mx-auto py-16 px-4 lg:px-0">
-        {/* Cart Section - Full width 12 */}
+        {/* Cart Section */}
         <div className="p-4 w-full">
-          <h3 className="text-4xl font-extrabold text-yellow-400 mb-10">My Cart</h3>
+          <h3 className="text-4xl font-extrabold text-yellow-400 mb-10">
+            My Cart
+          </h3>
           {cart.length === 0 ? (
             <p>No items in cart.</p>
           ) : (
-            cart.map(item => (
-              <div key={item.id} className="p-4 border rounded-lg shadow-sm grid grid-cols-12 items-center gap-4 py-2 my-3">
+            cart.map((item) => (
+              <div
+                key={item.id}
+                className="p-4 border rounded-lg shadow-sm grid grid-cols-12 items-center gap-4 py-2 my-3"
+              >
                 <div className="col-span-12 sm:col-span-4 flex flex-col gap-1">
                   <h3 className="font-semibold">{item.product.product_name}</h3>
-                  <p className="text-sm text-gray-100">Price: ${item.product.price}</p>
-                  <p className="text-sm text-gray-100 font-medium">Total: ${item.total_price}</p>
+                  <p className="text-sm text-gray-100">
+                    Price: ${item.product.price}
+                  </p>
+                  <p className="text-sm text-gray-100 font-medium">
+                    Total: ${item.total_price}
+                  </p>
                 </div>
                 <div className="col-span-12 sm:col-span-4 flex justify-center items-center mt-2 sm:mt-0 space-x-2">
                   <button
-                    onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                    onClick={() =>
+                      handleQuantityChange(item.id, item.quantity - 1)
+                    }
                     className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
                   >
                     −
@@ -165,11 +239,15 @@ export default function Listing() {
                     type="number"
                     value={item.quantity}
                     min={1}
-                    onChange={e => handleQuantityChange(item.id, Number(e.target.value))}
+                    onChange={(e) =>
+                      handleQuantityChange(item.id, Number(e.target.value))
+                    }
                     className="w-12 text-center text-black font-medium rounded"
                   />
                   <button
-                    onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                    onClick={() =>
+                      handleQuantityChange(item.id, item.quantity + 1)
+                    }
                     className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
                   >
                     +
@@ -177,7 +255,10 @@ export default function Listing() {
                 </div>
                 <div className="col-span-12 sm:col-span-4 flex flex-col sm:flex-row sm:justify-end items-center gap-2 mt-2 sm:mt-0">
                   <img
-                    src={item.product.thumbnail || `https://via.placeholder.com/80?text=${item.product.product_name}`}
+                    src={
+                      item.product.thumbnail ||
+                      `https://via.placeholder.com/80?text=${item.product.product_name}`
+                    }
                     alt={item.product.product_name}
                     className="w-20 h-20 object-cover rounded"
                   />
@@ -193,14 +274,17 @@ export default function Listing() {
           )}
         </div>
 
-        {/* Address + Summary Section - Below cart, each 6 width */}
+        {/* Address + Summary Section */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Address */}
           <div className="p-4 w-full lg:w-6/12">
             <div className="p-6 border rounded-lg bg-gray-800 text-white">
               <h3 className="text-xl font-bold mb-4">Select Address</h3>
-              {addresses.map(addr => (
-                <div key={addr.id} className="flex items-center justify-between mb-2">
+              {addresses.map((addr) => (
+                <div
+                  key={addr.id}
+                  className="flex items-center justify-between mb-2"
+                >
                   <label className="flex items-center gap-2">
                     <input
                       type="radio"
@@ -210,23 +294,78 @@ export default function Listing() {
                       onChange={() => setSelectedAddress(addr.id)}
                     />
                     <span>
-                      {addr.address_line}, {addr.city}, {addr.state} - {addr.pincode}
+                      {addr.address_line}, {addr.city}, {addr.state} -{" "}
+                      {addr.pincode}
                     </span>
                   </label>
                   <button
-                    onClick={() => handleDeleteAddress(addr.id)}
+                    onClick={() => handleDelete(addr.id)}
                     className="px-2 py-1 bg-red-600 rounded hover:bg-red-500 text-sm"
                   >
                     Delete
                   </button>
                 </div>
               ))}
+
+              {/* Add Address Toggle */}
               <button
-                onClick={handleAddAddress}
+                onClick={() => setShowAddressForm(!showAddressForm)}
                 className="mt-2 px-4 py-2 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300"
               >
-                Add Address
+                {showAddressForm ? "Cancel" : "Add Address"}
               </button>
+
+              {/* Form */}
+              {showAddressForm && (
+                <div className="mt-4 p-3 bg-gray-700 rounded-lg">
+                  <input
+                    type="text"
+                    placeholder="Address Line"
+                    value={newAddress.address_line}
+                    onChange={(e) =>
+                      setNewAddress({
+                        ...newAddress,
+                        address_line: e.target.value,
+                      })
+                    }
+                    className="w-full mb-2 px-3 py-2 rounded text-black"
+                  />
+                  <input
+                    type="text"
+                    placeholder="City"
+                    value={newAddress.city}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, city: e.target.value })
+                    }
+                    className="w-full mb-2 px-3 py-2 rounded text-black"
+                  />
+                  <input
+                    type="text"
+                    placeholder="State"
+                    value={newAddress.state}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, state: e.target.value })
+                    }
+                    className="w-full mb-2 px-3 py-2 rounded text-black"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Pincode"
+                    value={newAddress.pincode}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, pincode: e.target.value })
+                    }
+                    className="w-full mb-2 px-3 py-2 rounded text-black"
+                  />
+
+                  <button
+                    onClick={handleSaveAddress}
+                    className="mt-2 px-4 py-2 bg-green-500 text-white font-bold rounded hover:bg-green-400"
+                  >
+                    Save Address
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
