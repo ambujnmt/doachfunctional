@@ -34,7 +34,7 @@ export default function DynamicFormListing({ section = "", sectionId = "" }) {
 
   // Delete brand
     const handleDelete = async (id) => {
-        await confirmDelete(`/delete/brand/${id}`, fetchSubmissions);
+        await confirmDelete(`/delete/dynamicFormSubmission/${id}`, fetchSubmissions);
     };
 
   // Filter search
