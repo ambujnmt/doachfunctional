@@ -163,9 +163,9 @@ export default function Listing() {
                         </td>
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
-                            <button className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition">
+                            {/* <button className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition">
                               <FaEye className="text-black text-lg" />
-                            </button>
+                            </button> */}
                             <Link
                               href={`/administor/event/edit?id=${event.id}`}
                               className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition"

@@ -75,7 +75,7 @@ export default function View() {
 
             <div className="flex items-center gap-3 text-gray-300">
               <FaPhone className="text-purple-500" />
-              <span>{customer?.phone || "N/A"}</span>
+              <span>{customer?.phone_number || "N/A"}</span>
             </div>
 
             <div className="flex items-center gap-3 text-gray-300">

@@ -154,9 +154,9 @@ export default function Listing() {
                     </td>
                     <td className="p-3 text-center">
                       <div className="flex justify-center space-x-2">
-                        <button className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition">
+                        {/* <button className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition">
                           <FaEye className="text-white text-lg" />
-                        </button>
+                        </button> */}
                         <Link
                           href={`/administor/stories/edit?id=${story.id}`}
                           className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition"

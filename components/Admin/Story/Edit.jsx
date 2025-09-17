@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getStoryById, updateStory } from "../../../utils/fetchAdminApi";
+import { getStoryById, updateStory, getFormList } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import dynamic from "next/dynamic";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +18,8 @@ export default function EditStory() {
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [formId, setFormId] = useState(""); // dynamic form dropdown
+  const [formList, setFormList] = useState([]);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [video, setVideo] = useState(null);
@@ -35,6 +37,16 @@ export default function EditStory() {
     ],
   };
 
+  // Fetch dynamic forms
+  useEffect(() => {
+    const fetchForms = async () => {
+      const data = await getFormList();
+      setFormList(data);
+    };
+    fetchForms();
+  }, []);
+
+  // Fetch story details
   useEffect(() => {
     if (!storyId) return;
     const fetchStory = async () => {
@@ -45,6 +57,7 @@ export default function EditStory() {
           setDate(res.data.story_date || "");
           setDescription(res.data.description || "");
           setCategory(res.data.content_type || "");
+          setFormId(res.data.form_id || "");
           setPreview(res.data.story_image || null);
           setVideoPreview(res.data.story_video || null);
         } else toast.error("Story not found");
@@ -87,6 +100,7 @@ export default function EditStory() {
     formData.append("story_date", date);
     formData.append("description", description);
     formData.append("content_type", category);
+    if (formId) formData.append("form_id", formId);
     if (image) formData.append("image", image);
     if (video) formData.append("video", video);
 
@@ -106,7 +120,17 @@ export default function EditStory() {
   return (
     <div className="bg-[#000] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Edit Story</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+           Edit Story
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-5 text-[#FFFFFF]">
           {/* Title */}
           <div>
@@ -133,20 +157,36 @@ export default function EditStory() {
             />
           </div>
 
-          {/* Content Type */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
-              required
-            >
-              <option value="">Select Content Type</option>
-              <option value="Video">Video Content</option>
-              <option value="Articles">Articles</option>
-              <option value="News">News</option>
-            </select>
+          {/* Two-column dropdowns: Content Type + Dynamic Form */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+                required
+              >
+                <option value="">Select Content Type</option>
+                <option value="Video">Video Content</option>
+                <option value="Articles">Articles</option>
+                <option value="News">News</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Select Form (Optional)</label>
+              <select
+                value={formId}
+                onChange={(e) => setFormId(e.target.value)}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+              >
+                <option value="">Select Form</option>
+                {formList.map((form) => (
+                  <option key={form.id} value={form.id}>{form.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Description */}
@@ -170,11 +210,7 @@ export default function EditStory() {
               <input type="file" accept="image/*" onChange={handleImageChange} />
               {preview && (
                 <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="object-cover w-full h-full rounded-md"
-                  />
+                  <img src={preview} alt="Preview" className="object-cover w-full h-full rounded-md" />
                 </div>
               )}
             </div>

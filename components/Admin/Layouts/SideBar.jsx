@@ -33,6 +33,7 @@ export default function SideBar({ menuOpen }) {
     // { name: "Community", icon: <FaComments className="text-yellow-400" />, href: "/administor/community/listing" },
     { name: "Event Contests", icon: <FaTrophy className="text-yellow-400" />, href: "/administor/eventContests/listing" },
     { name: "Dynamic Forms", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/form/listing" },
+    { name: "Enquiry Data", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/enquiry/listing" },
     { name: "Pages", icon: <FaListAlt className="text-yellow-400" />, href: "/administor/pages/dynamic" },
     { name: "Support", icon: <FaHeadset className="text-yellow-400" />, href: "/administor/pages/support" },
     { name: "Subscription", icon: <FaCreditCard className="text-yellow-400" />, href: "/administor/subscription/listing" },

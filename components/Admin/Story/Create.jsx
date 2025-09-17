@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createStory } from "../../../utils/fetchAdminApi";
+import { createStory, getFormList } from "../../../utils/fetchAdminApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
@@ -12,6 +12,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 export default function Create() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
+  const [formId, setFormId] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
@@ -19,8 +20,18 @@ export default function Create() {
   const [video, setVideo] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [formList, setFormList] = useState([]);
 
   const router = useRouter();
+
+  // Fetch dynamic forms
+  useEffect(() => {
+    const fetchForms = async () => {
+      const data = await getFormList();
+      setFormList(data);
+    };
+    fetchForms();
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -56,7 +67,7 @@ export default function Create() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description || !date || !category || !image) {
-      toast.error("Please fill all fields and upload an image.");
+      toast.error("Please fill all required fields and upload an image.");
       return;
     }
 
@@ -67,6 +78,7 @@ export default function Create() {
     formData.append("content_type", category);
     formData.append("image", image);
     if (video) formData.append("video", video);
+    if (formId) formData.append("form_id", formId);
 
     try {
       setLoading(true);
@@ -84,11 +96,21 @@ export default function Create() {
   return (
     <div className="bg-[#000] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-[#FFF] mb-4">Create Story</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+           Create Story
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 text-[#FFFFFF]">
 
-          {/* Title */}
+          {/* Story Title */}
           <div>
             <label className="block text-yellow-500 font-medium mb-1">Story Title *</label>
             <input
@@ -101,7 +123,7 @@ export default function Create() {
             />
           </div>
 
-          {/* Date */}
+          {/* Story Date */}
           <div>
             <label className="block text-yellow-500 font-medium mb-1">Story Date *</label>
             <input
@@ -113,20 +135,38 @@ export default function Create() {
             />
           </div>
 
-          {/* Content Type */}
-          <div>
-            <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
-              required
-            >
-              <option value="">Select Content Type</option>
-              <option value="Video">Video Content</option>
-              <option value="Articles">Articles</option>
-              <option value="News">News</option>
-            </select>
+          {/* Two-column dropdowns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Content Type */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Content Type *</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+                required
+              >
+                <option value="">Select Content Type</option>
+                <option value="Video">Video Content</option>
+                <option value="Articles">Articles</option>
+                <option value="News">News</option>
+              </select>
+            </div>
+
+            {/* Dynamic Form */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">Select Form (Optional)</label>
+              <select
+                value={formId}
+                onChange={(e) => setFormId(e.target.value)}
+                className="w-full border border-[#FFD700] rounded-lg px-4 py-2 bg-[#222222] text-[#FFFFFF] focus:ring focus:ring-[#FFEA70]"
+              >
+                <option value="">Select Form</option>
+                {formList.map((form) => (
+                  <option key={form.id} value={form.id}>{form.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Description */}
@@ -144,18 +184,14 @@ export default function Create() {
             </div>
           </div>
 
-          {/* Image + Video */}
+          {/* Image & Video */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-yellow-500 font-medium mb-1">Story Image *</label>
               <input type="file" accept="image/*" onChange={handleImageChange} />
               {preview && (
                 <div className="mt-3 p-2 border border-white rounded-lg bg-[#1F1F1F] w-full h-36 flex items-center justify-center">
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="object-cover w-full h-full rounded-md"
-                  />
+                  <img src={preview} alt="Preview" className="object-cover w-full h-full rounded-md" />
                 </div>
               )}
             </div>

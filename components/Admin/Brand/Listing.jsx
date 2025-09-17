@@ -31,7 +31,7 @@ export default function Listing() {
 
   // Delete brand
   const handleDelete = async (id) => {
-    await confirmDelete(`/delete/brand/${id}`, fetchBrands);
+    await confirmDelete(`/delete/dynamicFormSubmission/${id}`, fetchBrands);
   };
 
   // Search filter
@@ -144,9 +144,9 @@ export default function Listing() {
                         </td>
                         <td className="p-3 text-center">
                           <div className="flex justify-center space-x-2">
-                            <button className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition">
+                            {/* <button className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition">
                               <FaEye className="text-black text-lg" />
-                            </button>
+                            </button> */}
                             <Link
                               href={`/administor/brand/edit?id=${brand.id}`}
                               className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition"

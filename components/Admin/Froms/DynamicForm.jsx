@@ -46,7 +46,17 @@ export default function DynamicForm() {
   return (
     <div className="bg-[#0F0F0F] py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">Dynamic Form Builder</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+            Dynamic Form Builder
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
 
         {/* Form Name */}
         <div className="mb-6">

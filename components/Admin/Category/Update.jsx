@@ -61,7 +61,17 @@ export default function Update() {
   return (
     <div className="bg-[#000] min-h-screen py-6">
       <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">Edit Category</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-white">
+           Edit Category
+          </h2>
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
+          >
+            ← Back
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-5 text-white">
           
           {/* Category Name */}

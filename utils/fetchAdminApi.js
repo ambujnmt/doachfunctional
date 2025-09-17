@@ -868,4 +868,39 @@ export const updateForm = async (id, payload) => {
 };
 
 
+export const getFormSubmissions = async (section = "", sectionId = "", userId = "", token = "") => {
+  try {
+    let url = `${baseUrl}api/admin/v2/dynamic-data-listing?`;
+    if (section) url += `section=${section}&`;
+    if (sectionId) url += `section_id=${sectionId}&`;
+    if (userId) url += `user_id=${userId}&`;
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching submissions:", error);
+    return { status: false, data: [] };
+  }
+};
+
+export const getFormSubmissionById = async (id, token = "") => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/dynamic-data-view/${id}`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching submission:", error);
+    return { status: false, data: null, message: "Something went wrong!" };
+  }
+};
+
+
 
