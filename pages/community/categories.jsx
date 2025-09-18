@@ -1,16 +1,14 @@
- 
-
 import React, { useState } from "react";   
-import Community from "../components/Community/Community";
+import Category from "../../components/Community/Category";
 
-export default function DashboardPage() {
+export default function categories() {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   return (
     // <PrivateRoute>
 
     <div>   
-        <Community />  
+        <Category />  
     </div>
     // </PrivateRoute>
   );

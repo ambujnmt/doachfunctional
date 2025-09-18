@@ -140,7 +140,7 @@ export default function YellowCircleMenu() {
             </Link>
 
             <Link
-            href="/community"
+            href="/community/categories"
             className="block px-3 py-3 mt-0 rounded-md hover:bg-[#FFC32B]/10 cursor-pointer text-sm border-b !border-gray-700 text-left text-white hover:!text-[#FFC32B] leading-[15px]"
           >
             Community

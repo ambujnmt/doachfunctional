@@ -57,16 +57,14 @@ export default function EventDetail({ slug, token }) {
 
   // -------------------- Handlers --------------------
   const handleReact = async (type) => {
-    if (!userId) return 
-    toast.error("You must be logged in to react!");
+    if (!userId) return toast.error("You must be logged in to react!");
     const res = await reactToEvent(currentEvent.id, type, userId, token);
     setLikes(res.likes);
     setDislikes(res.dislikes);
   };
 
   const handleAddComment = async () => {
-    if (!userId) return 
-    toast.error("You must be logged in to comment!");
+    if (!userId) return toast.error("You must be logged in to comment!");
     if (!commentText.trim()) return;
 
     const newComment = await addCommentToEvent(currentEvent.id, commentText, userId, token);
