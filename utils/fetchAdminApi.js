@@ -598,6 +598,74 @@ export const getSubscribedCustomerDetailById = async (id) => {
 };
 
 
+// category Community section
+export const categoryCommunityList = async () => {
+  try {
+    const response = await fetch(`${baseUrl}api/admin/v2/community/category-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch customers");
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+};
+
+export const createCommunityCategory = async (formData) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}api/admin/v2/community/category-create`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" }, // ✅ image ke liye zaroori
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    if (error.response?.status === 422 && error.response.data?.errors) {
+      const firstError = Object.values(error.response.data.errors)[0][0];
+      throw new Error(firstError);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
+
+export const getCommunityCategoryById = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/admin/v2/community/category-get/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("getEvent error:", error);
+    return { status: false, message: error.message };
+  }
+};
+
+export const updateCommunityCategory = async (id, formData) => {
+  return await axios.post(
+    `${baseUrl}api/admin/v2/community/category-update/${id}`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+};
+
 export const getcommunityList = async () => {
   try {
     const response = await fetch(`${baseUrl}api/admin/v2/community-list`, {

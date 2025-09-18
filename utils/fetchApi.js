@@ -555,3 +555,96 @@ export const saveAddress = async (token, addressData) => {
     return { status: false, message: error.message };
   }
 };
+
+// community  
+export const getCommunityCategories = async () => {
+  try {
+    const res = await fetch(`${baseUrl}api/v1/community-category`);
+    const data = await res.json();
+    if (data.status) {
+      return data.data;
+    }
+    return [];
+  } catch (error) {
+    console.error("Failed to fetch community categories:", error);
+    return [];
+  }
+};
+
+// Get communities by category slug
+export const getCommunitiesByCategorySlug = async (slug) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/v1/community-category/${slug}`);
+    if (response.data.status) {
+      return response.data;
+    }
+    return { category: null, communities: [] };
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+    return { category: null, communities: [] };
+  }
+};
+
+export async function fetchCommunityDetail(slug) {
+  try {
+    const res = await fetch(`${baseUrl}api/v1/community-detail/${slug}`); 
+    const data = await res.json();
+
+    if (data.status) {
+      return {
+        community: data.community,
+        related_communities: data.related_communities || [],
+      };
+    } else {
+      console.error("Community API Error:", data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Failed to fetch community:", error);
+    return null;
+  }
+}
+
+
+// Fetch feedback for an coach
+export const fetchCommunityFeedback = async (communityId, token) => {
+  try {
+    const res = await axios.get(`${baseUrl}api/v1/communities/${communityId}/feedback`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching event feedback:", err);
+    return { likes: 0, dislikes: 0, comments: [] };
+  }
+};
+
+// React to an event
+export const reactToCommunity = async (communityId, type, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/communities/${communityId}/react`,
+      { type, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error reacting to event:", err);
+    return { likes: 0, dislikes: 0 };
+  }
+};
+
+// Add comment to an event
+export const addCommentToCommunity = async (communityId, comment, userId, token) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}api/v1/communities/${communityId}/comment`,
+      { comment, user_id: userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return res.data.data;
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    return null;
+  }
+};

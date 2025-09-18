@@ -4,17 +4,30 @@ import { useSearchParams, useRouter } from "next/navigation";
 import {
   getcommunityDetailById,
   updatecommunity,
+  categoryCommunityList,
+  getFormList, // ✅ import API
 } from "../../../utils/fetchAdminApi";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import dynamic from "next/dynamic";
+
+// Dynamically import React Quill
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 export default function Edit() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
+  const [categories, setCategories] = useState([]);
+  const [forms, setForms] = useState([]); // ✅ Forms list
+
   const [formData, setFormData] = useState({
     title: "",
     date: "",
+    form_id: "", // ✅ new field
+    content_type: "",
     category: "",
     description: "",
     status: 1,
@@ -26,7 +39,24 @@ export default function Edit() {
   const [previewVideo, setPreviewVideo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch detail
+  // Fetch categories + forms
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const [catData, formData] = await Promise.all([
+          categoryCommunityList(),
+          getFormList(),
+        ]);
+        setCategories(catData || []);
+        setForms(formData || []);
+      } catch (err) {
+        toast.error("Failed to load categories or forms");
+      }
+    };
+    fetchInitialData();
+  }, []);
+
+  // Fetch community detail
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
@@ -36,9 +66,11 @@ export default function Edit() {
           setFormData({
             title: res.data.title || "",
             date: res.data.date || "",
+            form_id: res.data.form_id || "", // ✅ load form_id
+            content_type: res.data.content_type || "",
             category: res.data.category || "",
             description: res.data.description || "",
-            status: res.data.status || 1,
+            status: res.data.status ?? 1,
             image: null,
             video: null,
           });
@@ -93,127 +125,201 @@ export default function Edit() {
     }
   };
 
+  if (loading) {
+    return <div className="p-6 text-center">Loading...</div>;
+  }
+
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Community</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4"
-        encType="multipart/form-data"
-      >
-        {/* Title */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
+    <div className="bg-[#000] min-h-screen py-6">
+      <div className="bg-[#1F1F1F] border border-[#FFD700] shadow-lg rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-white mb-4">Edit Community</h1>
 
-        {/* Date */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Date</label>
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-
-        {/* Category */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="4"
-            className="w-full border rounded px-3 py-2"
-            required
-          ></textarea>
-        </div>
-
-        {/* Image Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Image</label>
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full border rounded px-3 py-2"
-          />
-          {previewImage && (
-            <img
-              src={previewImage}
-              alt="Preview"
-              className="mt-2 h-32 w-auto rounded object-cover"
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 text-white"
+          encType="multipart/form-data"
+        >
+          {/* Title */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        {/* Video Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Video</label>
-          <input
-            type="file"
-            name="video"
-            accept="video/*"
-            onChange={handleFileChange}
-            className="w-full border rounded px-3 py-2"
-          />
-          {previewVideo && (
-            <video controls className="mt-2 w-full max-h-60 rounded">
-              <source src={previewVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
-        </div>
+          {/* Row: Date + Form */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Date */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">
+                Date
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+                required
+              />
+            </div>
 
-        {/* Status */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Status</label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value={1}>Active</option>
-            <option value={0}>Inactive</option>
-          </select>
-        </div>
+            {/* Form Dropdown */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">
+                Form
+              </label>
+              <select
+                name="form_id"
+                value={formData.form_id}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+              >
+                <option value="">Select form</option>
+                {forms.map((form) => (
+                  <option key={form.id} value={form.id}>
+                    {form.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-        {/* Submit */}
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Update
-          </button>
-        </div>
-      </form>
+          {/* Row: Content Type + Category */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Content Type */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">
+                Content Type
+              </label>
+              <select
+                name="content_type"
+                value={formData.content_type}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+                required
+              >
+                <option value="">Select content type</option>
+                <option value="Video Content">Video Content</option>
+                <option value="Articles">Articles</option>
+                <option value="News">News</option>
+              </select>
+            </div>
+
+            {/* Category */}
+            <div>
+              <label className="block text-yellow-500 font-medium mb-1">
+                Category
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+                required
+              >
+                <option value="">Select category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">
+              Description
+            </label>
+            <div className="border border-[#FFD700] rounded-lg p-2 bg-[#222]">
+              <ReactQuill
+                theme="snow"
+                value={formData.description}
+                onChange={(val) =>
+                  setFormData((prev) => ({ ...prev, description: val }))
+                }
+              />
+            </div>
+          </div>
+
+          {/* Image Upload */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">
+              Image
+            </label>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+            />
+            {previewImage && (
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="mt-2 h-32 w-auto rounded object-cover"
+              />
+            )}
+          </div>
+
+          {/* Video Upload */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">
+              Video
+            </label>
+            <input
+              type="file"
+              name="video"
+              accept="video/*"
+              onChange={handleFileChange}
+              className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+            />
+            {previewVideo && (
+              <video controls className="mt-2 w-full max-h-60 rounded">
+                <source src={previewVideo} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </div>
+
+          {/* Status */}
+          <div>
+            <label className="block text-yellow-500 font-medium mb-1">
+              Status
+            </label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full border border-[#FFD700] rounded px-3 py-2 bg-[#222]"
+            >
+              <option value={1}>Active</option>
+              <option value={0}>Inactive</option>
+            </select>
+          </div>
+
+          {/* Submit */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="px-5 py-2 bg-[#FFD700] text-black rounded hover:bg-[#FFEA70]"
+            >
+              Update
+            </button>
+          </div>
+        </form>
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </div>
   );
 }
